@@ -6,16 +6,30 @@ lifecycleRuntimeKtx = "2.8.1"
 # Android Compose
 composeBom = "2024.05.00"
 composeCompiler = "1.5.9"
-# Android Libraries
-activityCompose = "1.9.0"
+# Android Room DB
+room = "2.6.1"
 # Android Testing
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
+# Android Libraries
+activityCompose = "1.9.0"
+desugarJdkLibs = "2.0.4"
 # Gradle and Plugin Related
 agp = "8.4.1"
+androidTools = "31.4.1"
 kotlin = "1.9.22"
+ksp = "1.9.22-1.0.17"
 # Other Libraries
 junit = "4.13.2"
+jetbrainsKotlinJvm = "1.9.22"
+
+# Project Versions
+projectApplicationId = "com.nibalk.tasky"
+projectVersionCode = "1"
+projectVersionName = "1.0"
+projectMinSdkVersion = "30"
+projectTargetSdkVersion = "34"
+projectCompileSdkVersion = "34"
 
 # ---------------------------------------------
 
@@ -23,6 +37,8 @@ junit = "4.13.2"
 # Android Core
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 # Android Lifecycle
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 # Android Compose
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
@@ -35,15 +51,44 @@ androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-te
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 # Android Libraries
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+android-desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugarJdkLibs" }
 # Android Testing
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 # Other Libraries
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+# Gradle Plugin Related
+android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
+android-tools-common-plugin = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
+room-gradle-plugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room" }
+kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+ksp-gradle-plugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 
 # ---------------------------------------------
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 
+#Convention Plugins
+tasky-android-application = { id = "nibalk.tasky.android.application", version = "unspecified" }
+tasky-android-application-compose = { id = "nibalk.tasky.android.application.compose", version = "unspecified" }
+
+# ---------------------------------------------
+
+[bundles]
+compose = [
+    "androidx-activity-compose",
+    "androidx-lifecycle-runtime-compose",
+    "androidx-lifecycle-viewmodel-compose",
+    "androidx-compose-material3",
+    "androidx-compose-ui",
+    "androidx-compose-ui-graphics",
+    "androidx-compose-ui-tooling-preview",
+    "androidx-compose-ui-test-junit4"
+]
+compose-debug = [
+    "androidx-compose-ui-tooling",
+    "androidx-compose-ui-test-manifest",
+]
