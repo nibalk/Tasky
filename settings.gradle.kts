@@ -23,4 +23,6 @@ dependencyResolutionManagement {
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "Tasky"
 include(":app")
-// include(":build-logic:convention")
+include(":auth:data")
+include(":auth:domain")
+include(":auth:presentation")

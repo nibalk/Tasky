@@ -13,15 +13,18 @@ junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 # Android Libraries
 activityCompose = "1.9.0"
+appcompat = "1.7.0"
 desugarJdkLibs = "2.0.4"
+# Google More Libraries
+material = "1.12.0"
+# Other Libraries
+junit = "4.13.2"
+jetbrainsKotlinJvm = "1.9.22"
 # Gradle and Plugin Related
 agp = "8.4.1"
 androidTools = "31.4.1"
 kotlin = "1.9.22"
 ksp = "1.9.22-1.0.17"
-# Other Libraries
-junit = "4.13.2"
-jetbrainsKotlinJvm = "1.9.22"
 
 # Project Versions
 projectApplicationId = "com.nibalk.tasky"
@@ -51,10 +54,14 @@ androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-te
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 # Android Libraries
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 android-desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugarJdkLibs" }
 # Android Testing
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+# Google More Libraries
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+google-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 # Other Libraries
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 # Gradle Plugin Related
@@ -74,6 +81,7 @@ jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrai
 #Convention Plugins
 tasky-android-application = { id = "nibalk.tasky.android.application", version = "unspecified" }
 tasky-android-application-compose = { id = "nibalk.tasky.android.application.compose", version = "unspecified" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 
 # ---------------------------------------------
 
