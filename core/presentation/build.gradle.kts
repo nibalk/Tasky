@@ -9,6 +9,7 @@ android {
 dependencies {
     // Project Modules
     implementation(projects.core.domain)
+
     // Core
     implementation(libs.androidx.core.ktx)
 }

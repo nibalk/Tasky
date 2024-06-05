@@ -9,6 +9,7 @@ android {
 dependencies {
     // Project Modules
     implementation(projects.core.domain)
+
     // Timber for logging
     implementation(libs.timber)
 }

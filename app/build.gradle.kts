@@ -28,6 +28,10 @@ dependencies {
     implementation(projects.auth.presentation)
     implementation(projects.auth.domain)
     implementation(projects.auth.data)
+    // Project Modules - Agenda
+    implementation(projects.agenda.presentation)
+    implementation(projects.agenda.domain)
+    implementation(projects.agenda.data)
 
     // Core
     implementation(libs.androidx.core.ktx)
