@@ -19,11 +19,12 @@ desugarJdkLibs = "2.0.4"
 material = "1.12.0"
 # Other Libraries
 junit = "4.13.2"
-jetbrainsKotlinJvm = "1.9.22"
+timber = "5.0.1"
 # Gradle and Plugin Related
 agp = "8.4.1"
 androidTools = "31.4.1"
 kotlin = "1.9.22"
+kotlinJvm = "1.9.22"
 ksp = "1.9.22-1.0.17"
 
 # Project Versions
@@ -60,10 +61,11 @@ android-desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", vers
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 # Google More Libraries
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 # Other Libraries
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+
 # Gradle Plugin Related
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 android-tools-common-plugin = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
@@ -75,13 +77,17 @@ ksp-gradle-plugin = { group = "com.google.devtools.ksp", name = "com.google.devt
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinJvm" }
 
 #Convention Plugins
 tasky-android-application = { id = "nibalk.tasky.android.application", version = "unspecified" }
 tasky-android-application-compose = { id = "nibalk.tasky.android.application.compose", version = "unspecified" }
-android-library = { id = "com.android.library", version.ref = "agp" }
+tasky-android-library = { id = "nibalk.tasky.android.library", version = "unspecified" }
+tasky-android-library-compose = { id = "nibalk.tasky.android.library.compose", version = "unspecified" }
+tasky-android-feature-ui = { id = "nibalk.tasky.android.feature.ui", version = "unspecified" }
+tasky-jvm-library = { id = "nibalk.tasky.jvm.library", version = "unspecified" }
 
 # ---------------------------------------------
 
