@@ -9,5 +9,5 @@ android {
 dependencies {
     // Project Modules
     implementation(projects.auth.domain)
-    //implementation(projects.core.domain)
+    implementation(projects.core.domain)
 }

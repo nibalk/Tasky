@@ -15,7 +15,10 @@ espressoCore = "3.5.1"
 activityCompose = "1.9.0"
 appcompat = "1.7.0"
 desugarJdkLibs = "2.0.4"
-# Google More Libraries
+# Kotlin
+kotlinxSerialization = "1.6.3"
+kotlinxCoroutines = "1.8.0"
+# Google Libraries
 material = "1.12.0"
 # Other Libraries
 junit = "4.13.2"
@@ -60,7 +63,11 @@ android-desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", vers
 # Android Testing
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-# Google More Libraries
+# Kotlin
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization"}
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines"}
+kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutines"}
+# Google Libraries
 google-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 # Other Libraries
 junit = { group = "junit", name = "junit", version.ref = "junit" }
