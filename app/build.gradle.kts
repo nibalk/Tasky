@@ -20,6 +20,19 @@ android {
 }
 
 dependencies {
+    // Project Modules - Core
+    implementation(projects.core.presentation)
+    implementation(projects.core.domain)
+    implementation(projects.core.data)
+    // Project Modules - Auth
+    implementation(projects.auth.presentation)
+    implementation(projects.auth.domain)
+    implementation(projects.auth.data)
+    // Project Modules - Agenda
+    implementation(projects.agenda.presentation)
+    implementation(projects.agenda.domain)
+    implementation(projects.agenda.data)
+
     // Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -23,5 +23,21 @@ gradlePlugin {
             id = "nibalk.tasky.android.application.compose"
             implementationClass = "AndroidApplicationComposeConventionPlugin"
         }
+        register("androidLibrary") {
+            id = "nibalk.tasky.android.library"
+            implementationClass = "AndroidLibraryConventionPlugin"
+        }
+        register("androidLibraryCompose") {
+            id = "nibalk.tasky.android.library.compose"
+            implementationClass = "AndroidLibraryComposeConventionPlugin"
+        }
+        register("androidFeatureUi") {
+            id = "nibalk.tasky.android.feature.ui"
+            implementationClass = "AndroidFeatureUiConventionPlugin"
+        }
+        register("jvmLibrary") {
+            id = "nibalk.tasky.jvm.library"
+            implementationClass = "JvmLibraryConventionPlugin"
+        }
     }
 }

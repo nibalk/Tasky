@@ -13,15 +13,22 @@ junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 # Android Libraries
 activityCompose = "1.9.0"
+appcompat = "1.7.0"
 desugarJdkLibs = "2.0.4"
+# Kotlin
+kotlinxSerialization = "1.6.3"
+kotlinxCoroutines = "1.8.0"
+# Google Libraries
+material = "1.12.0"
+# Other Libraries
+junit = "4.13.2"
+timber = "5.0.1"
 # Gradle and Plugin Related
 agp = "8.4.1"
 androidTools = "31.4.1"
 kotlin = "1.9.22"
+kotlinJvm = "1.9.22"
 ksp = "1.9.22-1.0.17"
-# Other Libraries
-junit = "4.13.2"
-jetbrainsKotlinJvm = "1.9.22"
 
 # Project Versions
 projectApplicationId = "com.nibalk.tasky"
@@ -51,12 +58,21 @@ androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-te
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 # Android Libraries
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 android-desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugarJdkLibs" }
 # Android Testing
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+# Kotlin
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization"}
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines"}
+kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutines"}
+# Google Libraries
+google-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 # Other Libraries
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+
 # Gradle Plugin Related
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 android-tools-common-plugin = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
@@ -68,12 +84,17 @@ ksp-gradle-plugin = { group = "com.google.devtools.ksp", name = "com.google.devt
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinJvm" }
 
 #Convention Plugins
 tasky-android-application = { id = "nibalk.tasky.android.application", version = "unspecified" }
 tasky-android-application-compose = { id = "nibalk.tasky.android.application.compose", version = "unspecified" }
+tasky-android-library = { id = "nibalk.tasky.android.library", version = "unspecified" }
+tasky-android-library-compose = { id = "nibalk.tasky.android.library.compose", version = "unspecified" }
+tasky-android-feature-ui = { id = "nibalk.tasky.android.feature.ui", version = "unspecified" }
+tasky-jvm-library = { id = "nibalk.tasky.jvm.library", version = "unspecified" }
 
 # ---------------------------------------------
 
