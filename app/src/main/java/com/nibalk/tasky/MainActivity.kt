@@ -21,10 +21,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             TaskyTheme {
                 Scaffold( modifier = Modifier.fillMaxSize() ) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    TaskyBackground(
+                        title = "Welcome",
+                    ) {
+                        Greeting(
+                            name = "Android",
+                            modifier = Modifier.padding(innerPadding)
+                        )
+                    }
                 }
             }
         }
