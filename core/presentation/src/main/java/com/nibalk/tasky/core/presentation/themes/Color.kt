@@ -15,5 +15,6 @@ val TaskyBlueLight = Color(0xFFEEF6FF)//light
 val TaskyWhite = Color(0xFFFFFFFF)
 val TaskyBrown = Color(0xFF40492D)
 val TaskyBrownLight = Color(0xFFF2F3F7) //light2
+val TaskyDarkOrange = Color(0xFFFF7272)
 val TaskyOrange = Color(0xFFFDEFA8)
 

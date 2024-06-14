@@ -15,10 +15,12 @@ private val ColorPalette = lightColorScheme(
     tertiary = TaskyBrownLight,
     background = TaskyWhite,
     surface = TaskyWhite,
+    error = TaskyDarkOrange,
     onPrimary = TaskyBlack,
     onSecondary = TaskyWhite,
     onBackground = TaskyLightGray,
-    onSurface = TaskyBlack
+    onSurface = TaskyBlack,
+    onSurfaceVariant = TaskyDarkGray
 )
 
 @Composable

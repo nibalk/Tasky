@@ -1,0 +1,5 @@
+<resources>
+    <!-- Content Descriptions -->
+    <string name="content_description_show_password_text">Show Password</string>
+    <string name="content_description_hide_password_text">Hide password</string>
+</resources>

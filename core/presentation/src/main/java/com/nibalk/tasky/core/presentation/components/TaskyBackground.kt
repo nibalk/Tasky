@@ -31,12 +31,13 @@ fun TaskyBackground(
         color = MaterialTheme.colorScheme.secondary
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            val headerWeight = if (header == null) 2.0f else 0.5f
-            val headerModifier = Modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .systemBarsPadding()
+        ) {
+            val headerWeight = if (header == null) 1.5f else 0.5f
+            val headerModifier = Modifier
+                .fillMaxSize()
                 .then(
                     Modifier.weight(headerWeight)
                 )
