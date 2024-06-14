@@ -10,7 +10,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.nibalk.tasky.auth.presentation.R
+import com.nibalk.tasky.auth.presentation.register.RegisterScreenRoot
 import com.nibalk.tasky.core.presentation.components.TaskyBackground
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 
@@ -20,13 +23,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TaskyTheme {
-                Scaffold( modifier = Modifier.fillMaxSize() ) { innerPadding ->
+                Scaffold( modifier = Modifier.fillMaxSize() ) { _ ->
                     TaskyBackground(
-                        title = "Welcome",
+                        title = stringResource(id = R.string.auth_welcome),
                     ) {
-                        Greeting(
-                            name = "Android",
-                            modifier = Modifier.padding(innerPadding)
+                        RegisterScreenRoot(
+                            onSignInClick = { },
+                            onSuccessfulRegistration = {  }
                         )
                     }
                 }
