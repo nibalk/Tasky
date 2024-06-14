@@ -12,12 +12,15 @@ room = "2.6.1"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 # Android Libraries
+navigationCompose = "2.7.7"
 activityCompose = "1.9.0"
 appcompat = "1.7.0"
 desugarJdkLibs = "2.0.4"
 # Kotlin
 kotlinxSerialization = "1.6.3"
 kotlinxCoroutines = "1.8.0"
+# Koin
+koin = "3.5.3"
 # Google Libraries
 material = "1.12.0"
 # Other Libraries
@@ -57,6 +60,7 @@ androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 # Android Libraries
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 android-desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugarJdkLibs" }
@@ -67,6 +71,11 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization"}
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines"}
 kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutines"}
+# Koin DI
+koin-android-workmanager = { group = "io.insert-koin", name = "koin-androidx-workmanager", version.ref = "koin" }
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
+koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
 # Google Libraries
 google-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 # Other Libraries
@@ -94,6 +103,7 @@ tasky-android-application-compose = { id = "nibalk.tasky.android.application.com
 tasky-android-library = { id = "nibalk.tasky.android.library", version = "unspecified" }
 tasky-android-library-compose = { id = "nibalk.tasky.android.library.compose", version = "unspecified" }
 tasky-android-feature-ui = { id = "nibalk.tasky.android.feature.ui", version = "unspecified" }
+tasky-anroid-di = { id = "nibalk.tasky.android.di", version = "unspecified" }
 tasky-jvm-library = { id = "nibalk.tasky.jvm.library", version = "unspecified" }
 
 # ---------------------------------------------
@@ -107,9 +117,15 @@ compose = [
     "androidx-compose-ui",
     "androidx-compose-ui-graphics",
     "androidx-compose-ui-tooling-preview",
-    "androidx-compose-ui-test-junit4"
+    "androidx-compose-ui-test-junit4",
+    "androidx-navigation-compose"
 ]
 compose-debug = [
     "androidx-compose-ui-tooling",
     "androidx-compose-ui-test-manifest",
+]
+koin = [
+    "koin-core",
+    "koin-android",
+    "koin-android-workmanager"
 ]

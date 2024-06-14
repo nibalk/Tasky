@@ -18,6 +18,8 @@ fun DependencyHandlerScope.addComposeDependencies(project: Project) {
 
         "implementation"(libs.findBundle("compose").get())
         "debugImplementation"(libs.findBundle("compose.debug").get())
+
+        "implementation"(project.libs.findLibrary("koin.androidx.compose").get())
     }
 }
 

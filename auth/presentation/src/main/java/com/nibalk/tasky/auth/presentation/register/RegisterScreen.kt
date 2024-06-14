@@ -31,12 +31,13 @@ import com.nibalk.tasky.core.presentation.components.TaskyTextField
 import com.nibalk.tasky.core.presentation.themes.CheckMarkIcon
 import com.nibalk.tasky.core.presentation.themes.Inter
 import com.nibalk.tasky.core.presentation.themes.TaskyGray
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun RegisterScreenRoot(
     onSignInClick: () -> Unit,
     onSuccessfulRegistration: () -> Unit,
-    viewModel: RegisterViewModel = androidx.lifecycle.viewmodel.compose.viewModel()//koinViewModel(),
+    viewModel: RegisterViewModel = koinViewModel(),
 ) {
     RegisterScreen(
         state = viewModel.state,
