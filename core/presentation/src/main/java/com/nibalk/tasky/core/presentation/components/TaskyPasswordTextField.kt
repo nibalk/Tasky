@@ -69,16 +69,16 @@ fun TaskyPasswordTextField(
                 TextObfuscationMode.Visible
             } else TextObfuscationMode.Hidden,
             textStyle = LocalTextStyle.current.copy(
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onTertiary
             ),
             keyboardType = KeyboardType.Password,
-            cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurfaceVariant),
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.onTertiary),
             modifier = Modifier
                 .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colorScheme.tertiary)
                 .border(
                     width = 1.dp,
-                    color = if (error.isNullOrEmpty()) {
+                    color = if (!error.isNullOrEmpty()) {
                         MaterialTheme.colorScheme.error
                     } else if  (isFocused) {
                         MaterialTheme.colorScheme.onBackground
@@ -165,7 +165,7 @@ fun TaskyPasswordRequirement(
         Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = text,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = MaterialTheme.colorScheme.onTertiary,
             fontSize = 14.sp
         )
     }

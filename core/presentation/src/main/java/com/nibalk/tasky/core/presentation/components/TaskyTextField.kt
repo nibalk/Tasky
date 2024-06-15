@@ -40,7 +40,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nibalk.tasky.core.presentation.themes.CheckMarkIcon
+import com.nibalk.tasky.core.presentation.themes.TaskyGreen
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
+import com.nibalk.tasky.core.presentation.themes.spacing
 
 @Composable
 fun TaskyTextField(
@@ -60,15 +62,15 @@ fun TaskyTextField(
         BasicTextField2(
             state = state,
             textStyle = LocalTextStyle.current.copy(
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onTertiary
             ),
             keyboardOptions = KeyboardOptions(
                 keyboardType = keyboardType
             ),
             lineLimits = TextFieldLineLimits.SingleLine,
-            cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurfaceVariant),
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.onTertiary),
             modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(MaterialTheme.spacing.spaceMedium))
                 .background(MaterialTheme.colorScheme.tertiary)
                 .border(
                     width = 1.dp,
@@ -79,7 +81,7 @@ fun TaskyTextField(
                     } else {
                         Color.Transparent
                     },
-                    shape = RoundedCornerShape(16.dp)
+                    shape = RoundedCornerShape(MaterialTheme.spacing.spaceMedium)
                 )
                 .padding(12.dp)
                 .onFocusChanged {
@@ -91,7 +93,7 @@ fun TaskyTextField(
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(MaterialTheme.spacing.spaceMedium))
                     Box(
                         modifier = Modifier
                             .weight(1f)
@@ -110,7 +112,7 @@ fun TaskyTextField(
                         Icon(
                             imageVector = endIcon,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onBackground,
+                            tint = TaskyGreen,
                             modifier = Modifier
                                 .padding(end = 8.dp)
                         )

@@ -4,6 +4,10 @@ class UserDataValidator(
     private val patternValidator: PatternValidator
 ) {
 
+    fun isValidName(name: String): Boolean {
+        return (name.length in 4..50)
+    }
+
     fun isValidEmail(email: String): Boolean {
         return patternValidator.matches(email.trim())
     }
