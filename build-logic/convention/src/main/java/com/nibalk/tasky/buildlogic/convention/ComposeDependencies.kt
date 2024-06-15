@@ -5,7 +5,7 @@ import org.gradle.kotlin.dsl.DependencyHandlerScope
 import org.gradle.kotlin.dsl.project
 
 fun DependencyHandlerScope.addUiLayerDependencies(project: Project) {
-    //"implementation"(project(":core:presentation"))
+    "implementation"(project(":core:presentation"))
 
     addComposeDependencies(project)
 }
@@ -18,6 +18,8 @@ fun DependencyHandlerScope.addComposeDependencies(project: Project) {
 
         "implementation"(libs.findBundle("compose").get())
         "debugImplementation"(libs.findBundle("compose.debug").get())
+
+        "implementation"(project.libs.findLibrary("koin.androidx.compose").get())
     }
 }
 

@@ -90,13 +90,13 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
         lineHeight = 30.sp,
-        color = TaskyBlueLight
+        color = TaskyLightBlue
     ),
     labelMedium = TextStyle(
         fontFamily = Inter,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 15.sp,
-        color = TaskyBlueLight
+        color = TaskyLightBlue
     ),
 )

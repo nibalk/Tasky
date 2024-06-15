@@ -36,4 +36,6 @@ dependencies {
     // Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    // Timber
+    implementation(libs.timber)
 }

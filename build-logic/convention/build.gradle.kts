@@ -35,6 +35,10 @@ gradlePlugin {
             id = "nibalk.tasky.android.feature.ui"
             implementationClass = "AndroidFeatureUiConventionPlugin"
         }
+        register("androidDi") {
+            id = "nibalk.tasky.android.di"
+            implementationClass = "AndroidDependencyInjectionConventionPlugin"
+        }
         register("jvmLibrary") {
             id = "nibalk.tasky.jvm.library"
             implementationClass = "JvmLibraryConventionPlugin"

@@ -5,6 +5,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import com.nibalk.tasky.core.presentation.R
 
+
+val BackIcon : ImageVector
+    @Composable
+    get() = ImageVector.vectorResource(id = R.drawable.arrow_left)
+
 val CheckMarkIcon: ImageVector
     @Composable
     get() = ImageVector.vectorResource(id = R.drawable.check_mark)

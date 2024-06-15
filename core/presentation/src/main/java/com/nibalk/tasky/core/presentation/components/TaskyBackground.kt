@@ -3,6 +3,7 @@ package com.nibalk.tasky.core.presentation.components
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -24,19 +25,20 @@ import com.nibalk.tasky.core.presentation.themes.spacing
 fun TaskyBackground(
     title: String? = null,
     header: (@Composable BoxScope.() -> Unit)? = null,
-    content: @Composable BoxScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.secondary
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            val headerWeight = if (header == null) 2.0f else 0.5f
-            val headerModifier = Modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .systemBarsPadding()
+        ) {
+            val headerWeight = if (header == null) 1.5f else 0.5f
+            val headerModifier = Modifier
+                .fillMaxSize()
                 .then(
                     Modifier.weight(headerWeight)
                 )
@@ -68,7 +70,9 @@ fun TaskyBackground(
                     .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)),
                 color = MaterialTheme.colorScheme.background
             ) {
-                Box(modifier = Modifier.padding(MaterialTheme.spacing.spaceMedium)) {
+                Column(modifier = Modifier
+                    .padding(MaterialTheme.spacing.spaceMedium)
+                ) {
                     content()
                 }
             }

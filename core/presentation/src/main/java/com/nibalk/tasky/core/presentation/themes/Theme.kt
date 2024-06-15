@@ -12,11 +12,15 @@ import androidx.core.view.WindowCompat
 private val ColorPalette = lightColorScheme(
     primary = TaskyWhite,
     secondary = TaskyBlack,
+    secondaryContainer = TaskyBrown,
     tertiary = TaskyBrownLight,
     background = TaskyWhite,
     surface = TaskyWhite,
+    error = TaskyDarkOrange,
     onPrimary = TaskyBlack,
     onSecondary = TaskyWhite,
+    onTertiary = TaskyDarkGray,
+    onSecondaryContainer = TaskyWhite,
     onBackground = TaskyLightGray,
     onSurface = TaskyBlack
 )
