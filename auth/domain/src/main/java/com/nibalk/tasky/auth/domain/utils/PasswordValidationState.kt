@@ -1,4 +1,4 @@
-package com.nibalk.tasky.auth.domain
+package com.nibalk.tasky.auth.domain.utils
 
 data class PasswordValidationState(
     val hasMinLength: Boolean = false,

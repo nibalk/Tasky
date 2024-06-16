@@ -1,12 +1,10 @@
 package com.nibalk.tasky.core.presentation.components
 
-import androidx.compose.foundation.background
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.nibalk.tasky.core.presentation.R
@@ -16,7 +14,8 @@ import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 @Composable
 fun TaskyBackButton(
     isVisible: Boolean,
-    modifier: Modifier = Modifier
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     if (isVisible) {
         FloatingActionButton(
@@ -40,6 +39,7 @@ private fun TaskyOutlinedActionButtonPreview() {
     TaskyTheme {
         TaskyBackButton(
             isVisible = true,
+            onClick = {}
         )
     }
 }

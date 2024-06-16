@@ -1,19 +1,11 @@
 package com.nibalk.tasky.auth.domain
 
-class UserDataValidator(
-    private val patternValidator: PatternValidator
-) {
+import com.nibalk.tasky.auth.domain.utils.AuthDataValidator
+import com.nibalk.tasky.auth.domain.utils.PasswordValidationState
 
-    fun isValidName(name: String): Boolean {
-        return (name.length in 4..50)
-    }
-
-    fun isValidEmail(email: String): Boolean {
-        return patternValidator.matches(email.trim())
-    }
-
-    fun validatePassword(password: String): PasswordValidationState {
-        val hasMinLength = password.length >= MIN_PASSWORD_LENGTH
+class ValidatePasswordUseCase {
+    operator fun invoke(password: String): PasswordValidationState {
+        val hasMinLength = password.length >= AuthDataValidator.PASSWORD_MIN_LENGTH
         val hasDigit = password.any { it.isDigit() }
         val hasLowerCaseCharacter = password.any { it.isLowerCase() }
         val hasUpperCaseCharacter = password.any { it.isUpperCase() }
@@ -24,9 +16,5 @@ class UserDataValidator(
             hasLowerCaseCharacter = hasLowerCaseCharacter,
             hasUpperCaseCharacter = hasUpperCaseCharacter
         )
-    }
-
-    companion object {
-        const val MIN_PASSWORD_LENGTH = 9
     }
 }

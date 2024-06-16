@@ -9,25 +9,29 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nibalk.tasky.auth.domain.UserDataValidator
+import com.nibalk.tasky.auth.domain.ValidateEmailUseCase
+import com.nibalk.tasky.auth.domain.ValidateNameUseCase
+import com.nibalk.tasky.auth.domain.ValidatePasswordUseCase
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 class RegisterViewModel(
-    private val userDataValidator: UserDataValidator
+    private val validateNameUseCase: ValidateNameUseCase,
+    private val validateEmailUseCase: ValidateEmailUseCase,
+    private val validatePasswordUseCase: ValidatePasswordUseCase
 ): ViewModel() {
 
     var state by mutableStateOf(RegisterState())
         private set
 
     init {
-        state.email.textAsFlow()
+        state.name.textAsFlow()
             .onEach { name ->
-                val isValidName = userDataValidator.isValidName(name.toString())
+                val isValidName = validateNameUseCase(name.toString())
                 state = state.copy(
                     isValidName = isValidName,
                     canRegister = isValidName &&
-                        state.isEmailValid &&
+                        state.isValidEmail &&
                         state.passwordValidationState.isValidPassword &&
                         !state.isRegistering
                 )
@@ -36,9 +40,9 @@ class RegisterViewModel(
 
         state.email.textAsFlow()
             .onEach { email ->
-                val isValidEmail = userDataValidator.isValidEmail(email.toString())
+                val isValidEmail = validateEmailUseCase(email.toString())
                 state = state.copy(
-                    isEmailValid = isValidEmail,
+                    isValidEmail = isValidEmail,
                     canRegister = state.isValidName &&
                         isValidEmail &&
                         state.passwordValidationState.isValidPassword &&
@@ -49,11 +53,11 @@ class RegisterViewModel(
 
         state.password.textAsFlow()
             .onEach { password ->
-                val passwordValidationState = userDataValidator.validatePassword(password.toString())
+                val passwordValidationState = validatePasswordUseCase(password.toString())
                 state = state.copy(
                     passwordValidationState = passwordValidationState,
                     canRegister = state.isValidName &&
-                        state.isEmailValid &&
+                        state.isValidEmail &&
                         passwordValidationState.isValidPassword &&
                         !state.isRegistering
                 )
@@ -62,6 +66,23 @@ class RegisterViewModel(
     }
 
     fun onAction(action: RegisterAction) {
+        when(action) {
+            RegisterAction.OnRegisterClick -> {
+                registerUser()
+            }
+            RegisterAction.OnTogglePasswordVisibilityClick -> {
+                state = state.copy(
+                    isPasswordVisible = !state.isPasswordVisible
+                )
+            }
+            RegisterAction.OnBackClick -> {
+                //TODO: Go back to login screen
+            }
+            else -> Unit
+        }
+    }
 
+    private fun registerUser() {
+        //TODO: Register use API call
     }
 }

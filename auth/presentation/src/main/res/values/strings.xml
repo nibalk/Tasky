@@ -10,9 +10,10 @@
     <string name="auth_get_started">Get Started</string>
     <string name="auth_login">Login</string>
     <string name="auth_must_be_a_valid_email">Must be a valid email</string>
+    <string name="auth_must_be_between_x_to_y_characters">Must be between %d to %d characters</string>
     <string name="auth_at_least_x_characters">At least %d characters</string>
     <string name="auth_at_least_one_number">At least one number</string>
-    <string name="auth_contains_lowercase_char">Contains lowercase character</string>
-    <string name="auth_contains_uppercase_char">Contains uppercase character</string>
+    <string name="auth_at_least_one_lowercase_char">At least one lowercase character</string>
+    <string name="auth_at_least_one_uppercase_char">At least one uppercase character</string>
 
 </resources>

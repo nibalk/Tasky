@@ -18,10 +18,7 @@ class MainActivity : ComponentActivity() {
             TaskyTheme {
                 Scaffold( modifier = Modifier.fillMaxSize() ) { _ ->
                     // TODO: Replace with navigation controller
-                    RegisterScreenRoot(
-                        onSignInClick = { },
-                        onSuccessfulRegistration = {  }
-                    )
+                    RegisterScreenRoot()
                 }
             }
         }
