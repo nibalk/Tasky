@@ -39,21 +39,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.nibalk.tasky.core.presentation.R
-import com.nibalk.tasky.core.presentation.themes.CheckMarkIcon
-import com.nibalk.tasky.core.presentation.themes.CrossMarkIcon
 import com.nibalk.tasky.core.presentation.themes.EyeClosedIcon
 import com.nibalk.tasky.core.presentation.themes.EyeOpenedIcon
-import com.nibalk.tasky.core.presentation.themes.TaskyGreen
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 
 @Composable
 fun TaskyPasswordTextField(
     state: TextFieldState,
+    hint: String,
     isPasswordVisible: Boolean,
     onTogglePasswordVisibility: () -> Unit,
-    hint: String,
     modifier: Modifier = Modifier,
     error: String? = null,
 ) {
@@ -78,7 +74,7 @@ fun TaskyPasswordTextField(
                 .background(MaterialTheme.colorScheme.tertiary)
                 .border(
                     width = 1.dp,
-                    color = if (!error.isNullOrEmpty()) {
+                    color = if (state.text.isNotEmpty() && !error.isNullOrEmpty()) {
                         MaterialTheme.colorScheme.error
                     } else if  (isFocused) {
                         MaterialTheme.colorScheme.onBackground
@@ -131,43 +127,15 @@ fun TaskyPasswordTextField(
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.End,
         ) {
-            if (error != null) {
+            if (state.text.isNotEmpty() && !error.isNullOrEmpty()) {
                 Text(
                     text = error,
                     color = MaterialTheme.colorScheme.error
                 )
             }
         }
-    }
-}
-
-@Composable
-fun TaskyPasswordRequirement(
-    text: String,
-    isValid: Boolean,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = if (isValid) {
-                CheckMarkIcon
-            } else {
-                CrossMarkIcon
-            },
-            contentDescription = null,
-            tint = if(isValid) TaskyGreen else MaterialTheme.colorScheme.error
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        Text(
-            text = text,
-            color = MaterialTheme.colorScheme.onTertiary,
-            fontSize = 14.sp
-        )
     }
 }
 

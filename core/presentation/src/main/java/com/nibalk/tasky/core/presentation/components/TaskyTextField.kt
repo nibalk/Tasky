@@ -47,8 +47,8 @@ import com.nibalk.tasky.core.presentation.themes.spacing
 @Composable
 fun TaskyTextField(
     state: TextFieldState,
-    endIcon: ImageVector?,
     hint: String,
+    endIcon: ImageVector?,
     modifier: Modifier = Modifier,
     error: String? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
@@ -74,7 +74,7 @@ fun TaskyTextField(
                 .background(MaterialTheme.colorScheme.tertiary)
                 .border(
                     width = 1.dp,
-                    color = if (!error.isNullOrEmpty()) {
+                    color = if (state.text.isNotEmpty() && !error.isNullOrEmpty()) {
                         MaterialTheme.colorScheme.error
                     } else if  (isFocused) {
                         MaterialTheme.colorScheme.onBackground
@@ -124,9 +124,9 @@ fun TaskyTextField(
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.End,
         ) {
-            if (error != null) {
+            if (state.text.isNotEmpty() && !error.isNullOrEmpty()) {
                 Text(
                     text = error,
                     color = MaterialTheme.colorScheme.error

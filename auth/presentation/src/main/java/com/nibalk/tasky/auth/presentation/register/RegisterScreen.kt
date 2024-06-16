@@ -19,13 +19,12 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import com.nibalk.tasky.auth.domain.PasswordValidationState
-import com.nibalk.tasky.auth.domain.UserDataValidator
+import com.nibalk.tasky.auth.domain.utils.AuthDataValidator
+import com.nibalk.tasky.auth.domain.utils.PasswordValidationState
 import com.nibalk.tasky.auth.presentation.R
 import com.nibalk.tasky.core.presentation.components.TaskyActionButton
 import com.nibalk.tasky.core.presentation.components.TaskyBackButton
 import com.nibalk.tasky.core.presentation.components.TaskyBackground
-import com.nibalk.tasky.core.presentation.components.TaskyPasswordRequirement
 import com.nibalk.tasky.core.presentation.components.TaskyPasswordTextField
 import com.nibalk.tasky.core.presentation.components.TaskyTextField
 import com.nibalk.tasky.core.presentation.themes.CheckMarkIcon
@@ -35,8 +34,6 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun RegisterScreenRoot(
-    onSignInClick: () -> Unit,
-    onSuccessfulRegistration: () -> Unit,
     viewModel: RegisterViewModel = koinViewModel(),
 ) {
     RegisterScreen(
@@ -63,17 +60,34 @@ private fun RegisterScreen(
             } else null,
             hint = stringResource(id = R.string.auth_name),
             modifier = Modifier.fillMaxWidth(),
+            error = if(!state.isValidName) {
+                stringResource(
+                    id = R.string.auth_must_be_between_x_to_y_characters,
+                    AuthDataValidator.NAME_MIN_LENGTH,
+                    AuthDataValidator.NAME_MAX_LENGTH,
+                )
+            } else {
+                null
+            }
         )
         // Email Field
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceMedium))
         TaskyTextField(
             state = state.email,
-            endIcon = if (state.isEmailValid) {
+            endIcon = if (state.isValidEmail) {
                 CheckMarkIcon
             } else null,
             hint = stringResource(id = R.string.auth_email),
+            keyboardType = KeyboardType.Email,
             modifier = Modifier.fillMaxWidth(),
-            keyboardType = KeyboardType.Email
+            error = if(!state.isValidEmail) {
+                stringResource(
+                    id = R.string.auth_must_be_a_valid_email,
+                    AuthDataValidator.PASSWORD_MIN_LENGTH
+                )
+            } else {
+                null
+            }
         )
         // Password Field
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceMedium))
@@ -84,12 +98,27 @@ private fun RegisterScreen(
                 onAction(RegisterAction.OnTogglePasswordVisibilityClick)
             },
             hint = stringResource(id = R.string.auth_password),
-            modifier = Modifier.fillMaxWidth()
-        )
-        // Password Requirements
-        Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceMedium))
-        PasswordRequirements(
-            passwordValidationState = state.passwordValidationState
+            modifier = Modifier.fillMaxWidth(),
+            error = if(!state.passwordValidationState.hasMinLength) {
+                stringResource(
+                    id = R.string.auth_at_least_x_characters,
+                    AuthDataValidator.PASSWORD_MIN_LENGTH
+                )
+            } else if (!state.passwordValidationState.hasNumericCharacter) {
+                stringResource(
+                    id = R.string.auth_at_least_one_number,
+                )
+            } else if (!state.passwordValidationState.hasLowerCaseCharacter) {
+                stringResource(
+                    id = R.string.auth_at_least_one_lowercase_char,
+                )
+            } else if (!state.passwordValidationState.hasUpperCaseCharacter) {
+                stringResource(
+                    id = R.string.auth_at_least_one_uppercase_char,
+                )
+            } else {
+                null
+            }
         )
         // Action Button
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceLarge))
@@ -110,6 +139,9 @@ private fun RegisterScreen(
         ) {
             TaskyBackButton(
                 isVisible = WindowInsets.ime.getBottom(LocalDensity.current) <= 0,
+                onClick = {
+                    onAction(RegisterAction.OnRegisterClick)
+                },
                 modifier = Modifier
                     .padding(
                         bottom = with(LocalDensity.current) {
@@ -119,40 +151,6 @@ private fun RegisterScreen(
             )
         }
     }
-}
-
-@Composable
-private fun PasswordRequirements(
-    passwordValidationState: PasswordValidationState
-) {
-    TaskyPasswordRequirement(
-        text = stringResource(
-            id = R.string.auth_at_least_x_characters,
-            UserDataValidator.MIN_PASSWORD_LENGTH
-        ),
-        isValid = passwordValidationState.hasMinLength
-    )
-    Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceExtraSmall))
-    TaskyPasswordRequirement(
-        text = stringResource(
-            id = R.string.auth_at_least_one_number,
-        ),
-        isValid = passwordValidationState.hasNumericCharacter
-    )
-    Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceExtraSmall))
-    TaskyPasswordRequirement(
-        text = stringResource(
-            id = R.string.auth_contains_lowercase_char,
-        ),
-        isValid = passwordValidationState.hasLowerCaseCharacter
-    )
-    Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceExtraSmall))
-    TaskyPasswordRequirement(
-        text = stringResource(
-            id = R.string.auth_contains_uppercase_char,
-        ),
-        isValid = passwordValidationState.hasUpperCaseCharacter
-    )
 }
 
 @Preview
