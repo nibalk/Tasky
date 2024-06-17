@@ -37,7 +37,7 @@ fun AuthBackButton(
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
-private fun TaskyOutlinedActionButtonPreview() {
+private fun AuthBackButtonPreview() {
     TaskyTheme {
         AuthBackButton(
             isVisible = true,

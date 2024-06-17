@@ -4,7 +4,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -17,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
@@ -27,7 +30,8 @@ import com.nibalk.tasky.core.presentation.themes.spacing
 fun TaskyBackground(
     title: String? = null,
     header: (@Composable BoxScope.() -> Unit)? = null,
-    content: @Composable ColumnScope.() -> Unit
+    footer: (@Composable BoxScope.() -> Unit)? = null,
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -38,11 +42,18 @@ fun TaskyBackground(
                 .fillMaxSize()
                 .systemBarsPadding()
         ) {
+            val footerWeight = if (footer == null) 0f else 0.5f
             val headerWeight = if (header == null) 1.5f else 0.5f
+
             val headerModifier = Modifier
                 .fillMaxSize()
                 .then(
                     Modifier.weight(headerWeight)
+                )
+            val footerModifier = Modifier
+                .fillMaxSize()
+                .then(
+                    Modifier.weight(footerWeight)
                 )
 
             // Header
@@ -67,7 +78,7 @@ fun TaskyBackground(
                 modifier = Modifier
                     .fillMaxSize()
                     .then(
-                        Modifier.weight(10 - headerWeight)
+                        Modifier.weight(10 - headerWeight - footerWeight)
                     )
                     .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)),
                 color = MaterialTheme.colorScheme.background
@@ -79,6 +90,19 @@ fun TaskyBackground(
                             .verticalScroll(rememberScrollState())
                     ) {
                         content()
+                    }
+                    if (footer != null) {
+                        Box(
+                            modifier = footerModifier
+                                .align(Alignment.BottomCenter)
+                                .padding(
+                                    bottom = with(LocalDensity.current) {
+                                        WindowInsets.navigationBars.getBottom(this).toDp()
+                                    },
+                                )
+                        ) {
+                            footer()
+                        }
                     }
                 }
             }

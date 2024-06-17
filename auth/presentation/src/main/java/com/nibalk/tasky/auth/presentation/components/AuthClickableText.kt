@@ -68,11 +68,13 @@ fun AuthClickableText(
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
-private fun TaskyOutlinedActionButtonPreview() {
+private fun AuthClickableTextPreview() {
     TaskyTheme {
-        AuthBackButton(
+        AuthClickableText(
             isVisible = true,
-            onClick = {}
+            onClick = {},
+            mainText = "Do you have account ? If not, ",
+            annotatedText = "Sign Up",
         )
     }
 }
