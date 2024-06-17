@@ -22,8 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.nibalk.tasky.auth.domain.utils.AuthDataValidator
 import com.nibalk.tasky.auth.domain.utils.PasswordValidationState
 import com.nibalk.tasky.auth.presentation.R
+import com.nibalk.tasky.auth.presentation.components.AuthBackButton
 import com.nibalk.tasky.core.presentation.components.TaskyActionButton
-import com.nibalk.tasky.core.presentation.components.TaskyBackButton
 import com.nibalk.tasky.core.presentation.components.TaskyBackground
 import com.nibalk.tasky.core.presentation.components.TaskyPasswordTextField
 import com.nibalk.tasky.core.presentation.components.TaskyTextField
@@ -34,11 +34,25 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun RegisterScreenRoot(
+    onBackClick: () -> Unit,
+    onSuccessfulRegistration: () -> Unit,
     viewModel: RegisterViewModel = koinViewModel(),
 ) {
     RegisterScreen(
         state = viewModel.state,
-        onAction = viewModel::onAction
+        onAction = { action ->
+            when(action) {
+                is RegisterAction.OnBackClick -> {
+                    onBackClick()
+                }
+                is RegisterAction.OnRegisterClick -> {
+                    onSuccessfulRegistration()
+                }
+                else -> Unit
+            }
+            viewModel.onAction(action)
+        }
+        //TODO: handle events
     )
 }
 
@@ -99,25 +113,31 @@ private fun RegisterScreen(
             },
             hint = stringResource(id = R.string.auth_password),
             modifier = Modifier.fillMaxWidth(),
-            error = if(!state.passwordValidationState.hasMinLength) {
-                stringResource(
-                    id = R.string.auth_at_least_x_characters,
-                    AuthDataValidator.PASSWORD_MIN_LENGTH
-                )
-            } else if (!state.passwordValidationState.hasNumericCharacter) {
-                stringResource(
-                    id = R.string.auth_at_least_one_number,
-                )
-            } else if (!state.passwordValidationState.hasLowerCaseCharacter) {
-                stringResource(
-                    id = R.string.auth_at_least_one_lowercase_char,
-                )
-            } else if (!state.passwordValidationState.hasUpperCaseCharacter) {
-                stringResource(
-                    id = R.string.auth_at_least_one_uppercase_char,
-                )
-            } else {
-                null
+            error = when {
+                !state.passwordValidationState.hasMinLength -> {
+                    stringResource(
+                        id = R.string.auth_at_least_x_characters,
+                        AuthDataValidator.PASSWORD_MIN_LENGTH
+                    )
+                }
+                !state.passwordValidationState.hasNumericCharacter -> {
+                    stringResource(
+                        id = R.string.auth_at_least_one_number,
+                    )
+                }
+                !state.passwordValidationState.hasLowerCaseCharacter -> {
+                    stringResource(
+                        id = R.string.auth_at_least_one_lowercase_char,
+                    )
+                }
+                !state.passwordValidationState.hasUpperCaseCharacter -> {
+                    stringResource(
+                        id = R.string.auth_at_least_one_uppercase_char,
+                    )
+                }
+                else -> {
+                    null
+                }
             }
         )
         // Action Button
@@ -137,10 +157,10 @@ private fun RegisterScreen(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Bottom
         ) {
-            TaskyBackButton(
+            AuthBackButton(
                 isVisible = WindowInsets.ime.getBottom(LocalDensity.current) <= 0,
                 onClick = {
-                    onAction(RegisterAction.OnRegisterClick)
+                    onAction(RegisterAction.OnBackClick)
                 },
                 modifier = Modifier
                     .padding(

@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -70,10 +72,14 @@ fun TaskyBackground(
                     .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)),
                 color = MaterialTheme.colorScheme.background
             ) {
-                Column(modifier = Modifier
-                    .padding(MaterialTheme.spacing.spaceMedium)
-                ) {
-                    content()
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Column(
+                        modifier = Modifier
+                            .padding(MaterialTheme.spacing.spaceMedium)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        content()
+                    }
                 }
             }
         }
