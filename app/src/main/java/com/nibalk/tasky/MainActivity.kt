@@ -7,8 +7,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.nibalk.tasky.auth.presentation.register.RegisterScreenRoot
+import androidx.navigation.compose.rememberNavController
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
+import com.nibalk.tasky.navigation.NavigationRoot
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,8 +18,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             TaskyTheme {
                 Scaffold( modifier = Modifier.fillMaxSize() ) { _ ->
-                    // TODO: Replace with navigation controller
-                    RegisterScreenRoot()
+                    val navController = rememberNavController()
+                    NavigationRoot(navController = navController)
                 }
             }
         }
