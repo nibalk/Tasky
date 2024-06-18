@@ -22,8 +22,8 @@ import com.nibalk.tasky.core.presentation.utils.UiText
 import com.nibalk.tasky.core.presentation.utils.asUiText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -41,44 +41,18 @@ class RegisterViewModel(
     val uiEvent: Flow<RegisterEvent> = eventChannel.receiveAsFlow()
 
     init {
-        state.name.textAsFlow()
-            .onEach { name ->
-                val isValidName = validateNameUseCase(name.toString())
-                state = state.copy(
-                    isValidName = isValidName,
-                    canRegister = isValidName &&
-                        state.isValidEmail &&
-                        state.passwordValidationState.isValidPassword &&
-                        !state.isRegistering
-                )
-            }
-            .launchIn(viewModelScope)
+        combine(
+            state.name.textAsFlow(),
+            state.email.textAsFlow(),
+            state.password.textAsFlow()
+        ) { name, email, password ->
 
-        state.email.textAsFlow()
-            .onEach { email ->
-                val isValidEmail = validateEmailUseCase(email.toString())
-                state = state.copy(
-                    isValidEmail = isValidEmail,
-                    canRegister = state.isValidName &&
-                        isValidEmail &&
-                        state.passwordValidationState.isValidPassword &&
-                        !state.isRegistering
-                )
-            }
-            .launchIn(viewModelScope)
-
-        state.password.textAsFlow()
-            .onEach { password ->
-                val passwordValidationState = validatePasswordUseCase(password.toString())
-                state = state.copy(
-                    passwordValidationState = passwordValidationState,
-                    canRegister = state.isValidName &&
-                        state.isValidEmail &&
-                        passwordValidationState.isValidPassword &&
-                        !state.isRegistering
-                )
-            }
-            .launchIn(viewModelScope)
+            state = state.copy(
+                nameError = validateNameUseCase(name.toString()),
+                emailError = validateEmailUseCase(email.toString()),
+                passwordError = validatePasswordUseCase(password.toString()),
+            )
+        }.launchIn(viewModelScope)
     }
 
     fun onAction(action: RegisterAction) {

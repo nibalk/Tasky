@@ -22,8 +22,8 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import com.nibalk.tasky.auth.domain.utils.AuthDataValidateError
 import com.nibalk.tasky.auth.domain.utils.AuthDataValidator
-import com.nibalk.tasky.auth.domain.utils.PasswordValidationState
 import com.nibalk.tasky.auth.presentation.R
 import com.nibalk.tasky.auth.presentation.components.AuthBackButton
 import com.nibalk.tasky.core.presentation.components.TaskyActionButton
@@ -44,6 +44,7 @@ fun RegisterScreenRoot(
 ) {
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
+
     ObserveAsEvents(viewModel.uiEvent) { event ->
         when(event) {
             is RegisterEvent.RegistrationError -> {
@@ -80,7 +81,6 @@ fun RegisterScreenRoot(
             }
             viewModel.onAction(action)
         }
-        //TODO: handle events
     )
 }
 
@@ -93,45 +93,56 @@ private fun RegisterScreen(
     TaskyBackground(
         title = stringResource(id = R.string.auth_create_your_account),
         footer = {
-            RegisterScreenFooter(onAction)
+            if (WindowInsets.ime.getBottom(LocalDensity.current) <= 0) {
+                RegisterScreenFooter(onAction)
+            }
         }
     ) {
         // Name Field
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceMedium))
         TaskyTextField(
             state = state.name,
-            endIcon = if (state.isValidName) {
+            endIcon = if (state.nameError == null) {
                 CheckMarkIcon
             } else null,
             hint = stringResource(id = R.string.auth_name),
             modifier = Modifier.fillMaxWidth(),
-            error = if(!state.isValidName) {
-                stringResource(
-                    id = R.string.auth_must_be_between_x_to_y_characters,
-                    AuthDataValidator.NAME_MIN_LENGTH,
-                    AuthDataValidator.NAME_MAX_LENGTH,
-                )
-            } else {
-                null
+            error =
+            when (state.nameError) {
+                AuthDataValidateError.NameError.EMPTY -> {
+                    stringResource(
+                        id = R.string.auth_must_enter_name,
+                        AuthDataValidator.PASSWORD_MIN_LENGTH
+                    )
+                }
+                AuthDataValidateError.NameError.INVALID_LENGTH -> {
+                    stringResource(
+                        id = R.string.auth_must_be_between_x_to_y_characters,
+                        AuthDataValidator.NAME_MIN_LENGTH,
+                        AuthDataValidator.NAME_MAX_LENGTH,
+                    )
+                }
+                else -> null
             }
         )
         // Email Field
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceMedium))
         TaskyTextField(
             state = state.email,
-            endIcon = if (state.isValidEmail) {
+            endIcon = if (state.emailError == null) {
                 CheckMarkIcon
             } else null,
             hint = stringResource(id = R.string.auth_email),
             keyboardType = KeyboardType.Email,
             modifier = Modifier.fillMaxWidth(),
-            error = if(!state.isValidEmail) {
-                stringResource(
-                    id = R.string.auth_must_be_a_valid_email,
-                    AuthDataValidator.PASSWORD_MIN_LENGTH
-                )
-            } else {
-                null
+            error = when (state.emailError) {
+                AuthDataValidateError.EmailError.EMPTY -> {
+                    stringResource(id = R.string.auth_must_enter_email)
+                }
+                AuthDataValidateError.EmailError.INVALID_FORMAT -> {
+                    stringResource(id = R.string.auth_must_be_a_valid_email)
+                }
+                else -> null
             }
         )
         // Password Field
@@ -144,27 +155,24 @@ private fun RegisterScreen(
             },
             hint = stringResource(id = R.string.auth_password),
             modifier = Modifier.fillMaxWidth(),
-            error = when {
-                !state.passwordValidationState.hasMinLength -> {
+            error = when(state.passwordError) {
+                AuthDataValidateError.PasswordError.EMPTY -> {
+                    stringResource(id = R.string.auth_must_enter_password)
+                }
+                AuthDataValidateError.PasswordError.TOO_SHORT -> {
                     stringResource(
                         id = R.string.auth_at_least_x_characters,
                         AuthDataValidator.PASSWORD_MIN_LENGTH
                     )
                 }
-                !state.passwordValidationState.hasNumericCharacter -> {
-                    stringResource(
-                        id = R.string.auth_at_least_one_number,
-                    )
+                AuthDataValidateError.PasswordError.NO_DIGIT -> {
+                    stringResource(id = R.string.auth_at_least_one_number)
                 }
-                !state.passwordValidationState.hasLowerCaseCharacter -> {
-                    stringResource(
-                        id = R.string.auth_at_least_one_lowercase_char,
-                    )
+                AuthDataValidateError.PasswordError.NO_LOWERCASE -> {
+                    stringResource(id = R.string.auth_at_least_one_lowercase_char)
                 }
-                !state.passwordValidationState.hasUpperCaseCharacter -> {
-                    stringResource(
-                        id = R.string.auth_at_least_one_uppercase_char,
-                    )
+                AuthDataValidateError.PasswordError.NO_UPPERCASE -> {
+                    stringResource(id = R.string.auth_at_least_one_uppercase_char)
                 }
                 else -> {
                     null
@@ -196,7 +204,6 @@ private fun RegisterScreenFooter(
         verticalArrangement = Arrangement.Bottom
     ) {
         AuthBackButton(
-            isVisible = WindowInsets.ime.getBottom(LocalDensity.current) <= 0,
             onClick = {
                 onAction(RegisterAction.OnBackClick)
             },
@@ -213,9 +220,7 @@ private fun RegisterScreenPreview() {
     TaskyTheme {
         RegisterScreen(
             state = RegisterState(
-                passwordValidationState = PasswordValidationState(
-                    hasNumericCharacter = true,
-                )
+                passwordError = AuthDataValidateError.PasswordError.TOO_SHORT
             ),
             onAction = {}
         )

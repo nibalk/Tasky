@@ -126,7 +126,7 @@ fun TaskyTextField(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.End,
         ) {
-            if (state.text.isNotEmpty() && !error.isNullOrEmpty()) {
+            if (!isFocused && state.text.isNotEmpty() && !error.isNullOrEmpty()) {
                 Text(
                     text = error,
                     color = MaterialTheme.colorScheme.error
