@@ -1,20 +1,28 @@
 package com.nibalk.tasky.auth.domain.usecase
 
+import com.nibalk.tasky.auth.domain.utils.AuthDataValidateError
 import com.nibalk.tasky.auth.domain.utils.AuthDataValidator
-import com.nibalk.tasky.auth.domain.utils.PasswordValidationState
 
 class ValidatePasswordUseCase {
-    operator fun invoke(password: String): PasswordValidationState {
-        val hasMinLength = password.length >= AuthDataValidator.PASSWORD_MIN_LENGTH
-        val hasDigit = password.any { it.isDigit() }
-        val hasLowerCaseCharacter = password.any { it.isLowerCase() }
-        val hasUpperCaseCharacter = password.any { it.isUpperCase() }
-
-        return PasswordValidationState(
-            hasMinLength = hasMinLength,
-            hasNumericCharacter = hasDigit,
-            hasLowerCaseCharacter = hasLowerCaseCharacter,
-            hasUpperCaseCharacter = hasUpperCaseCharacter
-        )
+    operator fun invoke(password: String): AuthDataValidateError.PasswordError? {
+        return when {
+            password.isEmpty() -> {
+                AuthDataValidateError.PasswordError.EMPTY
+            }
+            password.length < AuthDataValidator.PASSWORD_MIN_LENGTH -> {
+                AuthDataValidateError.PasswordError.TOO_SHORT
+            }
+            !(password.any { it.isDigit() }) -> {
+                AuthDataValidateError.PasswordError.NO_DIGIT
+            }
+            !(password.any { it.isLowerCase() }) -> {
+                AuthDataValidateError.PasswordError.NO_LOWERCASE
+            }
+            !(password.any { it.isUpperCase() }) -> {
+                AuthDataValidateError.PasswordError.NO_UPPERCASE
+            }
+            else -> null
+        }
     }
 }
+

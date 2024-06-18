@@ -13,25 +13,22 @@ import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 
 @Composable
 fun AuthBackButton(
-    isVisible: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (isVisible) {
-        FloatingActionButton(
-            onClick = {
-                onClick()
-            },
-            modifier = modifier,
-            containerColor = MaterialTheme.colorScheme.secondary,
-            contentColor = MaterialTheme.colorScheme.onSecondary,
-        ) {
-            Icon(
-                imageVector = BackIcon,
-                contentDescription = stringResource(id = R.string.content_description_back),
-                tint = MaterialTheme.colorScheme.primary
-            )
-        }
+    FloatingActionButton(
+        onClick = {
+            onClick()
+        },
+        modifier = modifier,
+        containerColor = MaterialTheme.colorScheme.secondary,
+        contentColor = MaterialTheme.colorScheme.onSecondary,
+    ) {
+        Icon(
+            imageVector = BackIcon,
+            contentDescription = stringResource(id = R.string.content_description_back),
+            tint = MaterialTheme.colorScheme.primary
+        )
     }
 }
 
@@ -40,7 +37,6 @@ fun AuthBackButton(
 private fun AuthBackButtonPreview() {
     TaskyTheme {
         AuthBackButton(
-            isVisible = true,
             onClick = {}
         )
     }

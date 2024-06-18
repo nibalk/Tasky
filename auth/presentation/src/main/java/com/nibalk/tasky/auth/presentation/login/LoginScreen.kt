@@ -19,8 +19,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import com.nibalk.tasky.auth.domain.utils.AuthDataValidateError
 import com.nibalk.tasky.auth.domain.utils.AuthDataValidator
-import com.nibalk.tasky.auth.domain.utils.PasswordValidationState
 import com.nibalk.tasky.auth.presentation.R
 import com.nibalk.tasky.auth.presentation.components.AuthClickableText
 import com.nibalk.tasky.core.presentation.components.TaskyActionButton
@@ -64,26 +64,35 @@ private fun LoginScreen(
     TaskyBackground(
         title = stringResource(id = R.string.auth_welcome),
         footer = {
-            LoginScreenFooter(onAction)
+            if (WindowInsets.ime.getBottom(LocalDensity.current) <= 0) {
+                LoginScreenFooter(onAction)
+            }
         }
     ) {
         // Email Field
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceMedium))
         TaskyTextField(
             state = state.email,
-            endIcon = if (state.isValidEmail) {
+            endIcon = if (state.emailError == null) {
                 CheckMarkIcon
             } else null,
             hint = stringResource(id = R.string.auth_email),
             modifier = Modifier.fillMaxWidth(),
             keyboardType = KeyboardType.Email,
-            error = if(!state.isValidEmail) {
-                stringResource(
-                    id = R.string.auth_must_be_a_valid_email,
-                    AuthDataValidator.PASSWORD_MIN_LENGTH
-                )
-            } else {
-                null
+            error = when (state.emailError) {
+                AuthDataValidateError.EmailError.EMPTY -> {
+                    stringResource(
+                        id = R.string.auth_must_enter_email,
+                        AuthDataValidator.PASSWORD_MIN_LENGTH
+                    )
+                }
+                AuthDataValidateError.EmailError.INVALID_FORMAT -> {
+                    stringResource(
+                        id = R.string.auth_must_be_a_valid_email,
+                        AuthDataValidator.PASSWORD_MIN_LENGTH
+                    )
+                }
+                else -> null
             }
         )
         // Password Field
@@ -123,7 +132,6 @@ private fun LoginScreenFooter(
         verticalArrangement = Arrangement.Bottom
     ) {
         AuthClickableText(
-            isVisible = WindowInsets.ime.getBottom(LocalDensity.current) <= 0,
             onClick = {
                 onAction(LoginAction.OnSignUpClick)
             },
@@ -142,9 +150,7 @@ private fun LoginScreenPreview() {
     TaskyTheme {
         LoginScreen(
             state = LoginState(
-                passwordValidationState = PasswordValidationState(
-                    hasNumericCharacter = true,
-                )
+                passwordError = AuthDataValidateError.PasswordError.NO_DIGIT
             ),
             onAction = {}
         )

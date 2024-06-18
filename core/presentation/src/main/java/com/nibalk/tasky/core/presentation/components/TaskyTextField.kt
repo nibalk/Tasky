@@ -74,7 +74,7 @@ fun TaskyTextField(
                 .background(MaterialTheme.colorScheme.tertiary)
                 .border(
                     width = 1.dp,
-                    color = if (state.text.isNotEmpty() && !error.isNullOrEmpty()) {
+                    color = if (!isFocused && state.text.isNotEmpty() && !error.isNullOrEmpty()) {
                         MaterialTheme.colorScheme.error
                     } else if  (isFocused) {
                         MaterialTheme.colorScheme.onBackground
@@ -126,7 +126,7 @@ fun TaskyTextField(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.End,
         ) {
-            if (state.text.isNotEmpty() && !error.isNullOrEmpty()) {
+            if (!isFocused && state.text.isNotEmpty() && !error.isNullOrEmpty()) {
                 Text(
                     text = error,
                     color = MaterialTheme.colorScheme.error
