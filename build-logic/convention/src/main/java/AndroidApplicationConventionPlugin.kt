@@ -13,7 +13,6 @@ class AndroidApplicationConventionPlugin: Plugin<Project> {
             pluginManager.run {
                 apply("com.android.application")
                 apply("org.jetbrains.kotlin.android")
-                apply("nibalk.tasky.android.di")
             }
 
             extensions.configure<ApplicationExtension> {

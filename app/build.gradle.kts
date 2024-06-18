@@ -36,6 +36,8 @@ dependencies {
     // Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    // Timber
+    // Koin for DI
+    implementation(libs.bundles.koin.compose)
+    // Timber for Logging
     implementation(libs.timber)
 }

@@ -12,8 +12,12 @@ import androidx.lifecycle.viewModelScope
 import com.nibalk.tasky.auth.domain.ValidateEmailUseCase
 import com.nibalk.tasky.auth.domain.ValidateNameUseCase
 import com.nibalk.tasky.auth.domain.ValidatePasswordUseCase
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 
 class RegisterViewModel(
     private val validateNameUseCase: ValidateNameUseCase,
@@ -23,6 +27,9 @@ class RegisterViewModel(
 
     var state by mutableStateOf(RegisterState())
         private set
+
+    private val eventChannel = Channel<RegisterEvent>()
+    val uiEvent: Flow<RegisterEvent> = eventChannel.receiveAsFlow()
 
     init {
         state.name.textAsFlow()
@@ -68,7 +75,7 @@ class RegisterViewModel(
     fun onAction(action: RegisterAction) {
         when(action) {
             RegisterAction.OnRegisterClick -> {
-                registerUser()
+                register()
             }
             RegisterAction.OnTogglePasswordVisibilityClick -> {
                 state = state.copy(
@@ -78,11 +85,13 @@ class RegisterViewModel(
             RegisterAction.OnBackClick -> {
                 //TODO: Go back to login screen
             }
-            else -> Unit
         }
     }
 
-    private fun registerUser() {
-        //TODO: Register use API call
+    private fun register() {
+        viewModelScope.launch {
+            eventChannel.send(RegisterEvent.RegistrationSuccess)
+            // TODO: Make the API call here
+        }
     }
 }

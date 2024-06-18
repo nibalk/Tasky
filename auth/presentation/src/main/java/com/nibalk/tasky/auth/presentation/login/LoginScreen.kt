@@ -1,5 +1,5 @@
 @file:OptIn(ExperimentalFoundationApi::class)
-package com.nibalk.tasky.auth.presentation.register
+package com.nibalk.tasky.auth.presentation.login
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.nibalk.tasky.auth.domain.utils.AuthDataValidator
 import com.nibalk.tasky.auth.domain.utils.PasswordValidationState
 import com.nibalk.tasky.auth.presentation.R
-import com.nibalk.tasky.auth.presentation.components.AuthBackButton
+import com.nibalk.tasky.auth.presentation.components.AuthClickableText
 import com.nibalk.tasky.core.presentation.components.TaskyActionButton
 import com.nibalk.tasky.core.presentation.components.TaskyBackground
 import com.nibalk.tasky.core.presentation.components.TaskyPasswordTextField
@@ -33,60 +33,40 @@ import com.nibalk.tasky.core.presentation.themes.spacing
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun RegisterScreenRoot(
-    onBackClick: () -> Unit,
-    onSuccessfulRegistration: () -> Unit,
-    viewModel: RegisterViewModel = koinViewModel(),
+fun LoginScreenRoot(
+    onSignUpClick: () -> Unit,
+    onSuccessfulLogin: () -> Unit,
+    viewModel: LoginViewModel = koinViewModel(),
 ) {
-    RegisterScreen(
+    LoginScreen(
         state = viewModel.state,
         onAction = { action ->
             when(action) {
-                is RegisterAction.OnBackClick -> {
-                    onBackClick()
+                is LoginAction.OnSignUpClick -> {
+                    onSignUpClick()
                 }
-                is RegisterAction.OnRegisterClick -> {
-                    onSuccessfulRegistration()
+                is LoginAction.OnLoginClick -> {
+                    onSuccessfulLogin()
                 }
                 else -> Unit
             }
             viewModel.onAction(action)
         }
-        //TODO: handle events
     )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun RegisterScreen(
-    state: RegisterState,
-    onAction: (RegisterAction) -> Unit
+private fun LoginScreen(
+    state: LoginState,
+    onAction: (LoginAction) -> Unit
 ) {
     TaskyBackground(
-        title = stringResource(id = R.string.auth_create_your_account),
+        title = stringResource(id = R.string.auth_welcome),
         footer = {
-            RegisterScreenFooter(onAction)
+            LoginScreenFooter(onAction)
         }
     ) {
-        // Name Field
-        Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceMedium))
-        TaskyTextField(
-            state = state.name,
-            endIcon = if (state.isValidName) {
-                CheckMarkIcon
-            } else null,
-            hint = stringResource(id = R.string.auth_name),
-            modifier = Modifier.fillMaxWidth(),
-            error = if(!state.isValidName) {
-                stringResource(
-                    id = R.string.auth_must_be_between_x_to_y_characters,
-                    AuthDataValidator.NAME_MIN_LENGTH,
-                    AuthDataValidator.NAME_MAX_LENGTH,
-                )
-            } else {
-                null
-            }
-        )
         // Email Field
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceMedium))
         TaskyTextField(
@@ -95,8 +75,8 @@ private fun RegisterScreen(
                 CheckMarkIcon
             } else null,
             hint = stringResource(id = R.string.auth_email),
-            keyboardType = KeyboardType.Email,
             modifier = Modifier.fillMaxWidth(),
+            keyboardType = KeyboardType.Email,
             error = if(!state.isValidEmail) {
                 stringResource(
                     id = R.string.auth_must_be_a_valid_email,
@@ -112,68 +92,45 @@ private fun RegisterScreen(
             state = state.password,
             isPasswordVisible = state.isPasswordVisible,
             onTogglePasswordVisibility = {
-                onAction(RegisterAction.OnTogglePasswordVisibilityClick)
+                onAction(LoginAction.OnTogglePasswordVisibilityClick)
             },
             hint = stringResource(id = R.string.auth_password),
             modifier = Modifier.fillMaxWidth(),
-            error = when {
-                !state.passwordValidationState.hasMinLength -> {
-                    stringResource(
-                        id = R.string.auth_at_least_x_characters,
-                        AuthDataValidator.PASSWORD_MIN_LENGTH
-                    )
-                }
-                !state.passwordValidationState.hasNumericCharacter -> {
-                    stringResource(
-                        id = R.string.auth_at_least_one_number,
-                    )
-                }
-                !state.passwordValidationState.hasLowerCaseCharacter -> {
-                    stringResource(
-                        id = R.string.auth_at_least_one_lowercase_char,
-                    )
-                }
-                !state.passwordValidationState.hasUpperCaseCharacter -> {
-                    stringResource(
-                        id = R.string.auth_at_least_one_uppercase_char,
-                    )
-                }
-                else -> {
-                    null
-                }
-            }
         )
         // Action Button
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceLarge))
         TaskyActionButton(
             text = stringResource(id = R.string.auth_get_started).uppercase(),
-            isLoading = state.isRegistering,
-            enabled = state.canRegister,
+            isLoading = state.isLogin,
+            enabled = state.canLogin,
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                onAction(RegisterAction.OnRegisterClick)
+                onAction(LoginAction.OnLoginClick)
             }
         )
     }
 }
 
 @Composable
-private fun RegisterScreenFooter(
-    onAction: (RegisterAction) -> Unit
+private fun LoginScreenFooter(
+    onAction: (LoginAction) -> Unit
 ) {
-    // Back Button
+    // Sign-up Link
     Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceExtraLarge))
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Bottom
     ) {
-        AuthBackButton(
+        AuthClickableText(
             isVisible = WindowInsets.ime.getBottom(LocalDensity.current) <= 0,
             onClick = {
-                onAction(RegisterAction.OnBackClick)
+                onAction(LoginAction.OnSignUpClick)
             },
+            mainText = stringResource(id = R.string.auth_no_account).uppercase() + " ",
+            annotatedText = stringResource(id = R.string.auth_sign_up).uppercase(),
             modifier = Modifier
-                .align(Alignment.Start)
+                .align(Alignment.CenterHorizontally)
                 .padding(MaterialTheme.spacing.spaceMedium)
         )
     }
@@ -181,10 +138,10 @@ private fun RegisterScreenFooter(
 
 @Preview
 @Composable
-private fun RegisterScreenPreview() {
+private fun LoginScreenPreview() {
     TaskyTheme {
-        RegisterScreen(
-            state = RegisterState(
+        LoginScreen(
+            state = LoginState(
                 passwordValidationState = PasswordValidationState(
                     hasNumericCharacter = true,
                 )

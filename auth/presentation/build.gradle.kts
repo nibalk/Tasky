@@ -10,4 +10,7 @@ dependencies {
     // Project Modules
     implementation(projects.auth.domain)
     implementation(projects.core.domain)
+
+    // Koin for DI
+    implementation(libs.bundles.koin.compose)
 }

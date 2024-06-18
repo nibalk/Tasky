@@ -1,4 +1,4 @@
-package com.nibalk.tasky.core.presentation.components
+package com.nibalk.tasky.auth.presentation.components
 
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -12,14 +12,16 @@ import com.nibalk.tasky.core.presentation.themes.BackIcon
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 
 @Composable
-fun TaskyBackButton(
+fun AuthBackButton(
     isVisible: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (isVisible) {
         FloatingActionButton(
-            onClick = { },
+            onClick = {
+                onClick()
+            },
             modifier = modifier,
             containerColor = MaterialTheme.colorScheme.secondary,
             contentColor = MaterialTheme.colorScheme.onSecondary,
@@ -35,9 +37,9 @@ fun TaskyBackButton(
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
-private fun TaskyOutlinedActionButtonPreview() {
+private fun AuthBackButtonPreview() {
     TaskyTheme {
-        TaskyBackButton(
+        AuthBackButton(
             isVisible = true,
             onClick = {}
         )
