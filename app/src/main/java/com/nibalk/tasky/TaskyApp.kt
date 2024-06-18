@@ -3,6 +3,7 @@ package com.nibalk.tasky
 import android.app.Application
 import com.nibalk.tasky.auth.data.di.authDataModule
 import com.nibalk.tasky.auth.presentation.di.authViewModelModule
+import com.nibalk.tasky.core.data.di.coreDataModule
 import com.nibalk.tasky.di.appModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -24,6 +25,7 @@ class TaskyApp: Application() {
                 appModule,
                 authDataModule,
                 authViewModelModule,
+                coreDataModule
             )
         }
     }
