@@ -11,17 +11,9 @@ import org.koin.dsl.module
 val coreDataModule = module {
     singleOf(::ApiKeyInterceptor)
     singleOf(::LoggingInterceptor)
-    singleOf(::HttpClientFactory)
 
     single { JsonConverterFactoryProvider }
 
-    single { HttpClientFactory(get(), get()) }
-    single {
-        get<HttpClientFactory>().build()
-    }
-
-    single { RetrofitFactory(get(), get()) }
-    single {
-        get<RetrofitFactory>().build()
-    }
+    singleOf(::HttpClientFactory)
+    singleOf(::RetrofitFactory)
 }

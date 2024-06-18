@@ -2,6 +2,7 @@ package com.nibalk.tasky
 
 import android.app.Application
 import com.nibalk.tasky.auth.data.di.authDataModule
+import com.nibalk.tasky.auth.presentation.di.authUseCaseModule
 import com.nibalk.tasky.auth.presentation.di.authViewModelModule
 import com.nibalk.tasky.core.data.di.coreDataModule
 import com.nibalk.tasky.di.appModule
@@ -24,6 +25,7 @@ class TaskyApp: Application() {
             modules(
                 appModule,
                 authDataModule,
+                authUseCaseModule,
                 authViewModelModule,
                 coreDataModule
             )

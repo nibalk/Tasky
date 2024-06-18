@@ -43,7 +43,7 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
                     navController.navigateUp()
                 },
                 onSuccessfulRegistration = {
-                    navController.navigateUp()
+                    //navController.navigateUp()
                 }
             )
         }

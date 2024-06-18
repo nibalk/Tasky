@@ -1,4 +1,4 @@
-package com.nibalk.tasky.auth.domain.usecases
+package com.nibalk.tasky.auth.domain.usecase
 
 import com.nibalk.tasky.auth.domain.utils.AuthPatternValidator
 
