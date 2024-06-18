@@ -17,12 +17,17 @@ activityCompose = "1.9.0"
 appcompat = "1.7.0"
 desugarJdkLibs = "2.0.4"
 # Kotlin
+kotlinxRetrofit= "0.8.0"
 kotlinxSerialization = "1.6.3"
 kotlinxCoroutines = "1.8.0"
 # Koin
 koin = "3.5.3"
 # Google Libraries
 material = "1.12.0"
+# Squareup Libraries
+retrofit = "2.9.0"
+okHttp = "4.10.0"
+gson = "2.9.0"
 # Other Libraries
 junit = "4.13.2"
 timber = "5.0.1"
@@ -68,6 +73,7 @@ android-desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", vers
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 # Kotlin
+kotlinx-serialization-retrofit = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "kotlinxRetrofit"}
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization"}
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines"}
 kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutines"}
@@ -78,6 +84,10 @@ koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin"
 koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
 # Google Libraries
 google-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+# Squareup Libraries
+squareup-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+squareup-okhttp-loggiing = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okHttp" }
+squareup-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "gson" }
 # Other Libraries
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
@@ -96,6 +106,7 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinJvm" }
+jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 #Convention Plugins
 tasky-android-application = { id = "nibalk.tasky.android.application", version = "unspecified" }
