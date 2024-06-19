@@ -1,12 +1,9 @@
-@file:OptIn(ExperimentalFoundationApi::class)
-
 package com.nibalk.tasky.auth.presentation.register
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nibalk.tasky.auth.domain.model.RegisterRequestParams
@@ -42,11 +39,10 @@ class RegisterViewModel(
 
     init {
         combine(
-            state.name.textAsFlow(),
-            state.email.textAsFlow(),
-            state.password.textAsFlow()
+            snapshotFlow { state.name.text },
+            snapshotFlow { state.email.text },
+            snapshotFlow { state.password.text }
         ) { name, email, password ->
-
             state = state.copy(
                 nameError = validateNameUseCase(name.toString()),
                 emailError = validateEmailUseCase(email.toString()),

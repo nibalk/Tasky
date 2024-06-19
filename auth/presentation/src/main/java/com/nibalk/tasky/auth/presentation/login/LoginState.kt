@@ -1,8 +1,6 @@
-@file:OptIn(ExperimentalFoundationApi::class)
 package com.nibalk.tasky.auth.presentation.login
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.text2.input.TextFieldState
+import androidx.compose.foundation.text.input.TextFieldState
 import com.nibalk.tasky.auth.domain.utils.AuthDataValidateError
 
 data class LoginState(

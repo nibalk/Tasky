@@ -1,6 +1,7 @@
 package com.nibalk.tasky.auth.presentation.components
 
-import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -46,16 +47,17 @@ fun AuthClickableText(
             ) {
                 append(annotatedText)
             }
+            pop()
         }
     }
-    ClickableText(
+
+    BasicText(
         text = annotatedString,
-        modifier = modifier,
-        onClick = { offset ->
+        modifier = modifier.clickable {
             annotatedString.getStringAnnotations(
                 tag = "clickable_text",
-                start = offset,
-                end = offset
+                start = 0,
+                end = annotatedString.length
             ).firstOrNull()?.let {
                 onClick()
             }

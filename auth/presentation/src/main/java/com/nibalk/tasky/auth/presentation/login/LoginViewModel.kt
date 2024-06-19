@@ -1,12 +1,9 @@
-@file:OptIn(ExperimentalFoundationApi::class)
-
 package com.nibalk.tasky.auth.presentation.login
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nibalk.tasky.auth.domain.usecase.ValidateEmailUseCase
@@ -31,10 +28,9 @@ class LoginViewModel(
 
     init {
         combine(
-            state.email.textAsFlow(),
-            state.password.textAsFlow()
+            snapshotFlow { state.email.text },
+            snapshotFlow { state.password.text }
         ) { email, password ->
-
             state = state.copy(
                 emailError = validateEmailUseCase(email.toString()),
                 passwordError = validatePasswordUseCase(password.toString()),

@@ -1,7 +1,5 @@
-@file:OptIn(ExperimentalFoundationApi::class)
 package com.nibalk.tasky.auth.presentation.login
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -55,7 +53,6 @@ fun LoginScreenRoot(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun LoginScreen(
     state: LoginState,

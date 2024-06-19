@@ -1,6 +1,5 @@
 package com.nibalk.tasky.navigation
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -16,28 +15,27 @@ fun NavigationRoot(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Route.AUTH_NAV_GRAPH
+        startDestination = AuthNavigationGraph
     ) {
         authGraph(navController)
     }
 }
 
 private fun NavGraphBuilder.authGraph(navController: NavHostController) {
-    navigation(
-        startDestination = Route.AUTH_LOGIN_SCREEN,
-        route = Route.AUTH_NAV_GRAPH
+    navigation<AuthNavigationGraph>(
+        startDestination = AuthLoginScreen,
     ) {
-        composable(route = Route.AUTH_LOGIN_SCREEN) {
+        composable<AuthLoginScreen>  {
             LoginScreenRoot(
                 onSignUpClick = {
-                    navController.navigate(Route.AUTH_REGISTER_SCREEN)
+                    navController.navigate(AuthRegisterScreen)
                 },
                 onSuccessfulLogin = {
                     // TODO: Navigate to Agenda Screen
                 }
             )
         }
-        composable(route = Route.AUTH_REGISTER_SCREEN) {
+        composable<AuthRegisterScreen> {
             RegisterScreenRoot(
                 onBackClick = {
                     navController.navigateUp()
@@ -49,3 +47,4 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
         }
     }
 }
+
