@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
+import com.nibalk.tasky.core.presentation.themes.TaskyWhite
 import com.nibalk.tasky.core.presentation.themes.spacing
 
 @Composable
@@ -61,7 +62,7 @@ fun TaskyActionButton(
                     .size(15.dp)
                     .alpha(if (isLoading) 1f else 0f),
                 strokeWidth = 1.5.dp,
-                color = MaterialTheme.colorScheme.onPrimary
+                color = TaskyWhite
             )
         }
     }
