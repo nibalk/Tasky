@@ -1,6 +1,7 @@
 package com.nibalk.tasky.auth.presentation.components
 
-import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -17,53 +18,51 @@ import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 
 @Composable
 fun AuthClickableText(
-    isVisible: Boolean,
     onClick: () -> Unit,
     mainText: String,
     annotatedText: String,
     modifier: Modifier = Modifier,
 ) {
-    if (isVisible) {
-        val annotatedString = buildAnnotatedString {
+    val annotatedString = buildAnnotatedString {
+        withStyle(
+            style = SpanStyle(
+                fontWeight = FontWeight.SemiBold,
+                fontFamily = Inter,
+                fontSize = 14.sp,
+                color = TaskyGray
+            )
+        ) {
+            append(mainText)
+            pushStringAnnotation(
+                tag = "clickable_text",
+                annotation = stringResource(id = com.nibalk.tasky.auth.presentation.R.string.auth_sign_up).uppercase()
+            )
             withStyle(
                 style = SpanStyle(
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = Inter,
                     fontSize = 14.sp,
-                    color = TaskyGray
+                    color = TaskyDarkBlue,
                 )
             ) {
-                append(mainText)
-                pushStringAnnotation(
-                    tag = "clickable_text",
-                    annotation = stringResource(id = com.nibalk.tasky.auth.presentation.R.string.auth_sign_up).uppercase()
-                )
-                withStyle(
-                    style = SpanStyle(
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = Inter,
-                        fontSize = 14.sp,
-                        color = TaskyDarkBlue,
-                    )
-                ) {
-                    append(annotatedText)
-                }
+                append(annotatedText)
+            }
+            pop()
+        }
+    }
+
+    BasicText(
+        text = annotatedString,
+        modifier = modifier.clickable {
+            annotatedString.getStringAnnotations(
+                tag = "clickable_text",
+                start = 0,
+                end = annotatedString.length
+            ).firstOrNull()?.let {
+                onClick()
             }
         }
-        ClickableText(
-            text = annotatedString,
-            modifier = modifier,
-            onClick = { offset ->
-                annotatedString.getStringAnnotations(
-                    tag = "clickable_text",
-                    start = offset,
-                    end = offset
-                ).firstOrNull()?.let {
-                    onClick()
-                }
-            }
-        )
-    }
+    )
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
@@ -71,7 +70,6 @@ fun AuthClickableText(
 private fun AuthClickableTextPreview() {
     TaskyTheme {
         AuthClickableText(
-            isVisible = true,
             onClick = {},
             mainText = "Do you have account ? If not, ",
             annotatedText = "Sign Up",

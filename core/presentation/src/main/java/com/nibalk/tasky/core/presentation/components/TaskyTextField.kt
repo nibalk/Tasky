@@ -1,8 +1,5 @@
-@file:OptIn(ExperimentalFoundationApi::class)
-
 package com.nibalk.tasky.core.presentation.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -15,11 +12,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text2.BasicTextField2
-import androidx.compose.foundation.text2.input.TextFieldLineLimits
-import androidx.compose.foundation.text2.input.TextFieldState
-import androidx.compose.foundation.text2.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -59,7 +56,7 @@ fun TaskyTextField(
     Column(
         modifier = modifier
     ) {
-        BasicTextField2(
+        BasicTextField(
             state = state,
             textStyle = LocalTextStyle.current.copy(
                 color = MaterialTheme.colorScheme.onTertiary
@@ -74,7 +71,7 @@ fun TaskyTextField(
                 .background(MaterialTheme.colorScheme.tertiary)
                 .border(
                     width = 1.dp,
-                    color = if (state.text.isNotEmpty() && !error.isNullOrEmpty()) {
+                    color = if (!isFocused && state.text.isNotEmpty() && !error.isNullOrEmpty()) {
                         MaterialTheme.colorScheme.error
                     } else if  (isFocused) {
                         MaterialTheme.colorScheme.onBackground
@@ -126,7 +123,7 @@ fun TaskyTextField(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.End,
         ) {
-            if (state.text.isNotEmpty() && !error.isNullOrEmpty()) {
+            if (!isFocused && state.text.isNotEmpty() && !error.isNullOrEmpty()) {
                 Text(
                     text = error,
                     color = MaterialTheme.colorScheme.error

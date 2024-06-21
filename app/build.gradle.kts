@@ -38,6 +38,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     // Koin for DI
     implementation(libs.bundles.koin.compose)
+    // Kotlinx Json for Serialization
+    implementation(libs.kotlinx.serialization.json)
     // Timber for Logging
     implementation(libs.timber)
 }

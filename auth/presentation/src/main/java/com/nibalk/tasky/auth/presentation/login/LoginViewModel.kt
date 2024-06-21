@@ -1,15 +1,13 @@
-@file:OptIn(ExperimentalFoundationApi::class)
-
 package com.nibalk.tasky.auth.presentation.login
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.text2.input.textAsFlow
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nibalk.tasky.auth.domain.usecase.ValidateEmailUseCase
+import com.nibalk.tasky.auth.domain.usecase.ValidatePasswordUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -19,6 +17,7 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val validateEmailUseCase: ValidateEmailUseCase,
+    private val validatePasswordUseCase: ValidatePasswordUseCase,
 ): ViewModel() {
 
     var state by mutableStateOf(LoginState())
@@ -28,11 +27,13 @@ class LoginViewModel(
     val uiEvent: Flow<LoginEvent> = eventChannel.receiveAsFlow()
 
     init {
-        combine(state.email.textAsFlow(), state.password.textAsFlow()) { email, password ->
-            val isValidEmail = validateEmailUseCase(email.toString())
+        combine(
+            snapshotFlow { state.email.text },
+            snapshotFlow { state.password.text }
+        ) { email, password ->
             state = state.copy(
-                isValidEmail = isValidEmail,
-                canLogin = isValidEmail && password.isNotEmpty()
+                emailError = validateEmailUseCase(email.toString()),
+                passwordError = validatePasswordUseCase(password.toString()),
             )
         }.launchIn(viewModelScope)
     }

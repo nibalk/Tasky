@@ -26,6 +26,7 @@ internal fun Project.configureKotlinAndroid(
     configureKotlin()
 
     dependencies {
+        "implementation"(libs.findLibrary("kotlinx.serialization.json").get())
         "coreLibraryDesugaring"(libs.findLibrary("android.desugar.jdk.libs").get())
     }
 }
