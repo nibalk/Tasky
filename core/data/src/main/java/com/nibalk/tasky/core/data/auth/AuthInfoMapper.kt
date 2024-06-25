@@ -2,8 +2,8 @@ package com.nibalk.tasky.core.data.auth
 
 import com.nibalk.tasky.core.domain.auth.AuthInfo
 
-fun AuthInfo.toAuthInfoSerializable(): AuthInfoSerializable {
-    return AuthInfoSerializable(
+fun AuthInfo.toAuthInfoDto(): AuthInfoDto {
+    return AuthInfoDto(
         accessTokenExpirationTimestamp = accessTokenExpirationTimestamp,
         accessToken = accessToken,
         refreshToken = refreshToken,
@@ -12,7 +12,7 @@ fun AuthInfo.toAuthInfoSerializable(): AuthInfoSerializable {
     )
 }
 
-fun AuthInfoSerializable.toAuthInfo(): AuthInfo {
+fun AuthInfoDto.toAuthInfo(): AuthInfo {
     return AuthInfo(
         accessTokenExpirationTimestamp = accessTokenExpirationTimestamp,
         accessToken = accessToken,
