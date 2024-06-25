@@ -107,10 +107,7 @@ private fun RegisterScreen(
             error =
             when (state.nameError) {
                 AuthDataValidateError.NameError.EMPTY -> {
-                    stringResource(
-                        id = R.string.auth_must_enter_name,
-                        AuthDataValidator.PASSWORD_MIN_LENGTH
-                    )
+                    stringResource(id = R.string.auth_must_enter_name)
                 }
                 AuthDataValidateError.NameError.INVALID_LENGTH -> {
                     stringResource(
