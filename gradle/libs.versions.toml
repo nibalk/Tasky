@@ -13,6 +13,7 @@ junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 # Android Libraries
 navigationCompose = "2.8.0-alpha08"
+securityCryptoKtx = "1.1.0-alpha06"
 activityCompose = "1.9.0"
 appcompat = "1.7.0"
 desugarJdkLibs = "2.0.4"
@@ -66,6 +67,7 @@ androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-te
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 # Android Libraries
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+androidx-security-crypto-ktx = { module = "androidx.security:security-crypto-ktx", version.ref = "securityCryptoKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 android-desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugarJdkLibs" }

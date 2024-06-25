@@ -36,6 +36,8 @@ dependencies {
     // Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    // Crypto
+    implementation(libs.androidx.security.crypto.ktx)
     // Koin for DI
     implementation(libs.bundles.koin.compose)
     // Kotlinx Json for Serialization
