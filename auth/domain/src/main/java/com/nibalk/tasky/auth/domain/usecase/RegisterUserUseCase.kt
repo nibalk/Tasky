@@ -8,7 +8,9 @@ import com.nibalk.tasky.core.domain.util.Result
 class RegisterUserUseCase(
     private val authRepository: AuthRepository
 ) {
-    suspend operator fun invoke(registerParams: RegisterRequestParams) : Result<Unit, DataError.Network> {
+    suspend operator fun invoke(
+        registerParams: RegisterRequestParams
+    ) : Result<Unit, DataError.Network> {
         return authRepository.register(registerParams)
     }
 }
