@@ -1,5 +1,6 @@
 package com.nibalk.tasky.auth.presentation.di
 
+import com.nibalk.tasky.auth.domain.usecase.LoginUserUseCase
 import com.nibalk.tasky.auth.domain.usecase.RegisterUserUseCase
 import com.nibalk.tasky.auth.domain.usecase.ValidateEmailUseCase
 import com.nibalk.tasky.auth.domain.usecase.ValidateNameUseCase
@@ -15,6 +16,7 @@ val authUseCaseModule = module {
     singleOf(::ValidateEmailUseCase)
     singleOf(::ValidatePasswordUseCase)
     singleOf(::RegisterUserUseCase)
+    singleOf(::LoginUserUseCase)
 }
 
 val authViewModelModule = module {

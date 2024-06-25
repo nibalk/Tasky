@@ -69,26 +69,24 @@ class RegisterViewModel(
 
     private fun register() {
         viewModelScope.launch {
-            viewModelScope.launch {
-                state = state.copy(isRegistering = true)
-                registerUserUseCase(
-                    RegisterRequestParams(
-                        name = state.email.text.toString(),
-                        email = state.email.text.toString().trim(),
-                        password = state.password.text.toString()
-                    )
-                ).onSuccess {
-                    state = state.copy(isRegistering = false)
-                    eventChannel.send(RegisterEvent.RegistrationSuccess)
-                }.onError { error ->
-                    state = state.copy(isRegistering = false)
-                    if(error == DataError.Network.CONFLICT) {
-                        eventChannel.send(RegisterEvent.RegistrationError(
-                            UiText.StringResource(R.string.auth_error_email_exists)
-                        ))
-                    } else {
-                        eventChannel.send(RegisterEvent.RegistrationError(error.asUiText()))
-                    }
+            state = state.copy(isRegistering = true)
+            registerUserUseCase(
+                RegisterRequestParams(
+                    name = state.email.text.toString(),
+                    email = state.email.text.toString().trim(),
+                    password = state.password.text.toString()
+                )
+            ).onSuccess {
+                state = state.copy(isRegistering = false)
+                eventChannel.send(RegisterEvent.RegistrationSuccess)
+            }.onError { error ->
+                state = state.copy(isRegistering = false)
+                if(error == DataError.Network.CONFLICT) {
+                    eventChannel.send(RegisterEvent.RegistrationError(
+                        UiText.StringResource(R.string.auth_error_email_exists)
+                    ))
+                } else {
+                    eventChannel.send(RegisterEvent.RegistrationError(error.asUiText()))
                 }
             }
         }

@@ -2,6 +2,7 @@ package com.nibalk.tasky.core.data.di
 
 import com.nibalk.tasky.core.data.auth.AutoTokenRefresher
 import com.nibalk.tasky.core.data.auth.EncryptedSessionStorage
+import com.nibalk.tasky.core.data.auth.remote.TokenRefreshClient
 import com.nibalk.tasky.core.data.networking.HttpClientFactory
 import com.nibalk.tasky.core.data.networking.JsonConverterFactoryProvider
 import com.nibalk.tasky.core.data.networking.RetrofitFactory
@@ -20,6 +21,7 @@ val coreDataModule = module {
     singleOf(::TokenInterceptor)
 
     single { JsonConverterFactoryProvider }
+    single { TokenRefreshClient }
 
     singleOf(::HttpClientFactory)
     singleOf(::RetrofitFactory)

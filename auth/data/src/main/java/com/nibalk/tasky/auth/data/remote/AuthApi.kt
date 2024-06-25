@@ -14,7 +14,7 @@ interface AuthApi {
         @Body body: RegisterRequestDto
     ): Response<Void>
 
-    @POST("/register")
+    @POST("/login")
     suspend fun login(
         @Body body: LoginRequestDto
     ): Response<AuthInfoDto>
