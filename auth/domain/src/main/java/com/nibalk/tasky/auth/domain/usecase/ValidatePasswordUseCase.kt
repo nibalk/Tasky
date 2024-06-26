@@ -12,13 +12,13 @@ class ValidatePasswordUseCase {
             password.length < AuthDataValidator.PASSWORD_MIN_LENGTH -> {
                 AuthDataValidateError.PasswordError.TOO_SHORT
             }
-            !(password.any { it.isDigit() }) -> {
+            password.none { it.isDigit() } -> {
                 AuthDataValidateError.PasswordError.NO_DIGIT
             }
-            !(password.any { it.isLowerCase() }) -> {
+            password.none { it.isLowerCase() } -> {
                 AuthDataValidateError.PasswordError.NO_LOWERCASE
             }
-            !(password.any { it.isUpperCase() }) -> {
+            password.none { it.isUpperCase() } -> {
                 AuthDataValidateError.PasswordError.NO_UPPERCASE
             }
             else -> null

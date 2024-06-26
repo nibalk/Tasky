@@ -18,7 +18,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.nibalk.tasky.auth.domain.utils.AuthDataValidateError
-import com.nibalk.tasky.auth.domain.utils.AuthDataValidator
 import com.nibalk.tasky.auth.presentation.R
 import com.nibalk.tasky.auth.presentation.components.AuthClickableText
 import com.nibalk.tasky.core.presentation.components.TaskyActionButton
@@ -78,16 +77,10 @@ private fun LoginScreen(
             keyboardType = KeyboardType.Email,
             error = when (state.emailError) {
                 AuthDataValidateError.EmailError.EMPTY -> {
-                    stringResource(
-                        id = R.string.auth_must_enter_email,
-                        AuthDataValidator.PASSWORD_MIN_LENGTH
-                    )
+                    stringResource(id = R.string.auth_must_enter_email)
                 }
                 AuthDataValidateError.EmailError.INVALID_FORMAT -> {
-                    stringResource(
-                        id = R.string.auth_must_be_a_valid_email,
-                        AuthDataValidator.PASSWORD_MIN_LENGTH
-                    )
+                    stringResource(id = R.string.auth_must_be_a_valid_email)
                 }
                 else -> null
             }

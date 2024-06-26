@@ -22,5 +22,6 @@
     <string name="auth_at_least_one_lowercase_char">At least one lowercase character</string>
     <string name="auth_at_least_one_uppercase_char">At least one uppercase character</string>
     <string name="auth_error_email_exists">A user with that email already exists.</string>
+    <string name="auth_error_email_password_incorrect">The email or password is incorrect.</string>
 
 </resources>
