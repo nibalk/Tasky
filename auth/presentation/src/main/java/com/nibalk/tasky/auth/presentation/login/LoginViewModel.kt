@@ -10,6 +10,7 @@ import com.nibalk.tasky.auth.domain.model.LoginRequestParams
 import com.nibalk.tasky.auth.domain.usecase.LoginUserUseCase
 import com.nibalk.tasky.auth.domain.usecase.ValidateEmailUseCase
 import com.nibalk.tasky.auth.domain.usecase.ValidatePasswordUseCase
+import com.nibalk.tasky.auth.domain.utils.AuthDataValidateError
 import com.nibalk.tasky.auth.presentation.R
 import com.nibalk.tasky.core.domain.util.DataError
 import com.nibalk.tasky.core.domain.util.onError
@@ -40,9 +41,14 @@ class LoginViewModel(
             snapshotFlow { state.email.text },
             snapshotFlow { state.password.text }
         ) { email, password ->
+            val passwordError = validatePasswordUseCase(password.toString())
             state = state.copy(
                 emailError = validateEmailUseCase(email.toString()),
-                passwordError = validatePasswordUseCase(password.toString()),
+                passwordError = if (passwordError == AuthDataValidateError.PasswordError.EMPTY) {
+                    passwordError
+                } else {
+                    null
+                }
             )
         }.launchIn(viewModelScope)
     }
@@ -65,17 +71,17 @@ class LoginViewModel(
 
     private fun login() {
         viewModelScope.launch {
-            state = state.copy(isLogin = true)
+            state = state.copy(isLoggingIn = true)
             loginUserUseCase(
                 LoginRequestParams(
                     email = state.email.text.toString().trim(),
                     password = state.password.text.toString()
                 )
             ).onSuccess {
-                state = state.copy(isLogin = false)
+                state = state.copy(isLoggingIn = false)
                 eventChannel.send(LoginEvent.LoginSuccess)
             }.onError { error ->
-                state = state.copy(isLogin = false)
+                state = state.copy(isLoggingIn = false)
                 if(error == DataError.Network.UNAUTHORIZED) {
                     eventChannel.send(LoginEvent.LoginError(
                         UiText.StringResource(R.string.auth_error_email_password_incorrect)

@@ -57,7 +57,7 @@ fun RegisterScreenRoot(
                 keyboardController?.hide()
                 Toast.makeText(
                     context,
-                    R.string.auth_is_successful,
+                    R.string.auth_registration_successful,
                     Toast.LENGTH_LONG
                 ).show()
                 onSuccessfulRegistration()
@@ -71,9 +71,6 @@ fun RegisterScreenRoot(
             when(action) {
                 is RegisterAction.OnBackClick -> {
                     onBackClick()
-                }
-                is RegisterAction.OnRegisterClick -> {
-                    onSuccessfulRegistration()
                 }
                 else -> Unit
             }
