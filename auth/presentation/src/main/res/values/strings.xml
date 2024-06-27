@@ -9,7 +9,8 @@
     <string name="auth_sign_up">Sign up</string>
     <string name="auth_get_started">Get Started</string>
     <string name="auth_login">Login</string>
-    <string name="auth_is_successful">Registration successful! You can log in now.</string>
+    <string name="auth_registration_successful">Registration successful! You can log in now.</string>
+    <string name="auth_login_successful">You\'re logged in.</string>
 
     <!-- Auth Module Errors -->
     <string name="auth_must_enter_email">Must enter email</string>

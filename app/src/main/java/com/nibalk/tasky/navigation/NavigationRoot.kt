@@ -1,6 +1,10 @@
 package com.nibalk.tasky.navigation
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -8,16 +12,19 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.nibalk.tasky.auth.presentation.login.LoginScreenRoot
 import com.nibalk.tasky.auth.presentation.register.RegisterScreenRoot
+import com.nibalk.tasky.core.presentation.themes.spacing
 
 @Composable
 fun NavigationRoot(
     navController: NavHostController,
+    isLoggedIn: Boolean
 ) {
     NavHost(
         navController = navController,
-        startDestination = AuthNavigationGraph
+        startDestination = if (isLoggedIn) AgendaNavigationGraph else AuthNavigationGraph
     ) {
         authGraph(navController)
+        agendaGraph(navController)
     }
 }
 
@@ -28,23 +35,51 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
         composable<AuthLoginScreen>  {
             LoginScreenRoot(
                 onSignUpClick = {
-                    navController.navigate(AuthRegisterScreen)
+                    navController.navigate(AuthRegisterScreen) {
+                        popUpTo(AuthLoginScreen) {
+                            inclusive = true
+                            saveState = true
+                        }
+                        restoreState = true
+                    }
                 },
                 onSuccessfulLogin = {
-                    // TODO: Navigate to Agenda Screen
+                    navController.navigate(AgendaNavigationGraph) {
+                        popUpTo(AuthNavigationGraph) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
         composable<AuthRegisterScreen> {
             RegisterScreenRoot(
                 onBackClick = {
-                    navController.navigateUp()
+                    navController.navigate(AuthLoginScreen) {
+                        popUpTo(AuthRegisterScreen) {
+                            inclusive = true
+                            saveState = true
+                        }
+                        restoreState = true
+                    }
                 },
                 onSuccessfulRegistration = {
-                    //navController.navigateUp()
+                    navController.navigate(AuthLoginScreen)
                 }
             )
         }
     }
 }
 
+private fun NavGraphBuilder.agendaGraph(navController: NavHostController) {
+    navigation<AgendaNavigationGraph>(
+        startDestination = AgendaScreen,
+    ) {
+        composable<AgendaScreen> {
+            Text(
+                modifier = Modifier.padding(MaterialTheme.spacing.spaceLarge),
+                text = "Agenda Screen!"
+            )
+        }
+    }
+}

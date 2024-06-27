@@ -1,5 +1,6 @@
 package com.nibalk.tasky.auth.presentation.login
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,7 +14,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,6 +30,7 @@ import com.nibalk.tasky.core.presentation.components.TaskyTextField
 import com.nibalk.tasky.core.presentation.themes.CheckMarkIcon
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import com.nibalk.tasky.core.presentation.themes.spacing
+import com.nibalk.tasky.core.presentation.utils.ObserveAsEvents
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -35,16 +39,35 @@ fun LoginScreenRoot(
     onSuccessfulLogin: () -> Unit,
     viewModel: LoginViewModel = koinViewModel(),
 ) {
+    val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+    ObserveAsEvents(viewModel.uiEvent) { event ->
+        when(event) {
+            is LoginEvent.LoginError -> {
+                keyboardController?.hide()
+                Toast.makeText(
+                    context,
+                    event.error.asString(context),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            LoginEvent.LoginSuccess -> {
+                keyboardController?.hide()
+                Toast.makeText(
+                    context,
+                    R.string.auth_login_successful,
+                    Toast.LENGTH_LONG
+                ).show()
+
+                onSuccessfulLogin()
+            }
+        }
+    }
     LoginScreen(
         state = viewModel.state,
         onAction = { action ->
             when(action) {
-                is LoginAction.OnSignUpClick -> {
-                    onSignUpClick()
-                }
-                is LoginAction.OnLoginClick -> {
-                    onSuccessfulLogin()
-                }
+                is LoginAction.OnSignUpClick -> onSignUpClick()
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -100,7 +123,7 @@ private fun LoginScreen(
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceLarge))
         TaskyActionButton(
             text = stringResource(id = R.string.auth_get_started).uppercase(),
-            isLoading = state.isLogin,
+            isLoading = state.isLoggingIn,
             enabled = state.canLogin,
             modifier = Modifier.fillMaxWidth(),
             onClick = {

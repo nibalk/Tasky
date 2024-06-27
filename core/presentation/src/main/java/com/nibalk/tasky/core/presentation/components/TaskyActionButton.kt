@@ -34,9 +34,13 @@ fun TaskyActionButton(
     Button(
         onClick = onClick,
         enabled = enabled,
-        colors = ButtonDefaults.buttonColors(
+        colors =             ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.secondary,
-            disabledContainerColor = MaterialTheme.colorScheme.tertiary
+            disabledContainerColor = if (isLoading) {
+                MaterialTheme.colorScheme.secondary
+            } else {
+                MaterialTheme.colorScheme.tertiary
+            }
         ),
         shape = RoundedCornerShape(100f),
         modifier = modifier

@@ -20,11 +20,10 @@ class TokenInterceptor(
         }
 
         val requestBuilder = chain.request().newBuilder()
-        var validAccessToken: String
 
         if (authInfo != null) {
             Timber.d("TokenInterceptor", "accessToken = ${authInfo.accessToken}")
-            validAccessToken = authInfo.accessToken
+            var validAccessToken = authInfo.accessToken
 
             if (authInfo.accessTokenExpirationTimestamp < System.currentTimeMillis()) {
                 val newAccessToken = runBlocking {

@@ -44,4 +44,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     // Timber for Logging
     implementation(libs.timber)
+    // Splash screen
+    implementation(libs.androidx.core.splashscreen)
 }

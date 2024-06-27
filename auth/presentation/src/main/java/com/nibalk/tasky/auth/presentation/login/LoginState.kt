@@ -9,10 +9,10 @@ data class LoginState(
     val emailError: AuthDataValidateError.EmailError? = null,
     val passwordError: AuthDataValidateError.PasswordError? = null,
     val isPasswordVisible: Boolean = false,
-    val isLogin: Boolean = false,
+    val isLoggingIn: Boolean = false,
 ) {
     val canLogin: Boolean
         get() = emailError == null &&
             passwordError == null &&
-            !isLogin
+            !isLoggingIn
 }
