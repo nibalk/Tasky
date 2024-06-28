@@ -1,9 +1,12 @@
 package com.nibalk.tasky.core.presentation.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
@@ -29,7 +32,7 @@ import com.nibalk.tasky.core.presentation.themes.spacing
 @Composable
 fun TaskyBackground(
     title: String? = null,
-    header: (@Composable BoxScope.() -> Unit)? = null,
+    header: (@Composable RowScope.() -> Unit)? = null,
     footer: (@Composable BoxScope.() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -42,8 +45,8 @@ fun TaskyBackground(
                 .fillMaxSize()
                 .systemBarsPadding()
         ) {
-            val footerWeight = if (footer == null) 0f else 0.5f
-            val headerWeight = if (header == null) 1.5f else 0.5f
+            val footerWeight = if (footer == null) 0.1f else 0.5f
+            val headerWeight = if (header == null) 1.5f else 1.0f
 
             val headerModifier = Modifier
                 .fillMaxSize()
@@ -58,9 +61,10 @@ fun TaskyBackground(
 
             // Header
             if (!title.isNullOrEmpty()) {
-                Box(
+                Row(
                     modifier = headerModifier,
-                    contentAlignment = Alignment.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
                         text = title,
@@ -68,7 +72,7 @@ fun TaskyBackground(
                     )
                 }
             } else if (header != null) {
-                Box(modifier = headerModifier) {
+                Row(modifier = headerModifier) {
                     header()
                 }
             }
