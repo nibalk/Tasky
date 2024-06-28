@@ -20,7 +20,7 @@ import java.time.LocalDate
 @Composable
 fun AgendaHeader(
     modifier: Modifier = Modifier,
-    currentDate: LocalDate,
+    selectedDate: LocalDate,
     userInitials: String,
     onMonthPickerClick: () -> Unit,
     onProfileIconClick: () -> Unit,
@@ -29,7 +29,7 @@ fun AgendaHeader(
         modifier = modifier
     ) {
         AgendaMonthPicker(
-            currentDate = currentDate,
+            selectedDate = selectedDate,
             onMonthClick = onMonthPickerClick
         )
         AgendaHeaderProfileIcon(
@@ -43,7 +43,7 @@ fun AgendaHeader(
 @Composable
 private fun AgendaHeaderPreview() {
     AgendaHeader(
-        currentDate = LocalDate.now(),
+        selectedDate = LocalDate.now(),
         userInitials = "AB",
         onMonthPickerClick = {},
         onProfileIconClick = {}

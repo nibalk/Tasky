@@ -23,7 +23,7 @@ import java.time.LocalDate
 @Composable
 fun AgendaMonthPicker(
     modifier: Modifier = Modifier,
-    currentDate: LocalDate,
+    selectedDate: LocalDate,
     onMonthClick: () -> Unit,
 ) {
     Row(
@@ -32,7 +32,7 @@ fun AgendaMonthPicker(
             .padding(MaterialTheme.spacing.spaceExtraSmall)
     ) {
         Text(
-            text = currentDate.month.name,
+            text = selectedDate.month.name,
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
             color = MaterialTheme.colorScheme.onSecondary
@@ -50,7 +50,7 @@ fun AgendaMonthPicker(
 @Composable
 fun AgendaMonthPickerPreview() {
     AgendaMonthPicker(
-        currentDate = LocalDate.now(),
+        selectedDate = LocalDate.now(),
         onMonthClick = {}
     )
 }

@@ -30,12 +30,12 @@ import java.time.LocalDate
 @Composable
 fun AgendaDayPicker(
     modifier: Modifier = Modifier,
-    currentDate: LocalDate,
+    selectedDate: LocalDate,
     selectedDay: Int = 0,
     onDayClick: (Int) -> Unit,
 ) {
     val itemsList = (0..< 6).map {
-        currentDate.plusDays(it.toLong())
+        selectedDate.plusDays(it.toLong())
     }
 
     LazyRow(
@@ -45,7 +45,7 @@ fun AgendaDayPicker(
     ) {
         itemsIndexed(itemsList) { index, date ->
             AgendaDayPickerItem(
-                currentDate = date,
+                selectedDate = date,
                 isSelected = selectedDay == index,
                 onDayClick = { onDayClick(index) }
             )
@@ -58,7 +58,7 @@ fun AgendaDayPicker(
 private fun AgendaPickerPreview() {
     TaskyTheme {
         AgendaDayPicker(
-            currentDate = LocalDate.now(),
+            selectedDate = LocalDate.now(),
             selectedDay = 3,
             onDayClick = {}
         )
@@ -68,7 +68,7 @@ private fun AgendaPickerPreview() {
 @Composable
 private fun AgendaDayPickerItem(
     modifier: Modifier = Modifier,
-    currentDate: LocalDate,
+    selectedDate: LocalDate,
     isSelected: Boolean = false,
     onDayClick: () -> Unit,
 ) {
@@ -81,13 +81,13 @@ private fun AgendaDayPickerItem(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = currentDate.dayOfWeek.name[0].toString(),
+            text = selectedDate.dayOfWeek.name[0].toString(),
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
             color = if (isSelected) TaskyDarkGray else TaskyGray
         )
         Text(
-            text = currentDate.dayOfMonth.toString(),
+            text = selectedDate.dayOfMonth.toString(),
             style = MaterialTheme.typography.bodySmall,
             fontSize = 17.sp,
             fontWeight = FontWeight.Bold,
@@ -101,7 +101,7 @@ private fun AgendaDayPickerItem(
 private fun AgendaDayPickerItemPreview() {
     TaskyTheme {
         AgendaDayPickerItem(
-            currentDate = LocalDate.now(),
+            selectedDate = LocalDate.now(),
             isSelected = true,
             onDayClick = {}
         )
