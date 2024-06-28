@@ -1,13 +1,18 @@
 package com.nibalk.tasky.agenda.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,9 +21,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.nibalk.tasky.agenda.presentation.utils.getSurroundingDays
 import com.nibalk.tasky.core.presentation.themes.TaskyDarkGray
 import com.nibalk.tasky.core.presentation.themes.TaskyGray
 import com.nibalk.tasky.core.presentation.themes.TaskyOrange
@@ -31,23 +39,28 @@ import java.time.LocalDate
 fun AgendaDayPicker(
     modifier: Modifier = Modifier,
     selectedDate: LocalDate,
-    selectedDay: Int = 0,
     onDayClick: (Int) -> Unit,
 ) {
-    val itemsList = (0..< 6).map {
-        selectedDate.plusDays(it.toLong())
-    }
+    val starIndex = 12
+    val lazyRowState = rememberLazyListState(
+        initialFirstVisibleItemIndex = starIndex
+    )
+    val itemsList = selectedDate.getSurroundingDays(before = starIndex)
 
     LazyRow(
         modifier = modifier
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceAround
+        contentPadding = PaddingValues(horizontal = 0.dp),
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceMedium),
+        state = lazyRowState
     ) {
         itemsIndexed(itemsList) { index, date ->
             AgendaDayPickerItem(
                 selectedDate = date,
-                isSelected = selectedDay == index,
-                onDayClick = { onDayClick(index) }
+                isSelected = date == selectedDate,
+                onDayClick = {
+                    onDayClick(index)
+                }
             )
         }
     }
@@ -59,7 +72,6 @@ private fun AgendaPickerPreview() {
     TaskyTheme {
         AgendaDayPicker(
             selectedDate = LocalDate.now(),
-            selectedDay = 3,
             onDayClick = {}
         )
     }
@@ -72,14 +84,30 @@ private fun AgendaDayPickerItem(
     isSelected: Boolean = false,
     onDayClick: () -> Unit,
 ) {
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val screenPaddings = 128.dp // 16+16+8+8+(16*5)
+
     Column(
         modifier = modifier
+            .width((screenWidth - screenPaddings) / 6)
+            .fillMaxHeight()
             .clip(RoundedCornerShape(100))
             .background(if (isSelected) TaskyOrange else Color.Transparent)
             .clickable { onDayClick() }
-            .padding(MaterialTheme.spacing.spaceSmall),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+            .padding(
+                horizontal = MaterialTheme.spacing.spaceSmall,
+                vertical = 12.dp
+            )
+            .border(
+                width = 1.dp,
+                color = if (selectedDate == LocalDate.now() && !isSelected) {
+                    TaskyOrange
+                } else Color.Transparent,
+                shape = RoundedCornerShape(100)
+            ),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween,
+    ){
         Text(
             text = selectedDate.dayOfWeek.name[0].toString(),
             fontSize = 11.sp,
