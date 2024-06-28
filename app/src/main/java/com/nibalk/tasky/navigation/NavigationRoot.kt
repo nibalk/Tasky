@@ -1,18 +1,14 @@
 package com.nibalk.tasky.navigation
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.nibalk.tasky.agenda.presentation.home.HomeScreen
 import com.nibalk.tasky.auth.presentation.login.LoginScreenRoot
 import com.nibalk.tasky.auth.presentation.register.RegisterScreenRoot
-import com.nibalk.tasky.core.presentation.themes.spacing
 
 @Composable
 fun NavigationRoot(
@@ -73,13 +69,10 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
 
 private fun NavGraphBuilder.agendaGraph(navController: NavHostController) {
     navigation<AgendaNavigationGraph>(
-        startDestination = AgendaScreen,
+        startDestination = AgendaHomeScreen,
     ) {
-        composable<AgendaScreen> {
-            Text(
-                modifier = Modifier.padding(MaterialTheme.spacing.spaceLarge),
-                text = "Agenda Screen!"
-            )
+        composable<AgendaHomeScreen> {
+            HomeScreen()
         }
     }
 }

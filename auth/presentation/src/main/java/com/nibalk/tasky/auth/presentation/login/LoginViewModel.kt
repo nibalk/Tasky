@@ -63,9 +63,7 @@ class LoginViewModel(
                     isPasswordVisible = !state.isPasswordVisible
                 )
             }
-            LoginAction.OnSignUpClick -> {
-                //TODO: Go to register screen
-            }
+            else -> Unit
         }
     }
 

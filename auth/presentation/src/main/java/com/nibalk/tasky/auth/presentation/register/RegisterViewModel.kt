@@ -61,9 +61,7 @@ class RegisterViewModel(
                     isPasswordVisible = !state.isPasswordVisible
                 )
             }
-            RegisterAction.OnBackClick -> {
-                //TODO: Go back to login screen
-            }
+            else -> Unit
         }
     }
 

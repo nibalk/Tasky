@@ -34,7 +34,7 @@ gson = "2.9.0"
 junit = "4.13.2"
 timber = "5.0.1"
 # Gradle and Plugin Related
-agp = "8.5.0-rc01"
+agp = "8.5.0-rc02"
 androidTools = "31.4.1"
 kotlin = "1.9.22"
 kotlinJvm = "1.9.22"

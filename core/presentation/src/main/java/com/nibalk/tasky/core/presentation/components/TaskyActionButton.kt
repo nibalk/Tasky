@@ -34,7 +34,7 @@ fun TaskyActionButton(
     Button(
         onClick = onClick,
         enabled = enabled,
-        colors =             ButtonDefaults.buttonColors(
+        colors =  ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.secondary,
             disabledContainerColor = if (isLoading) {
                 MaterialTheme.colorScheme.secondary

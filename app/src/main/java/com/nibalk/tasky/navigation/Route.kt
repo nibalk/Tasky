@@ -19,4 +19,4 @@ object AuthRegisterScreen
 object AgendaNavigationGraph
 
 @Serializable
-object AgendaScreen
+object AgendaHomeScreen
