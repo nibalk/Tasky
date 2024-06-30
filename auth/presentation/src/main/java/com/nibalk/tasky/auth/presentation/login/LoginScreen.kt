@@ -24,8 +24,8 @@ import com.nibalk.tasky.auth.domain.utils.AuthDataValidateError
 import com.nibalk.tasky.auth.presentation.R
 import com.nibalk.tasky.auth.presentation.components.AuthClickableText
 import com.nibalk.tasky.core.presentation.components.TaskyActionButton
-import com.nibalk.tasky.core.presentation.components.TaskyBackground
 import com.nibalk.tasky.core.presentation.components.TaskyPasswordTextField
+import com.nibalk.tasky.core.presentation.components.TaskyScrollableBackground
 import com.nibalk.tasky.core.presentation.components.TaskyTextField
 import com.nibalk.tasky.core.presentation.themes.CheckMarkIcon
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
@@ -80,7 +80,7 @@ private fun LoginScreen(
     state: LoginState,
     onAction: (LoginAction) -> Unit
 ) {
-    TaskyBackground(
+    TaskyScrollableBackground(
         title = stringResource(id = R.string.auth_welcome),
         footer = {
             if (WindowInsets.ime.getBottom(LocalDensity.current) <= 0) {
