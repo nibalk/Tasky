@@ -25,8 +25,8 @@ import com.nibalk.tasky.auth.domain.utils.AuthDataValidator
 import com.nibalk.tasky.auth.presentation.R
 import com.nibalk.tasky.auth.presentation.components.AuthBackButton
 import com.nibalk.tasky.core.presentation.components.TaskyActionButton
-import com.nibalk.tasky.core.presentation.components.TaskyBackground
 import com.nibalk.tasky.core.presentation.components.TaskyPasswordTextField
+import com.nibalk.tasky.core.presentation.components.TaskyScrollableBackground
 import com.nibalk.tasky.core.presentation.components.TaskyTextField
 import com.nibalk.tasky.core.presentation.themes.CheckMarkIcon
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
@@ -84,7 +84,7 @@ private fun RegisterScreen(
     state: RegisterState,
     onAction: (RegisterAction) -> Unit
 ) {
-    TaskyBackground(
+    TaskyScrollableBackground(
         title = stringResource(id = R.string.auth_create_your_account),
         footer = {
             if (WindowInsets.ime.getBottom(LocalDensity.current) <= 0) {

@@ -99,4 +99,14 @@ val Typography = Typography(
         lineHeight = 15.sp,
         color = TaskyLightBlue
     ),
+    displayMedium = TextStyle(
+        fontFamily = Inter,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 20.sp
+    ),
+    displaySmall = TextStyle(
+        fontFamily = Inter,
+        fontWeight = FontWeight.Light,
+        fontSize = 14.sp
+    ),
 )
