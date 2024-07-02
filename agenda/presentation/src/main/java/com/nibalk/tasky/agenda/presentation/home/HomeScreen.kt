@@ -2,6 +2,8 @@ package com.nibalk.tasky.agenda.presentation.home
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -11,6 +13,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.compose.ui.unit.dp
 import com.nibalk.tasky.agenda.presentation.components.AgendaDayPicker
 import com.nibalk.tasky.agenda.presentation.components.AgendaHeader
 import com.nibalk.tasky.agenda.presentation.components.AgendaRefreshableList
@@ -24,9 +28,12 @@ import java.time.LocalDate
 fun HomeScreen(
 
 ) {
+    // Simulated API call
     val items = remember {
-        (1..100).map { "Item $it" }
+        (46..60).map { "Item $it" }.toMutableList()
     }
+    var nextIndex = 45
+
     var isRefreshing by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
@@ -40,41 +47,40 @@ fun HomeScreen(
             )
         }
     ) {
-        val pickerHeight = 1.0f
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
         ) {
             AgendaDayPicker(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .then(Modifier.weight(pickerHeight)),
+                    .fillMaxWidth()
+                    .requiredHeight(80.dp),
                 selectedDate = LocalDate.now(),
                 onDayClick = {}
             )
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .then(Modifier.weight(10 - pickerHeight)),
-            ) {
-                AgendaRefreshableList(
-                    items = items,
-                    content = { itemTitle ->
-                        Text(
-                            text = itemTitle,
-                        )
-                    },
-                    isRefreshing = isRefreshing,
-                    onRefresh = {
-                        coroutineScope.launch {
-                            isRefreshing = true
-                            delay(3000L) // Simulated API call
-                            isRefreshing = false
+            AgendaRefreshableList(
+                items = items,
+                content = { itemTitle ->
+                    Text(text = itemTitle)
+                },
+                isRefreshing = isRefreshing,
+                onRefresh = {
+                    coroutineScope.launch {
+                        isRefreshing = true
+                        // Simulated API call
+                        delay(1000L)
+                        if (nextIndex > 0) {
+                            items.addAll(
+                                0,
+                                (nextIndex downTo (nextIndex - 14))
+                                    .map { "Item $it" }.reversed()
+                            )
                         }
+                        nextIndex -= 15
+                        isRefreshing = false
                     }
-                )
-            }
+                }
+            )
         }
     }
 }
@@ -82,6 +88,14 @@ fun HomeScreen(
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
 private fun HomeScreenPreview() {
+    TaskyTheme {
+        HomeScreen()
+    }
+}
+
+@PreviewScreenSizes
+@Composable
+private fun HomeScreenPreviewScreenSizes() {
     TaskyTheme {
         HomeScreen()
     }

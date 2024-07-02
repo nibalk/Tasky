@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,17 +40,17 @@ fun AgendaDayPicker(
     selectedDate: LocalDate,
     onDayClick: (Int) -> Unit,
 ) {
-    val starIndex = 12
+    val startIndex = 12
     val lazyRowState = rememberLazyListState(
-        initialFirstVisibleItemIndex = starIndex
+        initialFirstVisibleItemIndex = startIndex
     )
-    val itemsList = selectedDate.getSurroundingDays(before = starIndex)
+    val itemsList = selectedDate.getSurroundingDays(before = startIndex)
 
     LazyRow(
         modifier = modifier
             .fillMaxWidth(),
         contentPadding = PaddingValues(horizontal = 0.dp),
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceMedium),
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceLarge),
         state = lazyRowState
     ) {
         itemsIndexed(itemsList) { index, date ->
@@ -84,12 +83,9 @@ private fun AgendaDayPickerItem(
     isSelected: Boolean = false,
     onDayClick: () -> Unit,
 ) {
-    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-    val screenPaddings = 128.dp // 16+16+8+8+(16*5)
-
     Column(
         modifier = modifier
-            .width((screenWidth - screenPaddings) / 6)
+            .widthIn(MaterialTheme.spacing.spaceSmall)
             .fillMaxHeight()
             .clip(RoundedCornerShape(100))
             .background(if (isSelected) TaskyOrange else Color.Transparent)

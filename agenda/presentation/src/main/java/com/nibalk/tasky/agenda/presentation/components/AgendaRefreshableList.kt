@@ -4,6 +4,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -38,7 +39,10 @@ fun <T> AgendaRefreshableList(
                 get() = anim.value
 
             override suspend fun animateToThreshold() {
-                anim.animateTo(1f, spring(dampingRatio = Spring.DampingRatioHighBouncy))
+                anim.animateTo(1f, spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessHigh)
+                )
             }
 
             override suspend fun animateToHidden() {
@@ -50,18 +54,20 @@ fun <T> AgendaRefreshableList(
             }
         }
     }
-
-    PullToRefreshBox(
-        modifier = modifier,
-        isRefreshing = isRefreshing,
-        onRefresh = onRefresh,
-        state = pullToRefreshState
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
     ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            state = lazyListState,
+        PullToRefreshBox(
+            modifier = modifier,
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh,
+            state = pullToRefreshState
         ) {
-            if (!isRefreshing) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                state = lazyListState,
+            ) {
                 items(items.size) { index  ->
                     ListItem(
                         headlineContent = { content(items[index]) }
