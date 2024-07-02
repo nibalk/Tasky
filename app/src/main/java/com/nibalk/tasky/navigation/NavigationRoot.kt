@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.nibalk.tasky.agenda.presentation.home.HomeScreen
+import com.nibalk.tasky.agenda.presentation.home.HomeScreenRoot
 import com.nibalk.tasky.auth.presentation.login.LoginScreenRoot
 import com.nibalk.tasky.auth.presentation.register.RegisterScreenRoot
 
@@ -72,7 +73,9 @@ private fun NavGraphBuilder.agendaGraph(navController: NavHostController) {
         startDestination = AgendaHomeScreen,
     ) {
         composable<AgendaHomeScreen> {
-            HomeScreen()
+            HomeScreenRoot(
+                onDetailClicked = {}
+            )
         }
     }
 }

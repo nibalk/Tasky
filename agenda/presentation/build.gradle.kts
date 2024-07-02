@@ -11,6 +11,6 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.agenda.domain)
 
-    // Timber for logging
-    implementation(libs.timber)
+    // Koin for DI
+    implementation(libs.bundles.koin.compose)
 }

@@ -38,13 +38,13 @@ import java.time.LocalDate
 fun AgendaDayPicker(
     modifier: Modifier = Modifier,
     selectedDate: LocalDate,
-    onDayClick: (Int) -> Unit,
+    indexPair: Pair<Int, Int>,
+    datesList: List<LocalDate>,
+    onDayClick: (LocalDate) -> Unit,
 ) {
-    val startIndex = 12
     val lazyRowState = rememberLazyListState(
-        initialFirstVisibleItemIndex = startIndex
+        initialFirstVisibleItemIndex = indexPair.first
     )
-    val itemsList = selectedDate.getSurroundingDays(before = startIndex)
 
     LazyRow(
         modifier = modifier
@@ -53,12 +53,12 @@ fun AgendaDayPicker(
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceLarge),
         state = lazyRowState
     ) {
-        itemsIndexed(itemsList) { index, date ->
+        itemsIndexed(datesList) { index, date ->
             AgendaDayPickerItem(
                 selectedDate = date,
                 isSelected = date == selectedDate,
                 onDayClick = {
-                    onDayClick(index)
+                    onDayClick(date)
                 }
             )
         }
@@ -71,6 +71,8 @@ private fun AgendaPickerPreview() {
     TaskyTheme {
         AgendaDayPicker(
             selectedDate = LocalDate.now(),
+            indexPair = Pair(12, 17),
+            datesList = LocalDate.now().getSurroundingDays(before = 12),
             onDayClick = {}
         )
     }
@@ -89,7 +91,9 @@ private fun AgendaDayPickerItem(
             .fillMaxHeight()
             .clip(RoundedCornerShape(100))
             .background(if (isSelected) TaskyOrange else Color.Transparent)
-            .clickable { onDayClick() }
+            .clickable {
+                onDayClick()
+            }
             .padding(
                 horizontal = MaterialTheme.spacing.spaceSmall,
                 vertical = 12.dp
