@@ -1,6 +1,8 @@
 package com.nibalk.tasky.agenda.presentation.utils
 
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 
 fun LocalDate.getSurroundingDays(
     before: Int = 12,
@@ -12,4 +14,11 @@ fun LocalDate.getSurroundingDays(
             startDate.plusDays(it.toLong())
         }
         .toList()
+}
+
+fun Long.toLocalDate(): LocalDate {
+    return Instant
+        .ofEpochMilli(this)
+        .atZone(ZoneId.systemDefault())
+        .toLocalDate()
 }

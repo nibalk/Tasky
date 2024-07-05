@@ -18,15 +18,34 @@ import androidx.compose.ui.unit.dp
 import com.nibalk.tasky.agenda.presentation.components.AgendaDayPicker
 import com.nibalk.tasky.agenda.presentation.components.AgendaHeader
 import com.nibalk.tasky.agenda.presentation.components.AgendaRefreshableList
+import com.nibalk.tasky.agenda.presentation.utils.getSurroundingDays
 import com.nibalk.tasky.core.presentation.components.TaskyBackground
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.time.LocalDate
+import org.koin.androidx.compose.koinViewModel
+
+@Composable
+fun HomeScreenRoot(
+    onDetailClicked: () -> Unit,
+    viewModel: HomeViewModel = koinViewModel(),
+) {
+    HomeScreen(
+        state = viewModel.state,
+        onAction = { action ->
+            when(action) {
+                is HomeAction.OnAgendaListItemClicked -> onDetailClicked()
+                else -> Unit
+            }
+            viewModel.onAction(action)
+        }
+    )
+}
 
 @Composable
 fun HomeScreen(
-
+    state: HomeState,
+    onAction: (HomeAction) -> Unit
 ) {
     // Simulated API call
     val items = remember {
@@ -34,16 +53,22 @@ fun HomeScreen(
     }
     var nextIndex = 45
 
-    var isRefreshing by remember { mutableStateOf(false) }
+
     val coroutineScope = rememberCoroutineScope()
+
+    var isListRefreshing by remember { mutableStateOf(false) }
 
     TaskyBackground(
         header = {
             AgendaHeader(
-                selectedDate = LocalDate.now(),
-                userInitials = "NB",
-                onMonthPickerClick = { },
-                onProfileIconClick = { }
+                selectedDate = state.selectedDate,
+                userInitials = state.profileInitials,
+                onDayClicked = { clickedDate ->
+                    onAction(HomeAction.OnDayClicked(clickedDate))
+                },
+                onProfileIconClicked = {
+                    onAction(HomeAction.OnProfileClicked)
+                }
             )
         }
     ) {
@@ -55,18 +80,21 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .requiredHeight(80.dp),
-                selectedDate = LocalDate.now(),
-                onDayClick = {}
+                selectedDate = state.selectedDate,
+                datesList = state.selectedDate.getSurroundingDays(),
+                onDayClicked = { clickedDate ->
+                    onAction(HomeAction.OnDayClicked(clickedDate))
+                }
             )
             AgendaRefreshableList(
                 items = items,
                 content = { itemTitle ->
                     Text(text = itemTitle)
                 },
-                isRefreshing = isRefreshing,
+                isRefreshing = isListRefreshing,
                 onRefresh = {
                     coroutineScope.launch {
-                        isRefreshing = true
+                        isListRefreshing = true
                         // Simulated API call
                         delay(1000L)
                         if (nextIndex > 0) {
@@ -77,7 +105,7 @@ fun HomeScreen(
                             )
                         }
                         nextIndex -= 15
-                        isRefreshing = false
+                        isListRefreshing = false
                     }
                 }
             )
@@ -89,7 +117,12 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenPreview() {
     TaskyTheme {
-        HomeScreen()
+        HomeScreen(
+            state = HomeState(
+                profileInitials = "NI"
+            ),
+            onAction = {}
+        )
     }
 }
 
@@ -97,6 +130,11 @@ private fun HomeScreenPreview() {
 @Composable
 private fun HomeScreenPreviewScreenSizes() {
     TaskyTheme {
-        HomeScreen()
+        HomeScreen(
+            state = HomeState(
+                profileInitials = "NI"
+            ),
+            onAction = {}
+        )
     }
 }

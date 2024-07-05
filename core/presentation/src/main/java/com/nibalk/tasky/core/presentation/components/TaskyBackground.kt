@@ -65,7 +65,8 @@ fun TaskyBackground(
                 ) {
                     Text(
                         text = title,
-                        style = MaterialTheme.typography.headlineLarge
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = MaterialTheme.colorScheme.onSecondary
                     )
                 }
             } else if (header != null) {

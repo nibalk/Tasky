@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nibalk.tasky.agenda.presentation.utils.getSurroundingDays
 import com.nibalk.tasky.core.presentation.themes.TaskyDarkGray
+import com.nibalk.tasky.core.presentation.themes.TaskyDarkOrange
 import com.nibalk.tasky.core.presentation.themes.TaskyGray
 import com.nibalk.tasky.core.presentation.themes.TaskyOrange
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
@@ -38,13 +40,19 @@ import java.time.LocalDate
 fun AgendaDayPicker(
     modifier: Modifier = Modifier,
     selectedDate: LocalDate,
-    onDayClick: (Int) -> Unit,
+    datesList: List<LocalDate>,
+    onDayClicked: (LocalDate) -> Unit,
 ) {
-    val startIndex = 12
+    val selectedIndex = datesList.indexOf(selectedDate)
     val lazyRowState = rememberLazyListState(
-        initialFirstVisibleItemIndex = startIndex
+        initialFirstVisibleItemIndex = selectedIndex
     )
-    val itemsList = selectedDate.getSurroundingDays(before = startIndex)
+
+    LaunchedEffect(selectedDate) {
+        if (selectedIndex >= 0) {
+            lazyRowState.animateScrollToItem(selectedIndex)
+        }
+    }
 
     LazyRow(
         modifier = modifier
@@ -53,12 +61,12 @@ fun AgendaDayPicker(
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceLarge),
         state = lazyRowState
     ) {
-        itemsIndexed(itemsList) { index, date ->
+        itemsIndexed(datesList) { _, date ->
             AgendaDayPickerItem(
                 selectedDate = date,
                 isSelected = date == selectedDate,
                 onDayClick = {
-                    onDayClick(index)
+                    onDayClicked(date)
                 }
             )
         }
@@ -71,7 +79,8 @@ private fun AgendaPickerPreview() {
     TaskyTheme {
         AgendaDayPicker(
             selectedDate = LocalDate.now(),
-            onDayClick = {}
+            datesList = LocalDate.now().getSurroundingDays(),
+            onDayClicked = {}
         )
     }
 }
@@ -89,24 +98,26 @@ private fun AgendaDayPickerItem(
             .fillMaxHeight()
             .clip(RoundedCornerShape(100))
             .background(if (isSelected) TaskyOrange else Color.Transparent)
-            .clickable { onDayClick() }
-            .padding(
-                horizontal = MaterialTheme.spacing.spaceSmall,
-                vertical = 12.dp
-            )
+            .clickable {
+                onDayClick()
+            }
             .border(
                 width = 1.dp,
                 color = if (selectedDate == LocalDate.now() && !isSelected) {
-                    TaskyOrange
+                    TaskyDarkOrange
                 } else Color.Transparent,
                 shape = RoundedCornerShape(100)
+            )
+            .padding(
+                horizontal = MaterialTheme.spacing.spaceSmall,
+                vertical = 12.dp
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween,
     ){
         Text(
             text = selectedDate.dayOfWeek.name[0].toString(),
-            fontSize = 11.sp,
+            fontSize = 13.sp,
             fontWeight = FontWeight.Bold,
             color = if (isSelected) TaskyDarkGray else TaskyGray
         )
