@@ -9,6 +9,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -26,19 +30,37 @@ fun AgendaHeader(
     modifier: Modifier = Modifier,
     selectedDate: LocalDate,
     userInitials: String,
-    onMonthPickerClick: () -> Unit,
-    onProfileIconClick: () -> Unit,
+    onDayClicked: (LocalDate) -> Unit,
+    onProfileIconClicked: () -> Unit,
 ) {
+    var isDatePickerShown by remember {
+        mutableStateOf(false)
+    }
+
+    if (isDatePickerShown) {
+        AgendaDatePicker(
+            selectedDate = selectedDate,
+            onCancelPicker = {
+                isDatePickerShown = false
+            },
+            onConfirmPicker = { selectedPickerDate ->
+                onDayClicked(selectedPickerDate)
+            }
+        )
+    }
+
     TaskyHeader(
         modifier = modifier
     ) {
         AgendaMonthPicker(
             selectedDate = selectedDate,
-            onMonthClick = onMonthPickerClick
+            onMonthClick = {
+                isDatePickerShown = true
+            }
         )
         AgendaHeaderProfileIcon(
             userInitials = userInitials,
-            onProfileIconClick = onProfileIconClick
+            onProfileIconClick = onProfileIconClicked
         )
     }
 }
@@ -50,8 +72,8 @@ private fun AgendaHeaderPreview() {
         AgendaHeader(
             selectedDate = LocalDate.now(),
             userInitials = "NI",
-            onMonthPickerClick = {},
-            onProfileIconClick = {}
+            onDayClicked = {},
+            onProfileIconClicked = {}
         )
     }
 }

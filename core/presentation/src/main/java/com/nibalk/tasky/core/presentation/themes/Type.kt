@@ -52,7 +52,6 @@ val Typography = Typography(
         fontFamily = Inter,
         fontWeight = FontWeight.Bold,
         fontSize = 28.sp,
-        color = TaskyWhite
     ),
     headlineMedium = TextStyle(
         fontFamily = Inter,
@@ -63,7 +62,6 @@ val Typography = Typography(
         fontFamily = Inter,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
-        color = TaskyWhite
     ),
     bodyLarge = TextStyle(
         fontFamily = Inter,
@@ -90,14 +88,12 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
         lineHeight = 30.sp,
-        color = TaskyLightBlue
     ),
     labelMedium = TextStyle(
         fontFamily = Inter,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 15.sp,
-        color = TaskyLightBlue
     ),
     displayMedium = TextStyle(
         fontFamily = Inter,

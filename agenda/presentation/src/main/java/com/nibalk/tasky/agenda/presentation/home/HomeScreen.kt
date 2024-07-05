@@ -41,6 +41,7 @@ fun HomeScreenRoot(
         }
     )
 }
+
 @Composable
 fun HomeScreen(
     state: HomeState,
@@ -52,30 +53,20 @@ fun HomeScreen(
     }
     var nextIndex = 45
 
-    val indexPair = Pair(12, 17)
 
     val coroutineScope = rememberCoroutineScope()
 
     var isListRefreshing by remember { mutableStateOf(false) }
-    val dayPickerDatesList by remember {
-        mutableStateOf(
-            state.selectedDate.getSurroundingDays(
-                before = indexPair.first,
-                after = indexPair.second
-            )
-        )
-    }
-
 
     TaskyBackground(
         header = {
             AgendaHeader(
                 selectedDate = state.selectedDate,
                 userInitials = state.profileInitials,
-                onMonthPickerClick = {
-                    onAction(HomeAction.OnMonthClicked(state.selectedDate.monthValue))
+                onDayClicked = { clickedDate ->
+                    onAction(HomeAction.OnDayClicked(clickedDate))
                 },
-                onProfileIconClick = {
+                onProfileIconClicked = {
                     onAction(HomeAction.OnProfileClicked)
                 }
             )
@@ -90,9 +81,8 @@ fun HomeScreen(
                     .fillMaxWidth()
                     .requiredHeight(80.dp),
                 selectedDate = state.selectedDate,
-                datesList = dayPickerDatesList,
-                indexPair = indexPair,
-                onDayClick = { clickedDate ->
+                datesList = state.selectedDate.getSurroundingDays(),
+                onDayClicked = { clickedDate ->
                     onAction(HomeAction.OnDayClicked(clickedDate))
                 }
             )

@@ -1,4 +1,8 @@
 <resources>
     <!-- Content Descriptions -->
     <string name="content_description_change_month">Change Month</string>
+
+    <!-- Agenda Screen -->
+    <string name="agenda_dialog_confirm">Confirm</string>
+    <string name="agenda_dialog_cancel">Cancel</string>
 </resources>
