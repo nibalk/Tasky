@@ -6,7 +6,6 @@ class FormatProfileNameUseCase() {
         return when (names.size) {
             0 -> ""
             1 -> names[0].take(2).uppercase()
-            2 -> "${names[0][0]}${names[1][0]}".uppercase()
             else -> "${names[0][0]}${names[names.size - 1][0]}".uppercase()
         }
     }
