@@ -17,7 +17,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
@@ -29,7 +28,6 @@ import com.nibalk.tasky.agenda.presentation.components.AgendaRefreshableList
 import com.nibalk.tasky.agenda.presentation.utils.getSurroundingDays
 import com.nibalk.tasky.core.presentation.components.TaskyBackground
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
-import com.nibalk.tasky.core.presentation.utils.UiText
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -89,8 +87,9 @@ fun HomeScreen(
                     onDayClicked = { clickedDate ->
                         onAction(HomeAction.OnDayClicked(clickedDate))
                     },
-                    onProfileIconClicked = {
-                        onAction(HomeAction.OnProfileClicked)
+                    onLogoutClicked = {
+                        Toast.makeText(context,"Logout clicked!", Toast.LENGTH_LONG).show()
+                        onAction(HomeAction.OnLogoutClicked)
                     }
                 )
             }

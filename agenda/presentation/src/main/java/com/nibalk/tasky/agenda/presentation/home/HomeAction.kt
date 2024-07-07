@@ -6,7 +6,6 @@ import java.time.LocalDate
 
 sealed interface HomeAction {
     // Header
-    data object OnProfileClicked: HomeAction
     data object OnLogoutClicked: HomeAction
     data class OnDayClicked(val date: LocalDate) : HomeAction
     // List

@@ -22,14 +22,14 @@ import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 fun AgendaAddButton(
     onMenuItemClicked: (AgendaType) -> Unit
 ) {
-    var isMenuShown by remember {
+    var isAddMenuShown by remember {
         mutableStateOf(false)
     }
 
     FloatingActionButton(
         containerColor = MaterialTheme.colorScheme.secondary,
         contentColor = MaterialTheme.colorScheme.onSecondary,
-        onClick = { isMenuShown = true }
+        onClick = { isAddMenuShown = true }
     ) {
         Box {
             Icon(
@@ -37,28 +37,28 @@ fun AgendaAddButton(
                 contentDescription = "Add"
             )
             TaskyDropDownMenu(
-                isMenuShown = isMenuShown,
-                onDismissRequest = { isMenuShown = false },
+                isMenuShown = isAddMenuShown,
+                onDismissRequest = { isAddMenuShown = false },
                 menuItems = listOf(
                     TaskyDropDownMenuItem(
                         displayText = stringResource(id = AgendaType.EVENT.menuNameResId),
                         onClick = {
                             onMenuItemClicked(AgendaType.EVENT)
-                            isMenuShown = false
+                            isAddMenuShown = false
                         }
                     ),
                     TaskyDropDownMenuItem(
                         displayText = stringResource(id = AgendaType.TASK.menuNameResId),
                         onClick = {
                             onMenuItemClicked(AgendaType.TASK)
-                            isMenuShown = false
+                            isAddMenuShown = false
                         }
                     ),
                     TaskyDropDownMenuItem(
                         displayText = stringResource(id = AgendaType.REMINDER.menuNameResId),
                         onClick = {
                             onMenuItemClicked(AgendaType.REMINDER)
-                            isMenuShown = false
+                            isAddMenuShown = false
                         }
                     ),
                 )

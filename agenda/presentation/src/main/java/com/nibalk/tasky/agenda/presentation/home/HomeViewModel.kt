@@ -36,7 +36,7 @@ class HomeViewModel(
     fun onAction(action: HomeAction) {
         when(action) {
             is HomeAction.OnLogoutClicked -> {
-                login()
+                logout()
             }
             is HomeAction.OnAgendaListRefresh -> {
                 getAgendaItems()
@@ -50,7 +50,7 @@ class HomeViewModel(
         }
     }
 
-    private fun login() {
+    private fun logout() {
 
     }
 
