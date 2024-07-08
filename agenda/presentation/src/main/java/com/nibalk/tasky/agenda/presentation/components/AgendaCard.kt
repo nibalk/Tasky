@@ -30,13 +30,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nibalk.tasky.agenda.domain.model.AgendaItem
+import com.nibalk.tasky.agenda.presentation.model.AgendaType
 import com.nibalk.tasky.core.presentation.components.TaskyCircularCheckbox
-import com.nibalk.tasky.core.presentation.themes.TaskyBrownLight
-import com.nibalk.tasky.core.presentation.themes.TaskyDarkGray
-import com.nibalk.tasky.core.presentation.themes.TaskyGreen
-import com.nibalk.tasky.core.presentation.themes.TaskyLightGreen
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
-import com.nibalk.tasky.core.presentation.themes.TaskyWhite
 import com.nibalk.tasky.core.presentation.themes.spacing
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -65,11 +61,13 @@ fun AgendaCard(
         }
     }
 
-    val contentColor = if (item is AgendaItem.Task) TaskyWhite else TaskyDarkGray
-    val backgroundColor: Color = when (item) {
-        is AgendaItem.Task -> TaskyGreen
-        is AgendaItem.Event -> TaskyLightGreen
-        is AgendaItem.Reminder -> TaskyBrownLight
+    val cardColor: Pair<Color, Color> = when (item) {
+        is AgendaItem.Task ->
+            Pair(AgendaType.TASK.backgroundColor, AgendaType.TASK.contentColor)
+        is AgendaItem.Event ->
+            Pair(AgendaType.EVENT.backgroundColor, AgendaType.EVENT.contentColor)
+        is AgendaItem.Reminder ->
+            Pair(AgendaType.REMINDER.backgroundColor, AgendaType.REMINDER.contentColor)
     }
 
     Card(
@@ -82,13 +80,13 @@ fun AgendaCard(
                 onItemClick()
             },
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = backgroundColor)
+        colors = CardDefaults.cardColors(containerColor = cardColor.first)
     ) {
         // Title Row
         AgendaCardHeader(
             title = item.title,
             isDone = if (item is AgendaItem.Task) item.isDone else false,
-            contentColor = contentColor,
+            contentColor = cardColor.second,
             onOptionsClick = onOptionsClick,
             onItemClick = onItemClick,
             onIsDone = onIsDone
@@ -97,7 +95,7 @@ fun AgendaCard(
         Text(
             text = item.description,
             style = MaterialTheme.typography.displaySmall,
-            color = contentColor,
+            color = cardColor.second,
             modifier = Modifier
                 .align(Alignment.Start)
                 .padding(
@@ -110,7 +108,7 @@ fun AgendaCard(
         Text(
             text = itemDate,
             style = MaterialTheme.typography.displaySmall,
-            color = contentColor,
+            color = cardColor.second,
             modifier = Modifier
                 .align(Alignment.End)
                 .padding(

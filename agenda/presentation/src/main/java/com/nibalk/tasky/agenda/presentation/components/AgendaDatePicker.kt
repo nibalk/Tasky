@@ -42,7 +42,6 @@ import com.nibalk.tasky.core.presentation.themes.spacing
 import java.time.LocalDate
 import java.time.ZoneOffset
 
-
 @Composable
 fun AgendaDatePicker(
     selectedDate: LocalDate,
