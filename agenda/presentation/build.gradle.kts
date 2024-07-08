@@ -13,4 +13,6 @@ dependencies {
 
     // Koin for DI
     implementation(libs.bundles.koin.compose)
+    // Timber for logging
+    implementation(libs.timber)
 }

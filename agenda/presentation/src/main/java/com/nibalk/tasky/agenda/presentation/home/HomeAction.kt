@@ -9,9 +9,19 @@ sealed interface HomeAction {
     data object OnLogoutClicked: HomeAction
     data class OnDayClicked(val date: LocalDate) : HomeAction
     // List
-    data object OnAgendaListRefresh: HomeAction
-    data class OnAgendaListItemClicked(val agendaItem: AgendaItem) : HomeAction
-    data class OnListItemOptionsClick(val agendaItem: AgendaItem) : HomeAction
+    data object OnAgendaListRefreshed: HomeAction
     data class OnAddAgendaOptionsClicked(val agendaType: AgendaType) : HomeAction
-    data object OnAddAgendaOptionTypeClicked : HomeAction
+    // List Item
+    data class OnListItemOptionOpenClick(
+        val agendaItem: AgendaItem,
+        val agendaType: AgendaType
+    ) : HomeAction
+    data class OnListItemOptionEditClick(
+        val agendaItem: AgendaItem,
+        val agendaType: AgendaType
+    ) : HomeAction
+    data class OnListItemOptionDeleteClick(
+        val agendaItem: AgendaItem,
+        val agendaType: AgendaType
+    ) : HomeAction
 }

@@ -8,40 +8,72 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
+import com.nibalk.tasky.agenda.domain.model.AgendaItem
+import com.nibalk.tasky.agenda.presentation.R
 import com.nibalk.tasky.agenda.presentation.components.AgendaAddButton
+import com.nibalk.tasky.agenda.presentation.components.AgendaCard
 import com.nibalk.tasky.agenda.presentation.components.AgendaDayPicker
 import com.nibalk.tasky.agenda.presentation.components.AgendaHeader
 import com.nibalk.tasky.agenda.presentation.components.AgendaRefreshableList
+import com.nibalk.tasky.agenda.presentation.model.AgendaItemActionType
+import com.nibalk.tasky.agenda.presentation.model.AgendaType
 import com.nibalk.tasky.agenda.presentation.utils.getSurroundingDays
 import com.nibalk.tasky.core.presentation.components.TaskyBackground
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.nibalk.tasky.core.presentation.utils.ObserveAsEvents
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreenRoot(
-    onDetailClicked: () -> Unit,
+    onDetailClicked: (Boolean) -> Unit,
     viewModel: HomeViewModel = koinViewModel(),
 ) {
+    val context = LocalContext.current
+    ObserveAsEvents(viewModel.uiEvent) { event ->
+        when(event) {
+            is HomeEvent.FetchAgendaError -> {
+                Toast.makeText(
+                    context,
+                    event.error.asString(context),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            is HomeEvent.FetchAgendaSuccess -> {
+                Toast.makeText(
+                    context,
+                    R.string.agenda_items_list_loaded,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            is HomeEvent.LogoutError -> {
+                Toast.makeText(
+                    context,
+                    event.error.asString(context),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            is HomeEvent.LogoutSuccess -> {
+                Toast.makeText(
+                    context,
+                    R.string.agenda_logout_successful,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
     HomeScreen(
         state = viewModel.state,
         onAction = { action ->
             when(action) {
-                is HomeAction.OnAgendaListItemClicked -> onDetailClicked()
+                is HomeAction.OnListItemOptionOpenClick -> onDetailClicked(false)
+                is HomeAction.OnListItemOptionEditClick -> onDetailClicked(true)
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -55,17 +87,8 @@ fun HomeScreen(
     state: HomeState,
     onAction: (HomeAction) -> Unit
 ) {
-    // Simulated API call
-    val items = remember {
-        (46..60).map { "Item $it" }.toMutableList()
-    }
-    var nextIndex = 45
-
-
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
 
-    var isListRefreshing by remember { mutableStateOf(false) }
     Scaffold(
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
@@ -109,26 +132,36 @@ fun HomeScreen(
                     }
                 )
                 AgendaRefreshableList(
-                    items = items,
-                    content = { itemTitle ->
-                        Text(text = itemTitle)
-                    },
-                    isRefreshing = isListRefreshing,
-                    onRefresh = {
-                        coroutineScope.launch {
-                            isListRefreshing = true
-                            // Simulated API call
-                            delay(1000L)
-                            if (nextIndex > 0) {
-                                items.addAll(
-                                    0,
-                                    (nextIndex downTo (nextIndex - 14))
-                                        .map { "Item $it" }.reversed()
-                                )
-                            }
-                            nextIndex -= 15
-                            isListRefreshing = false
+                    modifier = Modifier.fillMaxWidth(),
+                    items = state.agendaItems,
+                    content = { item ->
+                        val agendaType: AgendaType = when (item) {
+                            is AgendaItem.Task -> AgendaType.TASK
+                            is AgendaItem.Event -> AgendaType.EVENT
+                            is AgendaItem.Reminder -> AgendaType.REMINDER
                         }
+                        AgendaCard(
+                            item = item,
+                            agendaType = agendaType,
+                            onItemClick = {},
+                            onIsDone = {}
+                        ) { actionType ->
+                            when(actionType) {
+                                AgendaItemActionType.OPEN -> {
+                                    onAction(HomeAction.OnListItemOptionOpenClick(item, agendaType))
+                                }
+                                AgendaItemActionType.EDIT -> {
+                                    onAction(HomeAction.OnListItemOptionEditClick(item, agendaType))
+                                }
+                                AgendaItemActionType.DELETE -> {
+                                    onAction(HomeAction.OnListItemOptionDeleteClick(item, agendaType))
+                                }
+                            }
+                        }
+                    },
+                    isRefreshing = state.isLoading,
+                    onRefresh = {
+                        onAction(HomeAction.OnAgendaListRefreshed)
                     }
                 )
             }
@@ -155,7 +188,7 @@ private fun HomeScreenPreviewScreenSizes() {
     TaskyTheme {
         HomeScreen(
             state = HomeState(
-                profileInitials = "NI"
+                profileInitials = "AB"
             ),
             onAction = {}
         )

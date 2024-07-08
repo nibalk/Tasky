@@ -1,6 +1,7 @@
 package com.nibalk.tasky
 
 import android.app.Application
+import com.nibalk.tasky.agenda.data.di.agendaDataModule
 import com.nibalk.tasky.agenda.presentation.di.agendaUseCaseModule
 import com.nibalk.tasky.agenda.presentation.di.agendaViewModelModule
 import com.nibalk.tasky.auth.data.di.authDataModule
@@ -29,6 +30,7 @@ class TaskyApp: Application() {
                 authDataModule,
                 authUseCaseModule,
                 authViewModelModule,
+                agendaDataModule,
                 agendaUseCaseModule,
                 agendaViewModelModule,
                 coreDataModule

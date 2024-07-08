@@ -8,14 +8,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,13 +18,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nibalk.tasky.agenda.domain.model.AgendaItem
+import com.nibalk.tasky.agenda.presentation.model.AgendaItemActionType
 import com.nibalk.tasky.agenda.presentation.model.AgendaType
 import com.nibalk.tasky.core.presentation.components.TaskyCircularCheckbox
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
@@ -41,10 +34,11 @@ import java.time.format.DateTimeFormatter
 fun AgendaCard(
     modifier: Modifier = Modifier,
     item: AgendaItem,
+    agendaType: AgendaType,
     datePattern : String = "dd MMM, HH:mm",
-    onOptionsClick: () -> Unit,
     onItemClick: () -> Unit,
     onIsDone: (Boolean) -> Unit,
+    onOptionsClick: (AgendaItemActionType) -> Unit,
 ) {
     val dateFormatter = DateTimeFormatter.ofPattern(datePattern)
     val itemDate = if (item is AgendaItem.Event) {
@@ -61,41 +55,31 @@ fun AgendaCard(
         }
     }
 
-    val cardColor: Pair<Color, Color> = when (item) {
-        is AgendaItem.Task ->
-            Pair(AgendaType.TASK.backgroundColor, AgendaType.TASK.contentColor)
-        is AgendaItem.Event ->
-            Pair(AgendaType.EVENT.backgroundColor, AgendaType.EVENT.contentColor)
-        is AgendaItem.Reminder ->
-            Pair(AgendaType.REMINDER.backgroundColor, AgendaType.REMINDER.contentColor)
-    }
-
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .widthIn(max = LocalConfiguration.current.screenWidthDp.dp)
             .heightIn(min = MaterialTheme.spacing.spaceDoubleExtraLarge)
             .clip(RoundedCornerShape(MaterialTheme.spacing.spaceMedium))
             .clickable {
                 onItemClick()
             },
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = cardColor.first)
+        colors = CardDefaults.cardColors(containerColor = agendaType.backgroundColor)
     ) {
         // Title Row
         AgendaCardHeader(
             title = item.title,
             isDone = if (item is AgendaItem.Task) item.isDone else false,
-            contentColor = cardColor.second,
-            onOptionsClick = onOptionsClick,
+            agendaType = agendaType,
             onItemClick = onItemClick,
-            onIsDone = onIsDone
+            onIsDone = onIsDone,
+            onOptionsClick = onOptionsClick
         )
         // Description
         Text(
             text = item.description,
             style = MaterialTheme.typography.displaySmall,
-            color = cardColor.second,
+            color = agendaType.contentColor,
             modifier = Modifier
                 .align(Alignment.Start)
                 .padding(
@@ -108,7 +92,7 @@ fun AgendaCard(
         Text(
             text = itemDate,
             style = MaterialTheme.typography.displaySmall,
-            color = cardColor.second,
+            color = agendaType.contentColor,
             modifier = Modifier
                 .align(Alignment.End)
                 .padding(
@@ -123,10 +107,10 @@ fun AgendaCard(
 private fun AgendaCardHeader(
     title: String,
     isDone: Boolean,
-    contentColor: Color,
-    onOptionsClick: () -> Unit,
+    agendaType: AgendaType,
     onItemClick: () -> Unit,
     onIsDone: (Boolean) -> Unit,
+    onOptionsClick: (AgendaItemActionType) -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -144,7 +128,7 @@ private fun AgendaCardHeader(
             // Title Row - Checkbox
             TaskyCircularCheckbox(
                 checked = isDone,
-                contentColor = contentColor,
+                contentColor = agendaType.contentColor,
                 onCheckedChange = onIsDone,
             )
             // Title Row - Title
@@ -152,24 +136,18 @@ private fun AgendaCardHeader(
             Text(
                 text = title,
                 style = MaterialTheme.typography.displayMedium,
-                color = contentColor,
+                color = agendaType.contentColor,
                 textDecoration = if (isDone) TextDecoration.LineThrough else null
             )
             Spacer(modifier = Modifier.width(MaterialTheme.spacing.spaceMedium))
         }
         // Title Row - More Options
-        IconButton(
-            onClick = onOptionsClick,
+        AgendaCardMoreOptions(
             modifier = Modifier
                 .weight(1f),
-        ) {
-            Icon(
-                modifier = Modifier.rotate(90.0f),
-                imageVector = Icons.Outlined.MoreVert,
-                contentDescription = "options",
-                tint = contentColor
-            )
-        }
+            contentColor = agendaType.contentColor,
+            onMenuItemClicked = onOptionsClick,
+        )
     }
 }
 
@@ -186,6 +164,7 @@ private fun AgendaCardTaskPreview() {
                 remindAt = LocalDateTime.now(),
                 isDone = true
             ),
+            agendaType = AgendaType.TASK,
             onOptionsClick = {},
             onItemClick = {},
             onIsDone = {}
@@ -208,6 +187,7 @@ private fun AgendaCardEventPreview() {
                 hostId = "",
                 isHost = false,
             ),
+            agendaType = AgendaType.EVENT,
             onOptionsClick = {},
             onItemClick = {},
             onIsDone = {}
@@ -227,6 +207,7 @@ fun AgendaCardReminderPreview() {
                 startAt = LocalDateTime.now(),
                 remindAt = LocalDateTime.now(),
             ),
+            agendaType = AgendaType.REMINDER,
             onOptionsClick = {},
             onItemClick = {},
             onIsDone = {}
