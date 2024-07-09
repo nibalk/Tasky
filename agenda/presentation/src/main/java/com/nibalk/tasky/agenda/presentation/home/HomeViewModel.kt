@@ -47,7 +47,7 @@ class HomeViewModel(
                 logout()
             }
             is HomeAction.OnAgendaListRefreshed -> {
-                viewModelScope.launch { refreshAgendaItems() }
+                viewModelScope.launch { fetchAgendaItems() }
             }
             is HomeAction.OnDayClicked -> {
                 state = state.copy(
@@ -75,22 +75,6 @@ class HomeViewModel(
         state = state.copy(isLoading = true)
         getAgendasUseCase(
             state.selectedDate
-        ).onSuccess { agendas ->
-            state = state.copy(
-                agendaItems = agendas.sortedBy { it.startAt },
-                isLoading = false
-            )
-            eventChannel.send(HomeEvent.FetchAgendaSuccess)
-        }.onError { error ->
-            state = state.copy(isLoading = false)
-            eventChannel.send(HomeEvent.FetchAgendaError(error.asUiText()))
-        }
-    }
-
-    private suspend fun refreshAgendaItems() {
-        state = state.copy(isLoading = true)
-        getAgendasUseCase(
-            state.selectedDate.plusDays(1)
         ).onSuccess { agendas ->
             state = state.copy(
                 agendaItems = agendas.sortedBy { it.startAt },

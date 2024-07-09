@@ -10,6 +10,7 @@ dependencies {
     // Project Modules
     implementation(projects.core.domain)
     implementation(projects.agenda.domain)
+    implementation(projects.test)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.core)
