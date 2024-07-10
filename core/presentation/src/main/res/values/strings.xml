@@ -1,4 +1,8 @@
 <resources>
+    <!-- Toast -->
+    <string name="toast_message_clicked">Clicked!</string>
+    <string name="toast_message_add">Add</string>
+
     <!-- Content Descriptions -->
     <string name="content_description_back">Back</string>
     <string name="content_description_show_password_text">Show Password</string>

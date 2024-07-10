@@ -14,6 +14,7 @@ import com.nibalk.tasky.core.domain.util.onSuccess
 import com.nibalk.tasky.core.presentation.utils.asUiText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -35,7 +36,7 @@ class HomeViewModel(
             setProfileInitials()
             snapshotFlow { state.selectedDate }
                 .distinctUntilChanged()
-                .collect {
+                .collectLatest {
                     fetchAgendaItems()
                 }
         }

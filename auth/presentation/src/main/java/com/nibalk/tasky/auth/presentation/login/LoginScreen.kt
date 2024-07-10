@@ -45,20 +45,11 @@ fun LoginScreenRoot(
         when(event) {
             is LoginEvent.LoginError -> {
                 keyboardController?.hide()
-                Toast.makeText(
-                    context,
-                    event.error.asString(context),
-                    Toast.LENGTH_LONG
-                ).show()
+                Toast.makeText(context, event.error.asString(context), Toast.LENGTH_LONG).show()
             }
             LoginEvent.LoginSuccess -> {
                 keyboardController?.hide()
-                Toast.makeText(
-                    context,
-                    R.string.auth_login_successful,
-                    Toast.LENGTH_LONG
-                ).show()
-
+                Toast.makeText(context, R.string.auth_login_success, Toast.LENGTH_SHORT).show()
                 onSuccessfulLogin()
             }
         }

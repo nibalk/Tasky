@@ -57,7 +57,7 @@ private fun AgendaHeaderPreview() {
     TaskyTheme {
         AgendaHeader(
             selectedDate = LocalDate.now(),
-            userInitials = "NI",
+            userInitials = "AB",
             onDayClicked = {},
             onLogoutClicked = {}
         )

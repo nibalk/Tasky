@@ -12,15 +12,15 @@ sealed interface HomeAction {
     data object OnAgendaListRefreshed: HomeAction
     data class OnAddAgendaOptionsClicked(val agendaType: AgendaType) : HomeAction
     // List Item
-    data class OnListItemOptionOpenClick(
+    data class OnListItemOptionOpenClicked(
         val agendaItem: AgendaItem,
         val agendaType: AgendaType
     ) : HomeAction
-    data class OnListItemOptionEditClick(
+    data class OnListItemOptionEditClicked(
         val agendaItem: AgendaItem,
         val agendaType: AgendaType
     ) : HomeAction
-    data class OnListItemOptionDeleteClick(
+    data class OnListItemOptionDeleteClicked(
         val agendaItem: AgendaItem,
         val agendaType: AgendaType
     ) : HomeAction

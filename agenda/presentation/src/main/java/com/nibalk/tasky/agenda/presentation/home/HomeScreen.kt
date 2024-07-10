@@ -29,42 +29,30 @@ import com.nibalk.tasky.core.presentation.components.TaskyBackground
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import com.nibalk.tasky.core.presentation.utils.ObserveAsEvents
 import org.koin.androidx.compose.koinViewModel
+import com.nibalk.tasky.core.presentation.R as CoreR
+
+typealias IsDetailScreenEditable = Boolean
 
 @Composable
 fun HomeScreenRoot(
-    onDetailClicked: (Boolean) -> Unit,
+    onDetailClicked: (IsDetailScreenEditable, AgendaType, AgendaItem?) -> Unit,
     viewModel: HomeViewModel = koinViewModel(),
 ) {
     val context = LocalContext.current
+
     ObserveAsEvents(viewModel.uiEvent) { event ->
         when(event) {
             is HomeEvent.FetchAgendaError -> {
-                Toast.makeText(
-                    context,
-                    event.error.asString(context),
-                    Toast.LENGTH_LONG
-                ).show()
+                Toast.makeText(context, event.error.asString(context), Toast.LENGTH_LONG).show()
             }
             is HomeEvent.FetchAgendaSuccess -> {
-                Toast.makeText(
-                    context,
-                    R.string.agenda_items_list_loaded,
-                    Toast.LENGTH_LONG
-                ).show()
+                Toast.makeText(context, R.string.agenda_items_list_loaded, Toast.LENGTH_SHORT).show()
             }
             is HomeEvent.LogoutError -> {
-                Toast.makeText(
-                    context,
-                    event.error.asString(context),
-                    Toast.LENGTH_LONG
-                ).show()
+                Toast.makeText(context, event.error.asString(context), Toast.LENGTH_LONG).show()
             }
             is HomeEvent.LogoutSuccess -> {
-                Toast.makeText(
-                    context,
-                    R.string.agenda_logout_successful,
-                    Toast.LENGTH_LONG
-                ).show()
+                Toast.makeText(context, R.string.agenda_logout_successful, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -72,8 +60,24 @@ fun HomeScreenRoot(
         state = viewModel.state,
         onAction = { action ->
             when(action) {
-                is HomeAction.OnListItemOptionOpenClick -> onDetailClicked(false)
-                is HomeAction.OnListItemOptionEditClick -> onDetailClicked(true)
+                is HomeAction.OnAddAgendaOptionsClicked -> {
+                    onDetailClicked(true, action.agendaType, null)
+                }
+                is HomeAction.OnListItemOptionEditClicked -> {
+                    onDetailClicked(true, action.agendaType, action.agendaItem)
+                }
+                is HomeAction.OnListItemOptionOpenClicked -> {
+                    onDetailClicked(false, action.agendaType, action.agendaItem)
+                }
+                is HomeAction.OnListItemOptionDeleteClicked -> {
+                    Toast.makeText(
+                        context,
+                        "${getString(context, action.agendaType.menuNameResId)} " +
+                            "${getString(context, AgendaItemActionType.DELETE.menuNameResId)} " +
+                            "${getString(context, CoreR.string.toast_message_clicked)}!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -87,17 +91,10 @@ fun HomeScreen(
     state: HomeState,
     onAction: (HomeAction) -> Unit
 ) {
-    val context = LocalContext.current
-
     Scaffold(
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             AgendaAddButton { agendaType ->
-                Toast.makeText(
-                    context,
-                    "${getString(context, agendaType.menuNameResId)} clicked!",
-                    Toast.LENGTH_LONG
-                ).show()
                 onAction(HomeAction.OnAddAgendaOptionsClicked(agendaType))
             }
         },
@@ -111,7 +108,6 @@ fun HomeScreen(
                         onAction(HomeAction.OnDayClicked(clickedDate))
                     },
                     onLogoutClicked = {
-                        Toast.makeText(context,"Logout clicked!", Toast.LENGTH_LONG).show()
                         onAction(HomeAction.OnLogoutClicked)
                     }
                 )
@@ -148,13 +144,13 @@ fun HomeScreen(
                         ) { actionType ->
                             when(actionType) {
                                 AgendaItemActionType.OPEN -> {
-                                    onAction(HomeAction.OnListItemOptionOpenClick(item, agendaType))
+                                    onAction(HomeAction.OnListItemOptionOpenClicked(item, agendaType))
                                 }
                                 AgendaItemActionType.EDIT -> {
-                                    onAction(HomeAction.OnListItemOptionEditClick(item, agendaType))
+                                    onAction(HomeAction.OnListItemOptionEditClicked(item, agendaType))
                                 }
                                 AgendaItemActionType.DELETE -> {
-                                    onAction(HomeAction.OnListItemOptionDeleteClick(item, agendaType))
+                                    onAction(HomeAction.OnListItemOptionDeleteClicked(item, agendaType))
                                 }
                             }
                         }
@@ -175,7 +171,7 @@ private fun HomeScreenPreview() {
     TaskyTheme {
         HomeScreen(
             state = HomeState(
-                profileInitials = "NI"
+                profileInitials = "AB"
             ),
             onAction = {}
         )
