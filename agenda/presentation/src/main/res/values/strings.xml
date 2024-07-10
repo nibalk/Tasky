@@ -4,6 +4,8 @@
 
     <!-- Agenda Screen -->
     <string name="agenda_dialog_confirm">Confirm</string>
+    <string name="agenda_items_list_loaded">Agenda items loaded</string>
+    <string name="agenda_logout_successful">User logout done</string>
 
     <!-- Agenda Screen - Menu Options -->
     <string name="agenda_option_event">Event</string>
