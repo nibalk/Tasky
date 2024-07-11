@@ -55,6 +55,5 @@ fun TaskyNeedleSeparator(
 private fun TaskyNeedleSeparatorPreview() {
     TaskyTheme {
         TaskyNeedleSeparator()
-
     }
 }

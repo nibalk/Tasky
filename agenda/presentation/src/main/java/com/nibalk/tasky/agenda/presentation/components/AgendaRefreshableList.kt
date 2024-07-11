@@ -29,12 +29,13 @@ import com.nibalk.tasky.core.presentation.themes.spacing
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T> AgendaRefreshableList(
+    modifier: Modifier = Modifier,
+    lazyListState: LazyListState = rememberLazyListState(),
     items: List<T>,
-    content: @Composable (T) -> Unit,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
-    modifier: Modifier = Modifier,
-    lazyListState: LazyListState = rememberLazyListState()
+    emptyContent: @Composable () -> Unit,
+    listContent: @Composable (T) -> Unit,
 ) {
 
     // val pullToRefreshState = rememberPullToRefreshState()
@@ -82,14 +83,13 @@ fun <T> AgendaRefreshableList(
                 state = lazyListState,
                 contentPadding = PaddingValues(0.dp),
             ) {
+                if (items.isEmpty()) {
+                    item {
+                        emptyContent()
+                    }
+                }
                 items(items.size) { index  ->
-                    content(items[index])
-//                    Box(
-//                        modifier = Modifier
-//                            .padding(vertical = MaterialTheme.spacing.spaceSmall)
-//                    ) {
-//                        content(items[index])
-//                    }
+                    listContent(items[index])
                 }
             }
         }
@@ -102,12 +102,13 @@ fun AgendaRefreshableListPreview() {
     TaskyTheme {
         AgendaRefreshableList(
             items = (1..100).map { "Item $it" },
-            content = { itemTitle ->
+            isRefreshing = false,
+            listContent = { itemTitle ->
                 Text(
                     text = itemTitle,
                 )
             },
-            isRefreshing = false,
+            emptyContent = {},
             onRefresh = {}
         )
     }

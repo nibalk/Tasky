@@ -105,7 +105,7 @@ fun TaskyTextField(
                         innerBox()
                     }
                     if(endIcon != null) {
-                        Spacer(modifier = Modifier.width(16.dp))
+                        Spacer(modifier = Modifier.width(MaterialTheme.spacing.spaceMedium))
                         Icon(
                             imageVector = endIcon,
                             contentDescription = null,
@@ -117,7 +117,7 @@ fun TaskyTextField(
                 }
             }
         )
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceExtraSmall))
         Row(
             modifier = Modifier
                 .fillMaxWidth(),

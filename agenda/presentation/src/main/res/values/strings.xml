@@ -7,6 +7,7 @@
     <string name="agenda_items_list_loaded">Agenda items loaded</string>
     <string name="agenda_logout_successful">User logout done</string>
     <string name="agenda_title_today">Today</string>
+    <string name="agenda_empty_list">No agendas for this date.</string>
 
     <!-- Agenda Screen - Menu Options -->
     <string name="agenda_option_event">Event</string>
