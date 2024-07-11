@@ -41,6 +41,7 @@ import com.nibalk.tasky.core.presentation.R
 import com.nibalk.tasky.core.presentation.themes.EyeClosedIcon
 import com.nibalk.tasky.core.presentation.themes.EyeOpenedIcon
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
+import com.nibalk.tasky.core.presentation.themes.spacing
 
 @Composable
 fun TaskyPasswordTextField(
@@ -93,7 +94,7 @@ fun TaskyPasswordTextField(
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(MaterialTheme.spacing.spaceMedium))
                     Box(
                         modifier = Modifier
                             .weight(1f)
@@ -123,7 +124,7 @@ fun TaskyPasswordTextField(
                 }
             }
         )
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceExtraSmall))
         Row(
             modifier = Modifier
                 .fillMaxWidth(),

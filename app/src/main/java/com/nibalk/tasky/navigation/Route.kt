@@ -20,3 +20,21 @@ object AgendaNavigationGraph
 
 @Serializable
 object AgendaHomeScreen
+
+@Serializable
+data class AgendaEventScreen(
+    val isEditable: Boolean,
+    val agendaId: String?
+)
+
+@Serializable
+data class AgendaTaskScreen(
+    val isEditable: Boolean,
+    val agendaId: String?
+)
+
+@Serializable
+data class AgendaReminderScreen(
+    val isEditable: Boolean,
+    val agendaId: String?
+)
