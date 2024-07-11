@@ -83,12 +83,13 @@ fun <T> AgendaRefreshableList(
                 contentPadding = PaddingValues(0.dp),
             ) {
                 items(items.size) { index  ->
-                    Box(
-                        modifier = Modifier
-                            .padding(vertical = MaterialTheme.spacing.spaceSmall)
-                    ) {
-                        content(items[index])
-                    }
+                    content(items[index])
+//                    Box(
+//                        modifier = Modifier
+//                            .padding(vertical = MaterialTheme.spacing.spaceSmall)
+//                    ) {
+//                        content(items[index])
+//                    }
                 }
             }
         }

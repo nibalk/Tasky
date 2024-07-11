@@ -83,7 +83,7 @@ fun AgendaCard(
             modifier = Modifier
                 .align(Alignment.Start)
                 .padding(
-                    start = MaterialTheme.spacing.spaceExtraLarge,
+                    start = 56.dp,
                     end = MaterialTheme.spacing.spaceExtraLarge,
                     bottom = MaterialTheme.spacing.spaceMedium,
                 )

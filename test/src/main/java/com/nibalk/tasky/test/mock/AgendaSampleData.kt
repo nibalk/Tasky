@@ -8,8 +8,8 @@ object AgendaSampleData {
     // Events
     val event1 = AgendaItem.Event(
         id = "E01",
-        title = "Tasky Event - Attend Google I/O 1",
-        description = "Attend Google I/O event to learn what's new in Android",
+        title = "Tasky Event - Attend 2024 Google I/O 1",
+        description = "Attend Google I/O event to learn what is new in Android",
         startAt = LocalDateTime.now(),
         remindAt = LocalDateTime.now(),
         endAt = LocalDateTime.now(),
@@ -18,8 +18,8 @@ object AgendaSampleData {
     )
     val event2 = AgendaItem.Event(
         id = "E02",
-        title = "Tasky Event - Attend Google I/O 2",
-        description = "Attend Google I/O event to learn what's new in Android",
+        title = "Tasky Event - Attend 2024 Google I/O 2",
+        description = "Attend Google I/O event to learn what is new in Android",
         startAt = LocalDateTime.now().plusDays(1),
         remindAt = LocalDateTime.now(),
         endAt = LocalDateTime.now(),
@@ -28,8 +28,8 @@ object AgendaSampleData {
     )
     val event3 = AgendaItem.Event(
         id = "E03",
-        title = "Tasky Event - Attend Google I/O 3",
-        description = "Attend Google I/O event to learn what's new in Android",
+        title = "Tasky Event - Attend 2024 Google I/O 3",
+        description = "Attend Google I/O event to learn what is new in Android",
         startAt = LocalDateTime.now().plusDays(2),
         remindAt = LocalDateTime.now(),
         endAt = LocalDateTime.now(),
@@ -38,8 +38,8 @@ object AgendaSampleData {
     )
     val event4 = AgendaItem.Event(
         id = "E04",
-        title = "Tasky Event - Attend Google I/O 4",
-        description = "Attend Google I/O event to learn what's new in Android",
+        title = "Tasky Event - Attend 2024 Google I/O 4",
+        description = "Attend Google I/O event to learn what is new in Android",
         startAt = LocalDateTime.now().plusDays(2),
         remindAt = LocalDateTime.now(),
         endAt = LocalDateTime.now(),
@@ -48,8 +48,8 @@ object AgendaSampleData {
     )
     val event5 = AgendaItem.Event(
         id = "E05",
-        title = "Tasky Event - Attend Google I/O 5",
-        description = "Attend Google I/O event to learn what's new in Android",
+        title = "Tasky Event - Attend 2024 Google I/O 5",
+        description = "Attend Google I/O event to learn what is new in Android",
         startAt = LocalDateTime.now().plusHours(7),
         remindAt = LocalDateTime.now(),
         endAt = LocalDateTime.now(),
