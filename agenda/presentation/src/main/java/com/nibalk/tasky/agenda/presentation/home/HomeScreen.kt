@@ -112,7 +112,6 @@ fun HomeScreen(
     state: HomeState,
     onAction: (HomeAction) -> Unit
 ) {
-    val now = LocalDateTime.now()
     var showedNeedleOnce by remember {
         mutableStateOf(false)
     }
@@ -174,22 +173,17 @@ fun HomeScreen(
                             contentColor = MaterialTheme.colorScheme.onTertiary
                         )
                     }
-                ) { agendaItem, index ->
-                    key(agendaItem.id) {
-                        val isNotLastIndex = index != state.agendaItems.lastIndex
-                        val isNeedlePosition = state.needlePosition != null && index == state.needlePosition
-                        val shouldShowNeedle = (showedNeedleOnce && isNeedlePosition && isNotLastIndex) ||
-                            (!showedNeedleOnce && isNotLastIndex &&
-                                (agendaItem.startAt.isEqual(now) || agendaItem.startAt.isAfter(now)))
+                ) { item, index ->
+                    key(item.id) {
+                        val isTimeRange = item.startAt.isEqual(LocalDateTime.now()) ||
+                            item.startAt.isAfter(LocalDateTime.now())
+                        val isNeedlePosition = state.needlePosition != null &&
+                            index == state.needlePosition
+                        val shouldShowNeedle = (showedNeedleOnce && isNeedlePosition) ||
+                            (!showedNeedleOnce && isTimeRange)
 
-                        Timber.d("[NeedleLogs] - " +
-                            "%s | %s | shouldShow = %s | showedOnce = %s | indexOk = %s | needle = %s",
-                            agendaItem.id, agendaItem.startAt,
-                            shouldShowNeedle, showedNeedleOnce, isNotLastIndex, isNeedlePosition
-                        )
-
-                        AgendaListItemCardWithNeedle(
-                            item = agendaItem,
+                        AgendaListItemCard(
+                            item = item,
                             showNeedle = shouldShowNeedle,
                             onNeedleShown = {
                                 onAction(HomeAction.OnNeedleShown(index))
@@ -231,35 +225,10 @@ private fun HomeScreenPreviewScreenSizes() {
 }
 
 @Composable
-private fun AgendaListItemCardWithNeedle(
+private fun AgendaListItemCard(
     item: AgendaItem,
     showNeedle: Boolean,
     onNeedleShown: () -> Unit,
-    onAction: (HomeAction) -> Unit,
-) {
-    AgendaListItemCard(
-        item = item,
-        onAction = onAction
-    )
-    Box(
-        modifier = Modifier
-            .padding(vertical = MaterialTheme.spacing.spaceSmall),
-        contentAlignment = Alignment.Center
-    ) {
-        if (showNeedle) {
-            TaskyNeedleSeparator(
-                modifier = Modifier
-                    .align(Alignment.Center),
-            )
-            onNeedleShown()
-            Timber.d("[NeedleLogs] - Needle shown")
-        }
-    }
-}
-
-@Composable
-private fun AgendaListItemCard(
-    item: AgendaItem,
     onAction: (HomeAction) -> Unit,
 ) {
     val agendaType: AgendaType = when (item) {
@@ -283,6 +252,20 @@ private fun AgendaListItemCard(
             AgendaItemActionType.DELETE -> {
                 onAction(HomeAction.OnListItemOptionDeleteClicked(item, agendaType))
             }
+        }
+    }
+    Box(
+        modifier = Modifier
+            .padding(vertical = MaterialTheme.spacing.spaceSmall),
+        contentAlignment = Alignment.Center
+    ) {
+        if (showNeedle) {
+            TaskyNeedleSeparator(
+                modifier = Modifier
+                    .align(Alignment.Center),
+            )
+            onNeedleShown()
+            Timber.d("[NeedleLogs] - Needle shown")
         }
     }
 }
