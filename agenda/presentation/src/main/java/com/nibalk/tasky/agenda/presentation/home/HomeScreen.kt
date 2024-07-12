@@ -13,6 +13,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -108,7 +113,9 @@ fun HomeScreen(
     onAction: (HomeAction) -> Unit
 ) {
     val now = LocalDateTime.now()
-    var showedNeedleOnce = false
+    var showedNeedleOnce by remember {
+        mutableStateOf(false)
+    }
 
     Scaffold(
         floatingActionButtonPosition = FabPosition.End,
@@ -168,16 +175,16 @@ fun HomeScreen(
                         )
                     }
                 ) { agendaItem ->
-                    val shouldShowNeedle =
-                        (agendaItem.startAt.isEqual(now) || agendaItem.startAt.isAfter(now))
-                    AgendaListItemCard(
-                        item = agendaItem,
-                        showNeedle = shouldShowNeedle,
-                        showedNeedleOnce = showedNeedleOnce,
-                        onAction = onAction
-                    )
-                    if (shouldShowNeedle && !showedNeedleOnce) {
-                        showedNeedleOnce = true
+                    key(agendaItem.id) {
+                        val shouldShowNeedle = !showedNeedleOnce &&
+                            (agendaItem.startAt.isEqual(now) || agendaItem.startAt.isAfter(now))
+
+                        AgendaListItemCardWithNeedle(
+                            item = agendaItem,
+                            showNeedle = shouldShowNeedle,
+                            onNeedleShown = { showedNeedleOnce = true },
+                            onAction = onAction
+                        )
                     }
                 }
             }
@@ -212,10 +219,34 @@ private fun HomeScreenPreviewScreenSizes() {
 }
 
 @Composable
-private fun AgendaListItemCard(
+private fun AgendaListItemCardWithNeedle(
     item: AgendaItem,
     showNeedle: Boolean,
-    showedNeedleOnce: Boolean,
+    onNeedleShown: () -> Unit,
+    onAction: (HomeAction) -> Unit,
+) {
+    AgendaListItemCard(
+        item = item,
+        onAction = onAction
+    )
+    Box(
+        modifier = Modifier
+            .padding(vertical = MaterialTheme.spacing.spaceSmall),
+        contentAlignment = Alignment.Center
+    ) {
+        if (showNeedle) {
+            TaskyNeedleSeparator(
+                modifier = Modifier
+                    .align(Alignment.Center),
+            )
+            onNeedleShown()
+        }
+    }
+}
+
+@Composable
+private fun AgendaListItemCard(
+    item: AgendaItem,
     onAction: (HomeAction) -> Unit,
 ) {
     val agendaType: AgendaType = when (item) {
@@ -239,18 +270,6 @@ private fun AgendaListItemCard(
             AgendaItemActionType.DELETE -> {
                 onAction(HomeAction.OnListItemOptionDeleteClicked(item, agendaType))
             }
-        }
-    }
-    Box(
-        modifier = Modifier
-            .padding(vertical = MaterialTheme.spacing.spaceSmall),
-        contentAlignment = Alignment.Center
-    ) {
-        if (showNeedle && !showedNeedleOnce) {
-            TaskyNeedleSeparator(
-                modifier = Modifier
-                    .align(Alignment.Center),
-            )
         }
     }
 }
