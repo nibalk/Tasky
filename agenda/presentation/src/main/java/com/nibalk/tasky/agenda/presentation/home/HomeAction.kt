@@ -11,7 +11,7 @@ sealed interface HomeAction {
     // List
     data object OnAgendaListRefreshed: HomeAction
     data class OnAddAgendaOptionsClicked(val agendaType: AgendaType) : HomeAction
-    data class OnNeedleShown(val isShown: Boolean) : HomeAction
+    data class OnNeedleShown(val needlePosition: Int) : HomeAction
     // List Item
     data class OnListItemOptionOpenClicked(
         val agendaItem: AgendaItem,

@@ -29,10 +29,10 @@ fun <T> TaskyRefreshableList(
     onRefresh: () -> Unit,
     headerContent: (@Composable () -> Unit)? = null,
     emptyContent: @Composable () -> Unit,
-    listContent: @Composable (T) -> Unit,
+    listContent: @Composable (T, Int) -> Unit,
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
-    Timber.d("(START) flag = $isRefreshing")
+    Timber.d("[PullToRefreshLogs] - RefreshList flag = $isRefreshing")
 
     Box(
         modifier = modifier
@@ -50,17 +50,17 @@ fun <T> TaskyRefreshableList(
                 item { emptyContent() }
             }
             items(items.size) { index ->
-                listContent(items[index])
+                listContent(items[index], index)
             }
         }
         if(pullToRefreshState.isRefreshing) {
             LaunchedEffect(true) {
-                Timber.d("(onRefresh) state = %s", pullToRefreshState.isRefreshing)
+                Timber.d("[PullToRefreshLogs] - onRefresh() state = %s", pullToRefreshState.isRefreshing)
                 onRefresh()
             }
         }
         LaunchedEffect(isRefreshing, pullToRefreshState.isRefreshing) {
-            Timber.d("(LaunchedEffect) flag = %s | state = %s",
+            Timber.d("[PullToRefreshLogs] - LaunchedEffect flag = %s | state = %s",
                 isRefreshing.toString().uppercase(), pullToRefreshState.isRefreshing
             )
             if(isRefreshing) {

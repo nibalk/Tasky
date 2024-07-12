@@ -44,11 +44,11 @@ import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import com.nibalk.tasky.core.presentation.themes.spacing
 import com.nibalk.tasky.core.presentation.utils.ObserveAsEvents
 import org.koin.androidx.compose.koinViewModel
+import timber.log.Timber
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import com.nibalk.tasky.core.presentation.R as CoreR
-
 
 @Composable
 fun HomeScreenRoot(
@@ -174,15 +174,25 @@ fun HomeScreen(
                             contentColor = MaterialTheme.colorScheme.onTertiary
                         )
                     }
-                ) { agendaItem ->
+                ) { agendaItem, index ->
                     key(agendaItem.id) {
                         val shouldShowNeedle = !showedNeedleOnce &&
+                            //index != state.agendaItems.lastIndex &&
                             (agendaItem.startAt.isEqual(now) || agendaItem.startAt.isAfter(now))
+
+                        Timber.d("[NeedleLogs] - " +
+                            "%s | %s | shouldShow = %s | showedOnce = %s | indexOk = %s",
+                            agendaItem.id, agendaItem.startAt,
+                            shouldShowNeedle, showedNeedleOnce,
+                            index != state.agendaItems.lastIndex
+                        )
 
                         AgendaListItemCardWithNeedle(
                             item = agendaItem,
                             showNeedle = shouldShowNeedle,
-                            onNeedleShown = { showedNeedleOnce = true },
+                            onNeedleShown = {
+                                showedNeedleOnce = true
+                            },
                             onAction = onAction
                         )
                     }
@@ -240,6 +250,7 @@ private fun AgendaListItemCardWithNeedle(
                     .align(Alignment.Center),
             )
             onNeedleShown()
+            Timber.d("[NeedleLogs] - Needle shown")
         }
     }
 }
