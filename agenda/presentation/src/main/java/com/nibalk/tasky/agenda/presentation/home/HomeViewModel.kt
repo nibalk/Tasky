@@ -56,6 +56,11 @@ class HomeViewModel(
                     selectedDate = action.date,
                 )
             }
+            is HomeAction.OnNeedleShown -> {
+                state = state.copy(
+                    needlePosition = action.needlePosition
+                )
+            }
             else -> Unit
         }
     }

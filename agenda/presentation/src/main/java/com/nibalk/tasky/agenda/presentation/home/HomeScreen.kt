@@ -176,21 +176,23 @@ fun HomeScreen(
                     }
                 ) { agendaItem, index ->
                     key(agendaItem.id) {
-                        val shouldShowNeedle = !showedNeedleOnce &&
-                            //index != state.agendaItems.lastIndex &&
-                            (agendaItem.startAt.isEqual(now) || agendaItem.startAt.isAfter(now))
+                        val isNotLastIndex = index != state.agendaItems.lastIndex
+                        val isNeedlePosition = state.needlePosition != null && index == state.needlePosition
+                        val shouldShowNeedle = (showedNeedleOnce && isNeedlePosition && isNotLastIndex) ||
+                            (!showedNeedleOnce && isNotLastIndex &&
+                                (agendaItem.startAt.isEqual(now) || agendaItem.startAt.isAfter(now)))
 
                         Timber.d("[NeedleLogs] - " +
-                            "%s | %s | shouldShow = %s | showedOnce = %s | indexOk = %s",
+                            "%s | %s | shouldShow = %s | showedOnce = %s | indexOk = %s | needle = %s",
                             agendaItem.id, agendaItem.startAt,
-                            shouldShowNeedle, showedNeedleOnce,
-                            index != state.agendaItems.lastIndex
+                            shouldShowNeedle, showedNeedleOnce, isNotLastIndex, isNeedlePosition
                         )
 
                         AgendaListItemCardWithNeedle(
                             item = agendaItem,
                             showNeedle = shouldShowNeedle,
                             onNeedleShown = {
+                                onAction(HomeAction.OnNeedleShown(index))
                                 showedNeedleOnce = true
                             },
                             onAction = onAction
