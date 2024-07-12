@@ -1,7 +1,8 @@
 package com.nibalk.tasky.core.presentation.components
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -10,6 +11,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,6 +29,7 @@ data class TaskyDropDownMenuItem(
 
 @Composable
 fun TaskyDropDownMenu(
+    modifier: Modifier = Modifier,
     isMenuShown: Boolean,
     onDismissRequest: () -> Unit,
     menuItems: List<TaskyDropDownMenuItem>,
@@ -33,11 +37,17 @@ fun TaskyDropDownMenu(
     DropdownMenu(
         expanded = isMenuShown,
         onDismissRequest = onDismissRequest,
-        containerColor = MaterialTheme.colorScheme.primary,
-        border = BorderStroke(width = 1.dp, color = TaskyLightBlue),
-        shape = RoundedCornerShape(MaterialTheme.spacing.spaceSmall),
-        shadowElevation = 8.dp,
-        tonalElevation = 8.dp,
+        modifier = modifier
+            .background(color = MaterialTheme.colorScheme.primary)
+            .border(
+                width = 1.dp,
+                color = TaskyLightBlue,
+                shape = RoundedCornerShape(MaterialTheme.spacing.spaceSmall)
+            )
+            .shadow(
+                elevation = 2.dp,
+                shape = RoundedCornerShape(2.dp),
+            ),
     ) {
         menuItems.forEach { item ->
             DropdownMenuItem(

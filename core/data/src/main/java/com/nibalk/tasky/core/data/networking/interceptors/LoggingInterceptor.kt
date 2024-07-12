@@ -8,7 +8,7 @@ import timber.log.Timber
 
 class LoggingInterceptor : Interceptor {
     private val logger = HttpLoggingInterceptor { message ->
-        Timber.tag("OkHttp").d(message)
+        Timber.d(message)
     }.apply {
         level= HttpLoggingInterceptor.Level.BODY
     }

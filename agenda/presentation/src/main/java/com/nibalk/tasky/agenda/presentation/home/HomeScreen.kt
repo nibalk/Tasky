@@ -28,13 +28,13 @@ import com.nibalk.tasky.agenda.presentation.components.AgendaAddButton
 import com.nibalk.tasky.agenda.presentation.components.AgendaCard
 import com.nibalk.tasky.agenda.presentation.components.AgendaDayPicker
 import com.nibalk.tasky.agenda.presentation.components.AgendaHeader
-import com.nibalk.tasky.agenda.presentation.components.AgendaRefreshableList
 import com.nibalk.tasky.agenda.presentation.model.AgendaItemActionType
 import com.nibalk.tasky.agenda.presentation.model.AgendaType
 import com.nibalk.tasky.agenda.presentation.utils.getSurroundingDays
 import com.nibalk.tasky.core.presentation.components.TaskyBackground
 import com.nibalk.tasky.core.presentation.components.TaskyEmptyList
 import com.nibalk.tasky.core.presentation.components.TaskyNeedleSeparator
+import com.nibalk.tasky.core.presentation.components.TaskyRefreshableList
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import com.nibalk.tasky.core.presentation.themes.spacing
 import com.nibalk.tasky.core.presentation.utils.ObserveAsEvents
@@ -136,26 +136,28 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                AgendaDayPicker(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .requiredHeight(80.dp),
-                    selectedDate = state.selectedDate,
-                    datesList = state.selectedDate.getSurroundingDays(),
-                    onDayClicked = { clickedDate ->
-                        onAction(HomeAction.OnDayClicked(clickedDate))
-                    }
-                )
-                AgendaListDateTitle(
-                    selectedDate = state.selectedDate,
-                    currentDate = state.currentDate
-                )
-                AgendaRefreshableList(
+                TaskyRefreshableList(
                     modifier = Modifier.fillMaxWidth(),
                     items = state.agendaItems,
                     isRefreshing = state.isLoading,
                     onRefresh = {
                         onAction(HomeAction.OnAgendaListRefreshed)
+                    },
+                    headerContent = {
+                        AgendaDayPicker(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .requiredHeight(80.dp),
+                            selectedDate = state.selectedDate,
+                            datesList = state.selectedDate.getSurroundingDays(),
+                            onDayClicked = { clickedDate ->
+                                onAction(HomeAction.OnDayClicked(clickedDate))
+                            }
+                        )
+                        AgendaListDateTitle(
+                            selectedDate = state.selectedDate,
+                            currentDate = state.currentDate
+                        )
                     },
                     emptyContent = {
                         TaskyEmptyList(
