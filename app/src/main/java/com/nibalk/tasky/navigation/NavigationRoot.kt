@@ -1,22 +1,23 @@
 package com.nibalk.tasky.navigation
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.nibalk.tasky.agenda.presentation.event.EventScreenRoot
 import com.nibalk.tasky.agenda.presentation.home.HomeScreenRoot
+import com.nibalk.tasky.agenda.presentation.model.AgendaArgs
 import com.nibalk.tasky.agenda.presentation.model.AgendaType
+import com.nibalk.tasky.agenda.presentation.reminder.ReminderScreenRoot
+import com.nibalk.tasky.agenda.presentation.task.TaskScreenRoot
+import com.nibalk.tasky.agenda.presentation.utils.toLocalDate
+import com.nibalk.tasky.agenda.presentation.utils.toLongDate
 import com.nibalk.tasky.auth.presentation.login.LoginScreenRoot
 import com.nibalk.tasky.auth.presentation.register.RegisterScreenRoot
+import java.time.LocalDate
 
 @Composable
 fun NavigationRoot(
@@ -86,19 +87,25 @@ private fun NavGraphBuilder.agendaGraph(navController: NavHostController) {
                         AgendaType.EVENT -> navController.navigate(
                             AgendaEventScreen(
                                 isEditable = isEditable,
-                                agendaId = agendaItem?.id
+                                agendaId = agendaItem?.id,
+                                selectedDate = agendaItem?.startAt?.toLocalDate()?.toLongDate()
+                                    ?: LocalDate.now().toLongDate()
                             )
                         )
                         AgendaType.TASK -> navController.navigate(
                             AgendaTaskScreen(
                                 isEditable = isEditable,
-                                agendaId = agendaItem?.id
+                                agendaId = agendaItem?.id,
+                                selectedDate = agendaItem?.startAt?.toLocalDate()?.toLongDate()
+                                    ?: LocalDate.now().toLongDate()
                             )
                         )
                         AgendaType.REMINDER -> navController.navigate(
                             AgendaReminderScreen(
                                 isEditable = isEditable,
-                                agendaId = agendaItem?.id
+                                agendaId = agendaItem?.id,
+                                selectedDate = agendaItem?.startAt?.toLocalDate()?.toLongDate()
+                                    ?: LocalDate.now().toLongDate()
                             )
                         )
                     }
@@ -107,33 +114,33 @@ private fun NavGraphBuilder.agendaGraph(navController: NavHostController) {
         }
         composable<AgendaEventScreen> { backStackEntry ->
             val args = backStackEntry.toRoute<AgendaEventScreen>()
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text("Event Screen with ID: ${args.agendaId} and Screen Editable: ${args.isEditable}")
-            }
+            EventScreenRoot(
+                agendaArgs = AgendaArgs(
+                    isEditable = args.isEditable,
+                    selectedDate = args.selectedDate.toLocalDate(),
+                    agendaId = args.agendaId,
+                )
+            )
         }
         composable<AgendaTaskScreen> { backStackEntry ->
             val args = backStackEntry.toRoute<AgendaTaskScreen>()
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text("Task Screen with ID: ${args.agendaId} and Screen Editable: ${args.isEditable}")
-            }
+            TaskScreenRoot(
+                agendaArgs = AgendaArgs(
+                    isEditable = args.isEditable,
+                    selectedDate = args.selectedDate.toLocalDate(),
+                    agendaId = args.agendaId,
+                )
+            )
         }
         composable<AgendaReminderScreen> { backStackEntry ->
             val args = backStackEntry.toRoute<AgendaReminderScreen>()
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text("Reminder Screen with ID: ${args.agendaId} and Screen Editable: ${args.isEditable}")
-            }
+            ReminderScreenRoot(
+                agendaArgs = AgendaArgs(
+                    isEditable = args.isEditable,
+                    selectedDate = args.selectedDate.toLocalDate(),
+                    agendaId = args.agendaId,
+                )
+            )
         }
     }
 }

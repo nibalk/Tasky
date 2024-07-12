@@ -10,4 +10,5 @@ data class HomeState(
     val selectedAgendaItem: AgendaItem? = null,
     val selectedDate: LocalDate = LocalDate.now(),
     val currentDate: LocalDate = LocalDate.now(),
+    val needlePosition: Int? = null,
 )

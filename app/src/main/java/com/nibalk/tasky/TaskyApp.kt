@@ -9,6 +9,7 @@ import com.nibalk.tasky.auth.presentation.di.authUseCaseModule
 import com.nibalk.tasky.auth.presentation.di.authViewModelModule
 import com.nibalk.tasky.core.data.di.coreDataModule
 import com.nibalk.tasky.di.appModule
+import com.nibalk.tasky.utils.TaskyTimberDebugTree
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -19,7 +20,7 @@ class TaskyApp: Application() {
     override fun onCreate() {
         super.onCreate()
         if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
+            Timber.plant(TaskyTimberDebugTree())
         }
 
         startKoin {

@@ -12,4 +12,6 @@ dependencies {
 
     // Core
     implementation(libs.androidx.core.ktx)
+    // Timber for logging
+    implementation(libs.timber)
 }

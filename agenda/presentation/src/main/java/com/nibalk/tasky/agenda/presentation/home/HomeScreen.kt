@@ -13,6 +13,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -28,27 +33,29 @@ import com.nibalk.tasky.agenda.presentation.components.AgendaAddButton
 import com.nibalk.tasky.agenda.presentation.components.AgendaCard
 import com.nibalk.tasky.agenda.presentation.components.AgendaDayPicker
 import com.nibalk.tasky.agenda.presentation.components.AgendaHeader
-import com.nibalk.tasky.agenda.presentation.components.AgendaRefreshableList
 import com.nibalk.tasky.agenda.presentation.model.AgendaItemActionType
 import com.nibalk.tasky.agenda.presentation.model.AgendaType
 import com.nibalk.tasky.agenda.presentation.utils.getSurroundingDays
 import com.nibalk.tasky.core.presentation.components.TaskyBackground
 import com.nibalk.tasky.core.presentation.components.TaskyEmptyList
 import com.nibalk.tasky.core.presentation.components.TaskyNeedleSeparator
+import com.nibalk.tasky.core.presentation.components.TaskyRefreshableList
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import com.nibalk.tasky.core.presentation.themes.spacing
 import com.nibalk.tasky.core.presentation.utils.ObserveAsEvents
 import org.koin.androidx.compose.koinViewModel
+import timber.log.Timber
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import com.nibalk.tasky.core.presentation.R as CoreR
 
-typealias IsDetailScreenEditable = Boolean
-
 @Composable
 fun HomeScreenRoot(
-    onDetailClicked: (IsDetailScreenEditable, AgendaType, AgendaItem?) -> Unit,
+    onDetailClicked: (
+        isDetailScreenEditable: Boolean,
+        AgendaType, AgendaItem?
+    ) -> Unit,
     viewModel: HomeViewModel = koinViewModel(),
 ) {
     val context = LocalContext.current
@@ -105,8 +112,9 @@ fun HomeScreen(
     state: HomeState,
     onAction: (HomeAction) -> Unit
 ) {
-    val now = LocalDateTime.now()
-    var showedNeedleOnce = false
+    var showedNeedleOnce by remember {
+        mutableStateOf(false)
+    }
 
     Scaffold(
         floatingActionButtonPosition = FabPosition.End,
@@ -134,26 +142,28 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                AgendaDayPicker(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .requiredHeight(80.dp),
-                    selectedDate = state.selectedDate,
-                    datesList = state.selectedDate.getSurroundingDays(),
-                    onDayClicked = { clickedDate ->
-                        onAction(HomeAction.OnDayClicked(clickedDate))
-                    }
-                )
-                AgendaListDateTitle(
-                    selectedDate = state.selectedDate,
-                    currentDate = state.currentDate
-                )
-                AgendaRefreshableList(
+                TaskyRefreshableList(
                     modifier = Modifier.fillMaxWidth(),
                     items = state.agendaItems,
                     isRefreshing = state.isLoading,
                     onRefresh = {
                         onAction(HomeAction.OnAgendaListRefreshed)
+                    },
+                    headerContent = {
+                        AgendaDayPicker(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .requiredHeight(80.dp),
+                            selectedDate = state.selectedDate,
+                            datesList = state.selectedDate.getSurroundingDays(),
+                            onDayClicked = { clickedDate ->
+                                onAction(HomeAction.OnDayClicked(clickedDate))
+                            }
+                        )
+                        AgendaListDateTitle(
+                            selectedDate = state.selectedDate,
+                            currentDate = state.currentDate
+                        )
                     },
                     emptyContent = {
                         TaskyEmptyList(
@@ -163,17 +173,24 @@ fun HomeScreen(
                             contentColor = MaterialTheme.colorScheme.onTertiary
                         )
                     }
-                ) { agendaItem ->
-                    val shouldShowNeedle =
-                        (agendaItem.startAt.isEqual(now) || agendaItem.startAt.isAfter(now))
-                    AgendaListItemCard(
-                        item = agendaItem,
-                        showNeedle = shouldShowNeedle,
-                        showedNeedleOnce = showedNeedleOnce,
-                        onAction = onAction
-                    )
-                    if (shouldShowNeedle && !showedNeedleOnce) {
-                        showedNeedleOnce = true
+                ) { item, index ->
+                    key(item.id) {
+                        val isTimeRange = item.startAt.isEqual(LocalDateTime.now()) ||
+                            item.startAt.isAfter(LocalDateTime.now())
+                        val isNeedlePosition = state.needlePosition != null &&
+                            index == state.needlePosition
+                        val shouldShowNeedle = (showedNeedleOnce && isNeedlePosition) ||
+                            (!showedNeedleOnce && isTimeRange)
+
+                        AgendaListItemCard(
+                            item = item,
+                            showNeedle = shouldShowNeedle,
+                            onNeedleShown = {
+                                onAction(HomeAction.OnNeedleShown(index))
+                                showedNeedleOnce = true
+                            },
+                            onAction = onAction
+                        )
                     }
                 }
             }
@@ -211,7 +228,7 @@ private fun HomeScreenPreviewScreenSizes() {
 private fun AgendaListItemCard(
     item: AgendaItem,
     showNeedle: Boolean,
-    showedNeedleOnce: Boolean,
+    onNeedleShown: () -> Unit,
     onAction: (HomeAction) -> Unit,
 ) {
     val agendaType: AgendaType = when (item) {
@@ -242,11 +259,13 @@ private fun AgendaListItemCard(
             .padding(vertical = MaterialTheme.spacing.spaceSmall),
         contentAlignment = Alignment.Center
     ) {
-        if (showNeedle && !showedNeedleOnce) {
+        if (showNeedle) {
             TaskyNeedleSeparator(
                 modifier = Modifier
                     .align(Alignment.Center),
             )
+            onNeedleShown()
+            Timber.d("[NeedleLogs] - Needle shown")
         }
     }
 }
@@ -256,7 +275,7 @@ private fun AgendaListDateTitle(
     modifier: Modifier = Modifier,
     selectedDate: LocalDate,
     currentDate: LocalDate,
-    datePattern: String = "dd MMM yyyy",
+    datePattern: String = "dd MMMM yyyy",
 ) {
     Text(
         modifier = modifier
@@ -267,7 +286,7 @@ private fun AgendaListDateTitle(
         text =  if (selectedDate == currentDate) {
             stringResource(R.string.agenda_title_today)
         } else {
-            selectedDate.format(DateTimeFormatter.ofPattern(datePattern))
+            selectedDate.format(DateTimeFormatter.ofPattern(datePattern)).uppercase()
         },
     )
 }

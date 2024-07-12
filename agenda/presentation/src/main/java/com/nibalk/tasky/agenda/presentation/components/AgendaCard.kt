@@ -135,7 +135,7 @@ private fun AgendaCardHeader(
             Spacer(modifier = Modifier.width(MaterialTheme.spacing.spaceMedium))
             Text(
                 text = title,
-                style = MaterialTheme.typography.displayMedium,
+                style = MaterialTheme.typography.displayLarge,
                 color = agendaType.contentColor,
                 textDecoration = if (isDone) TextDecoration.LineThrough else null
             )
