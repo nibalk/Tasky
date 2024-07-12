@@ -44,11 +44,13 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import com.nibalk.tasky.core.presentation.R as CoreR
 
-typealias IsDetailScreenEditable = Boolean
 
 @Composable
 fun HomeScreenRoot(
-    onDetailClicked: (IsDetailScreenEditable, AgendaType, AgendaItem?) -> Unit,
+    onDetailClicked: (
+        isDetailScreenEditable: Boolean,
+        AgendaType, AgendaItem?
+    ) -> Unit,
     viewModel: HomeViewModel = koinViewModel(),
 ) {
     val context = LocalContext.current
@@ -256,7 +258,7 @@ private fun AgendaListDateTitle(
     modifier: Modifier = Modifier,
     selectedDate: LocalDate,
     currentDate: LocalDate,
-    datePattern: String = "dd MMM yyyy",
+    datePattern: String = "dd MMMM yyyy",
 ) {
     Text(
         modifier = modifier
@@ -267,7 +269,7 @@ private fun AgendaListDateTitle(
         text =  if (selectedDate == currentDate) {
             stringResource(R.string.agenda_title_today)
         } else {
-            selectedDate.format(DateTimeFormatter.ofPattern(datePattern))
+            selectedDate.format(DateTimeFormatter.ofPattern(datePattern)).uppercase()
         },
     )
 }

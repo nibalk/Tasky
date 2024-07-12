@@ -48,6 +48,7 @@ val Inter = FontFamily(
 )
 
 val Typography = Typography(
+    // Headline - FontWeight.Bold
     headlineLarge = TextStyle(
         fontFamily = Inter,
         fontWeight = FontWeight.Bold,
@@ -63,16 +64,17 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
     ),
+    // Body - FontWeight.Light
     bodyLarge = TextStyle(
         fontFamily = Inter,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Light,
         fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp,
     ),
     bodyMedium = TextStyle(
         fontFamily = Inter,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.Light,
         fontSize = 14.sp,
         lineHeight = 22.sp,
         letterSpacing = 0.5.sp,
@@ -83,9 +85,10 @@ val Typography = Typography(
         fontSize = 14.sp,
         lineHeight = 12.sp,
     ),
+    // Label - FontWeight.Normal
     labelLarge = TextStyle(
         fontFamily = Inter,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.Normal,
         fontSize = 18.sp,
         lineHeight = 30.sp,
     ),
@@ -95,10 +98,16 @@ val Typography = Typography(
         fontSize = 16.sp,
         lineHeight = 15.sp,
     ),
-    displayMedium = TextStyle(
+    // Label - FontWeight.SemiBold
+    displayLarge = TextStyle(
         fontFamily = Inter,
         fontWeight = FontWeight.SemiBold,
         fontSize = 20.sp
+    ),
+    displayMedium = TextStyle(
+        fontFamily = Inter,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 16.sp
     ),
     displaySmall = TextStyle(
         fontFamily = Inter,

@@ -39,7 +39,7 @@ fun TaskyEmptyList(
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceMedium))
         Text(
             text = displayMessage,
-            style = MaterialTheme.typography.displayMedium,
+            style = MaterialTheme.typography.displayLarge,
             color = contentColor,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
