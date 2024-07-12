@@ -3,6 +3,7 @@ package com.nibalk.tasky.agenda.presentation.utils
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.ZoneOffset
 
 fun LocalDate.getSurroundingDays(
     before: Int = 12,
@@ -21,4 +22,11 @@ fun Long.toLocalDate(): LocalDate {
         .ofEpochMilli(this)
         .atZone(ZoneId.systemDefault())
         .toLocalDate()
+}
+
+fun LocalDate.toLongDate(): Long {
+    return this
+        .atStartOfDay(ZoneOffset.UTC)
+        .toInstant()
+        .toEpochMilli()
 }

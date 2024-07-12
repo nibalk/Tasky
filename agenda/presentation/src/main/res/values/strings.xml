@@ -1,6 +1,8 @@
 <resources>
     <!-- Content Descriptions -->
     <string name="content_description_change_month">Change Month</string>
+    <string name="content_description_close">Close</string>
+    <string name="content_description_edit">Edit</string>
 
     <!-- Agenda Screen -->
     <string name="agenda_dialog_confirm">Confirm</string>
@@ -8,6 +10,8 @@
     <string name="agenda_logout_successful">User logout done</string>
     <string name="agenda_title_today">Today</string>
     <string name="agenda_empty_list">No agendas for this date.</string>
+    <string name="agenda_item_save">Save</string>
+    <string name="agenda_item_edit">Edit %s</string>
 
     <!-- Agenda Screen - Menu Options -->
     <string name="agenda_option_event">Event</string>
