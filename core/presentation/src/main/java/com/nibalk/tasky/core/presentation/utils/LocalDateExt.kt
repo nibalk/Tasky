@@ -1,4 +1,4 @@
-package com.nibalk.tasky.agenda.presentation.utils
+package com.nibalk.tasky.core.presentation.utils
 
 import java.time.Instant
 import java.time.LocalDate
