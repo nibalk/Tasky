@@ -100,7 +100,8 @@ fun TaskyBackground(
                                     bottom = with(LocalDensity.current) {
                                         WindowInsets.navigationBars.getBottom(this).toDp()
                                     },
-                                )
+                                ),
+                            contentAlignment = Alignment.BottomCenter
                         ) {
                             footer()
                         }

@@ -281,7 +281,7 @@ private fun AgendaListDateTitle(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = MaterialTheme.spacing.spaceLarge),
-        style = MaterialTheme.typography.headlineMedium,
+        style = MaterialTheme.typography.headlineSmall,
         color = MaterialTheme.colorScheme.onPrimary,
         text =  if (selectedDate == currentDate) {
             stringResource(R.string.agenda_title_today)

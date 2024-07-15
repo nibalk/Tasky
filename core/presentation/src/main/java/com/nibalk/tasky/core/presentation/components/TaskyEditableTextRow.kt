@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nibalk.tasky.core.presentation.R
+import com.nibalk.tasky.core.presentation.themes.TaskyDarkGray
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import com.nibalk.tasky.core.presentation.themes.spacing
 
@@ -35,6 +36,7 @@ enum class TaskyEditableTextRowType(
 fun TaskyEditableTextRow(
     modifier: Modifier = Modifier,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary,
+    hint: String = "",
     content: String,
     rowType: TaskyEditableTextRowType,
     isEditable: Boolean,
@@ -65,14 +67,14 @@ fun TaskyEditableTextRow(
                 Spacer(modifier = Modifier.width(MaterialTheme.spacing.spaceSmall))
             }
             Text(
-                text = content,
+                text = content.ifEmpty { hint },
                 style = when (rowType) {
                     TaskyEditableTextRowType.TITLE ->
-                        MaterialTheme.typography.headlineLarge
+                        MaterialTheme.typography.headlineMedium
                     TaskyEditableTextRowType.DESCRIPTION ->
                         MaterialTheme.typography.labelMedium
                 },
-                color = contentColor,
+                color = if(content.isEmpty()) TaskyDarkGray else contentColor,
             )
         }
         if (isEditable) {

@@ -12,6 +12,8 @@
     <string name="agenda_item_save">Save</string>
     <string name="agenda_item_edit">Edit %s</string>
     <string name="agenda_item_delete">Delete %s</string>
+    <string name="agenda_item_enter_title">Enter Title</string>
+    <string name="agenda_item_enter_description">Enter Description</string>
     <string name="agenda_item_from">From</string>
     <string name="agenda_item_to">To</string>
     <string name="agenda_item_at">At</string>

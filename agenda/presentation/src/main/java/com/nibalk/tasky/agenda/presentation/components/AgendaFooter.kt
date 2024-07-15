@@ -4,10 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -26,13 +23,15 @@ import com.nibalk.tasky.core.presentation.themes.spacing
 
 @Composable
 fun AgendaFooter(
-    modifier: Modifier = Modifier,
     contentColor: Color = TaskyGray,
     content: String,
     onButtonClicked: () -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .clickable {
+                onButtonClicked()
+            },
         verticalArrangement = Arrangement.Bottom
     ) {
         HorizontalDivider(color = TaskyLightBlue)
@@ -50,9 +49,6 @@ fun AgendaFooter(
                 color = contentColor,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.clickable {
-                    onButtonClicked()
-                }
             )
         }
     }

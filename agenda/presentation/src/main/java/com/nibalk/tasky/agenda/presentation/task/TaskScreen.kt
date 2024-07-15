@@ -69,6 +69,7 @@ fun TaskScreen(
         TaskyEditableTextRow(
             rowType = TaskyEditableTextRowType.TITLE,
             content = state.agendaItem?.title.orEmpty(),
+            hint = stringResource(id = R.string.agenda_item_enter_title),
             isEditable = state.isEditingMode,
             onClick = {}
         )
@@ -76,6 +77,7 @@ fun TaskScreen(
         TaskyEditableTextRow(
             rowType = TaskyEditableTextRowType.DESCRIPTION,
             content = state.agendaItem?.description.orEmpty(),
+            hint = stringResource(id = R.string.agenda_item_enter_description),
             isEditable = state.isEditingMode,
             onClick = {}
         )
