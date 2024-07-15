@@ -19,7 +19,13 @@ val agendaUseCaseModule = module {
 
 val agendaViewModelModule = module {
     viewModelOf(::HomeViewModel)
-    viewModel { (agendaArgs: AgendaArgs) -> EventViewModel(agendaArgs) }
-    viewModel { (agendaArgs: AgendaArgs) -> TaskViewModel(agendaArgs) }
-    viewModel { (agendaArgs: AgendaArgs) -> ReminderViewModel(agendaArgs)}
+    viewModel {
+        (agendaArgs: AgendaArgs) -> EventViewModel(agendaArgs)
+    }
+    viewModel {
+        (agendaArgs: AgendaArgs) -> TaskViewModel(agendaArgs)
+    }
+    viewModel {
+        (agendaArgs: AgendaArgs) -> ReminderViewModel(agendaArgs)
+    }
 }

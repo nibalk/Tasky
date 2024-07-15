@@ -19,7 +19,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nibalk.tasky.core.presentation.R
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -29,15 +31,20 @@ fun TaskyEditableDateTimeRow(
     datePattern: String = "MMM dd yyyy",
     timePattern: String = "HH:mm",
     selectedDateTime: LocalDateTime,
+    onTimeSelected: (LocalTime) -> Unit,
+    onDateSelected: (LocalDate) -> Unit,
     label: String,
     isEditable: Boolean,
 ) {
     Row(
-        modifier = modifier.fillMaxWidth().padding(vertical = 20.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 20.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
-            modifier = Modifier.weight(4f),
+            modifier = Modifier
+                .weight(4f),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -52,7 +59,9 @@ fun TaskyEditableDateTimeRow(
                 modifier = Modifier
                     .then(
                         if (isEditable) {
-                            Modifier.clickable { }
+                            Modifier.clickable {
+                                //TODO: show timepicker
+                            }
                         } else Modifier
                     ),
                 verticalAlignment = Alignment.CenterVertically,
@@ -76,10 +85,13 @@ fun TaskyEditableDateTimeRow(
         }
         // Selected Date
         Row(
-            modifier = Modifier.weight(4f)
+            modifier = Modifier
+                .weight(4f)
                 .then(
                     if (isEditable) {
-                        Modifier.clickable { }
+                        Modifier.clickable {
+                            //TODO: show datepicker
+                        }
                     } else Modifier
                 ),
             verticalAlignment = Alignment.CenterVertically,
@@ -109,6 +121,8 @@ fun TaskyEditableDateTimeRowPreview() {
     TaskyTheme {
         TaskyEditableDateTimeRow(
             selectedDateTime = LocalDateTime.now(),
+            onTimeSelected = {},
+            onDateSelected = {},
             label = "From",
             isEditable = true,
         )
