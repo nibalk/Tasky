@@ -35,5 +35,8 @@ class ReminderViewModel(
             )
         }
     }
-    fun onAction(action: ReminderAction) { }
+
+    fun onAction(action: ReminderAction) {
+
+    }
 }

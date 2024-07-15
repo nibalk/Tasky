@@ -28,14 +28,19 @@ fun AgendaFooter(
     onButtonClicked: () -> Unit,
 ) {
     Column(
-        modifier = Modifier.clickable { onButtonClicked() },
+        modifier = Modifier
+            .clickable {
+                onButtonClicked()
+            },
         verticalArrangement = Arrangement.Bottom
     ) {
         HorizontalDivider(color = TaskyLightBlue)
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding( vertical = MaterialTheme.spacing.spaceMedium),
+                .padding(
+                    vertical = MaterialTheme.spacing.spaceMedium,
+                ),
             contentAlignment = Alignment.Center
         ) {
             Text(
