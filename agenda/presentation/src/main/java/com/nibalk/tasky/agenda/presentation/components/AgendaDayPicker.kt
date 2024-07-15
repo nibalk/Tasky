@@ -26,7 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.nibalk.tasky.agenda.presentation.utils.getSurroundingDays
+import com.nibalk.tasky.core.presentation.utils.getSurroundingDays
 import com.nibalk.tasky.core.presentation.themes.TaskyDarkGray
 import com.nibalk.tasky.core.presentation.themes.TaskyDarkOrange
 import com.nibalk.tasky.core.presentation.themes.TaskyGray

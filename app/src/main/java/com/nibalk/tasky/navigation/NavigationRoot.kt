@@ -13,8 +13,8 @@ import com.nibalk.tasky.agenda.presentation.model.AgendaArgs
 import com.nibalk.tasky.agenda.presentation.model.AgendaType
 import com.nibalk.tasky.agenda.presentation.reminder.ReminderScreenRoot
 import com.nibalk.tasky.agenda.presentation.task.TaskScreenRoot
-import com.nibalk.tasky.agenda.presentation.utils.toLocalDate
-import com.nibalk.tasky.agenda.presentation.utils.toLongDate
+import com.nibalk.tasky.core.presentation.utils.toLocalDate
+import com.nibalk.tasky.core.presentation.utils.toLongDate
 import com.nibalk.tasky.auth.presentation.login.LoginScreenRoot
 import com.nibalk.tasky.auth.presentation.register.RegisterScreenRoot
 import java.time.LocalDate

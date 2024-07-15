@@ -35,7 +35,7 @@ import com.nibalk.tasky.agenda.presentation.components.AgendaDayPicker
 import com.nibalk.tasky.agenda.presentation.components.AgendaHeader
 import com.nibalk.tasky.agenda.presentation.model.AgendaItemActionType
 import com.nibalk.tasky.agenda.presentation.model.AgendaType
-import com.nibalk.tasky.agenda.presentation.utils.getSurroundingDays
+import com.nibalk.tasky.core.presentation.utils.getSurroundingDays
 import com.nibalk.tasky.core.presentation.components.TaskyBackground
 import com.nibalk.tasky.core.presentation.components.TaskyEmptyList
 import com.nibalk.tasky.core.presentation.components.TaskyNeedleSeparator
@@ -281,7 +281,7 @@ private fun AgendaListDateTitle(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = MaterialTheme.spacing.spaceLarge),
-        style = MaterialTheme.typography.headlineMedium,
+        style = MaterialTheme.typography.headlineSmall,
         color = MaterialTheme.colorScheme.onPrimary,
         text =  if (selectedDate == currentDate) {
             stringResource(R.string.agenda_title_today)

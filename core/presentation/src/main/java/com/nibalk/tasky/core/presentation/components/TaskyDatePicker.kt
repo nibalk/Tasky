@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.nibalk.tasky.agenda.presentation.components
+package com.nibalk.tasky.core.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -32,18 +32,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import com.nibalk.tasky.agenda.presentation.R
-import com.nibalk.tasky.agenda.presentation.utils.toLocalDate
+import com.nibalk.tasky.core.presentation.R
 import com.nibalk.tasky.core.presentation.themes.TaskyDarkOrange
 import com.nibalk.tasky.core.presentation.themes.TaskyOrange
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import com.nibalk.tasky.core.presentation.themes.TaskyWhite
 import com.nibalk.tasky.core.presentation.themes.spacing
+import com.nibalk.tasky.core.presentation.utils.toLocalDate
 import java.time.LocalDate
 import java.time.ZoneOffset
 
 @Composable
-fun AgendaDatePicker(
+fun TaskyDatePicker(
     selectedDate: LocalDate,
     onCancelPicker: () -> Unit,
     onConfirmPicker: (LocalDate) -> Unit
@@ -104,12 +104,12 @@ fun AgendaDatePicker(
                     TextButton(
                         onClick = {
                             if (datePickerState.selectedDateMillis != null) {
-                                onConfirmPicker(datePickerState.selectedDateMillis!!.toLocalDate ())
+                                onConfirmPicker(datePickerState.selectedDateMillis!!.toLocalDate())
                             }
                             onCancelPicker()
                         }
                     ) {
-                        Text(text = stringResource(id = R.string.agenda_dialog_confirm))
+                        Text(text = stringResource(id = R.string.button_confirm))
                     }
                 }
             }
@@ -121,7 +121,7 @@ fun AgendaDatePicker(
 @Composable
 private fun AgendaDatePickerPreview() {
     TaskyTheme {
-        AgendaDatePicker(
+        TaskyDatePicker(
             LocalDate.now(), {}, {}
         )
     }

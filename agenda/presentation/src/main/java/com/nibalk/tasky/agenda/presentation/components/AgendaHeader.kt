@@ -7,6 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.nibalk.tasky.core.presentation.components.TaskyDatePicker
 import com.nibalk.tasky.core.presentation.components.TaskyHeader
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import java.time.LocalDate
@@ -24,7 +25,7 @@ fun AgendaHeader(
     }
 
     if (isDatePickerShown) {
-        AgendaDatePicker(
+        TaskyDatePicker(
             selectedDate = selectedDate,
             onCancelPicker = {
                 isDatePickerShown = false
