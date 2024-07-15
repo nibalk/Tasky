@@ -11,6 +11,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,6 +40,33 @@ fun TaskyEditableDateTimeRow(
     label: String,
     isEditable: Boolean,
 ) {
+
+    var isDatePickerShown by remember { mutableStateOf(false) }
+    var isTimePickerShown by remember { mutableStateOf(false) }
+
+    if (isDatePickerShown) {
+        TaskyDatePicker(
+            selectedDate = selectedDateTime.toLocalDate(),
+            onCancelPicker = {
+                isDatePickerShown = false
+            },
+            onConfirmPicker = { selectedPickerDate ->
+                onDateSelected(selectedPickerDate)
+            }
+        )
+    }
+    if (isTimePickerShown) {
+        TaskyTimePicker(
+            selectedTime = selectedDateTime.toLocalTime(),
+            onCancelPicker = {
+                isTimePickerShown = false
+            },
+            onConfirmPicker = { selectedPickerTime ->
+                onTimeSelected(selectedPickerTime)
+            }
+        )
+    }
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -59,9 +90,7 @@ fun TaskyEditableDateTimeRow(
                 modifier = Modifier
                     .then(
                         if (isEditable) {
-                            Modifier.clickable {
-                                //TODO: show timepicker
-                            }
+                            Modifier.clickable { isTimePickerShown = true }
                         } else Modifier
                     ),
                 verticalAlignment = Alignment.CenterVertically,
@@ -89,9 +118,7 @@ fun TaskyEditableDateTimeRow(
                 .weight(4f)
                 .then(
                     if (isEditable) {
-                        Modifier.clickable {
-                            //TODO: show datepicker
-                        }
+                        Modifier.clickable { isDatePickerShown = true }
                     } else Modifier
                 ),
             verticalAlignment = Alignment.CenterVertically,
