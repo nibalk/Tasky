@@ -95,6 +95,12 @@ private fun NavGraphBuilder.agendaGraph(navController: NavHostController) {
         composable<AgendaDetailScreen> { backStackEntry ->
             val args = backStackEntry.toRoute<AgendaDetailScreen>()
             DetailScreenRoot(
+                onCloseClicked = {
+                    navController.popBackStack(
+                        route = AgendaHomeScreen,
+                        inclusive = false,
+                    )
+                },
                 agendaArgs = AgendaArgs(
                     isEditable = args.isEditable,
                     selectedDate = args.selectedDate.toLocalDate(),

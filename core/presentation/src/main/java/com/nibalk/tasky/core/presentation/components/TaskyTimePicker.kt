@@ -41,7 +41,6 @@ import com.nibalk.tasky.core.presentation.themes.TaskyOrange
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import com.nibalk.tasky.core.presentation.themes.TaskyWhite
 import com.nibalk.tasky.core.presentation.themes.spacing
-import java.time.LocalDate
 import java.time.LocalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -107,9 +106,9 @@ fun TaskyTimePicker(
                 ) {
                     TextButton(
                         onClick = {
-//                            if (timePickerState.selectedDateMillis != null) {
-//                                onConfirmPicker(timePickerState.selectedDateMillis!!.toLocalDate())
-//                            }
+                            onConfirmPicker(
+                                LocalTime.of(timePickerState.hour, timePickerState.minute)
+                            )
                             onCancelPicker()
                         }
                     ) {
