@@ -43,8 +43,7 @@ fun TaskyEditableTextRow(
     onClick: () -> Unit,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
             .then(
                 if (isEditable) {
                     Modifier.clickable { onClick() }
@@ -69,10 +68,8 @@ fun TaskyEditableTextRow(
             Text(
                 text = content.ifEmpty { hint },
                 style = when (rowType) {
-                    TaskyEditableTextRowType.TITLE ->
-                        MaterialTheme.typography.headlineMedium
-                    TaskyEditableTextRowType.DESCRIPTION ->
-                        MaterialTheme.typography.labelMedium
+                    TaskyEditableTextRowType.TITLE -> MaterialTheme.typography.headlineMedium
+                    TaskyEditableTextRowType.DESCRIPTION -> MaterialTheme.typography.labelMedium
                 },
                 color = if(content.isEmpty()) TaskyDarkGray else contentColor,
             )

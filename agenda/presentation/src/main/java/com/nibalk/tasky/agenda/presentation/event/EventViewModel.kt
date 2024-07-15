@@ -35,8 +35,5 @@ class EventViewModel(
             )
         }
     }
-
-    fun onAction(action: EventAction) {
-
-    }
+    fun onAction(action: EventAction) {}
 }

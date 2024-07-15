@@ -35,8 +35,5 @@ class TaskViewModel(
             )
         }
     }
-
-    fun onAction(action: TaskAction) {
-
-    }
+    fun onAction(action: TaskAction) {}
 }

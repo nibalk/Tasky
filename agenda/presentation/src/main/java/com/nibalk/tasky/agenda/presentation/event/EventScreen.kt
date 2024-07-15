@@ -49,21 +49,16 @@ fun EventScreen(
                 modifier = Modifier.fillMaxWidth(),
                 isEditable = state.isEditingMode,
                 headerDate = state.selectedDate,
-                headerTitle = stringResource(
-                    id = R.string.agenda_item_edit, AgendaType.EVENT
-                ).uppercase(),
+                headerTitle = stringResource(R.string.agenda_item_edit, AgendaType.EVENT).uppercase(),
                 onCloseDetail = { },
-                onSaveDetail = { }
-            ) {
-
-            }
+                onSaveDetail = { },
+                onIsEditableChanged = { },
+            )
         },
         footer = {
             if (WindowInsets.ime.getBottom(LocalDensity.current) <= 0) {
                 AgendaFooter(
-                    content = stringResource(
-                        id = R.string.agenda_item_delete, AgendaType.EVENT
-                    ).uppercase(),
+                    content = stringResource(R.string.agenda_item_delete, AgendaType.EVENT).uppercase(),
                     onButtonClicked = {}
                 )
             }
@@ -88,19 +83,13 @@ fun EventScreen(
         TaskyEditableDateTimeRow(
             label = stringResource(R.string.agenda_item_from),
             isEditable = state.isEditingMode,
-            selectedDateTime = state.agendaItem?.startAt
-                ?: state.selectedDate.atTime(LocalTime.now()),
-            onTimeSelected = { },
-            onDateSelected = { }
+            selectedDateTime = state.agendaItem?.startAt ?: state.selectedDate.atTime(LocalTime.now()),
         )
         HorizontalDivider(color = TaskyLightBlue)
         TaskyEditableDateTimeRow(
             label = stringResource(R.string.agenda_item_to),
             isEditable = state.isEditingMode,
-            selectedDateTime = state.agendaItem?.endAt
-                ?: state.selectedDate.atTime(LocalTime.now()),
-            onTimeSelected = { },
-            onDateSelected = { }
+            selectedDateTime = state.agendaItem?.endAt ?: state.selectedDate.atTime(LocalTime.now()),
         )
         HorizontalDivider(color = TaskyLightBlue)
     }

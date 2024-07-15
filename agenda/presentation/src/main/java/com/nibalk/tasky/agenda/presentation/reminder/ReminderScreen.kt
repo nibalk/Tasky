@@ -46,21 +46,16 @@ fun ReminderScreen(
                 modifier = Modifier.fillMaxWidth(),
                 isEditable = state.isEditingMode,
                 headerDate = state.selectedDate,
-                headerTitle = stringResource(
-                    id = R.string.agenda_item_edit, AgendaType.REMINDER
-                ).uppercase(),
+                headerTitle = stringResource(R.string.agenda_item_edit, AgendaType.REMINDER).uppercase(),
                 onCloseDetail = { },
-                onSaveDetail = { }
-            ) {
-
-            }
+                onSaveDetail = { },
+                onIsEditableChanged = { },
+            )
         },
         footer = {
             if (WindowInsets.ime.getBottom(LocalDensity.current) <= 0) {
                 AgendaFooter(
-                    content = stringResource(
-                        id = R.string.agenda_item_delete, AgendaType.REMINDER
-                    ).uppercase(),
+                    content = stringResource(R.string.agenda_item_delete, AgendaType.REMINDER).uppercase(),
                     onButtonClicked = {}
                 )
             }
@@ -85,10 +80,7 @@ fun ReminderScreen(
         TaskyEditableDateTimeRow(
             label = stringResource(R.string.agenda_item_at),
             isEditable = state.isEditingMode,
-            selectedDateTime = state.agendaItem?.startAt
-                ?: state.selectedDate.atTime(LocalTime.now()),
-            onTimeSelected = { },
-            onDateSelected = { }
+            selectedDateTime = state.agendaItem?.startAt ?: state.selectedDate.atTime(LocalTime.now()),
         )
         HorizontalDivider(color = TaskyLightBlue)
     }
