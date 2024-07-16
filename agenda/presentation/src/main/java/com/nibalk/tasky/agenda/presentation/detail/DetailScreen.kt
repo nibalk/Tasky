@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.nibalk.tasky.agenda.presentation.R
 import com.nibalk.tasky.agenda.presentation.components.AgendaDetailHeader
 import com.nibalk.tasky.agenda.presentation.components.AgendaFooter
+import com.nibalk.tasky.agenda.presentation.components.AgendaNotificationsRow
 import com.nibalk.tasky.agenda.presentation.model.AgendaArgs
 import com.nibalk.tasky.agenda.presentation.model.AgendaType
 import com.nibalk.tasky.core.presentation.components.TaskyEditableDateTimeRow
@@ -61,10 +62,13 @@ fun DetailScreen(
                 onCloseDetail = {
                     onAction(DetailAction.OnCloseClicked)
                 },
-                onSaveDetail = { }
-            ) {
-
-            }
+                onSaveDetail = {
+                    onAction(DetailAction.OnSaveClicked)
+                },
+                onIsEditableChanged = { isEditable ->
+                    onAction(DetailAction.OnIsEditableChanged(isEditable))
+                }
+            )
         },
         footer = {
             if (WindowInsets.ime.getBottom(LocalDensity.current) <= 0) {
@@ -123,6 +127,11 @@ fun DetailScreen(
             )
             HorizontalDivider(color = TaskyLightBlue)
         }
+        AgendaNotificationsRow(
+            isEditable = state.isEditingMode,
+            currentType = state.notificationDurationType,
+            onMenuItemClicked = {}
+        )
     }
 }
 
@@ -136,7 +145,7 @@ private fun DetailScreenPreview() {
                 agendaType = AgendaType.TASK,
                 agendaId = AgendaSampleData.task2.id,
                 title = AgendaSampleData.task2.title,
-                description = AgendaSampleData.task2.title,
+                description = AgendaSampleData.task2.description,
                 startDate = AgendaSampleData.task2.startAt.toLocalDate(),
                 startTime = AgendaSampleData.task2.startAt.toLocalTime(),
             ),

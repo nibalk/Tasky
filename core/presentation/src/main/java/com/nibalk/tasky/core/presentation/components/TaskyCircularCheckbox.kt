@@ -23,13 +23,14 @@ import com.nibalk.tasky.core.presentation.themes.spacing
 
 @Composable
 fun TaskyCircularCheckbox(
+    modifier: Modifier = Modifier,
     checked: Boolean,
     contentColor: Color,
     onCheckedChange: (Boolean) -> Unit,
     size: Dp = MaterialTheme.spacing.spaceLarge
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(100))
             .size(size)
             .border(

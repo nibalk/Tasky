@@ -25,4 +25,9 @@
     <string name="agenda_option_open">Open</string>
     <string name="agenda_option_edit">Edit</string>
     <string name="agenda_option_delete">Delete</string>
+    <string name="agenda_option_ten_minutes_before">10 minutes before</string>
+    <string name="agenda_option_thirty_minutes_before">30 minutes before</string>
+    <string name="agenda_option_one_hour_before">1 hour before</string>
+    <string name="agenda_option_six_hours_before">6 hours before</string>
+    <string name="agenda_option_one_day_before">1 day before</string>
 </resources>

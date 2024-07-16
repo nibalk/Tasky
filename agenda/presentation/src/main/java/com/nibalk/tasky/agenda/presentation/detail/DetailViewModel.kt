@@ -35,9 +35,7 @@ class DetailViewModel(
 
                 )
         }
-        viewModelScope.launch {
-            fetchAgendaItem()
-        }
+        fetchAgendaItem()
     }
 
     fun onAction(action: DetailAction) {
@@ -54,11 +52,14 @@ class DetailViewModel(
             is DetailAction.OnEndTimeSelected -> {
                 state = state.copy(endTime = action.time)
             }
+            is DetailAction.OnIsEditableChanged -> {
+                state = state.copy(isEditingMode = action.isEditable)
+            }
             else -> Unit
         }
     }
 
-    private suspend fun fetchAgendaItem() {
+    private fun fetchAgendaItem() {
         val item = when(AgendaType.valueOf(agendaArgs.agendaType)) { //TODO: Mocking for now
             AgendaType.EVENT -> {
                 AgendaSampleData.allAgendas.find {
@@ -78,7 +79,7 @@ class DetailViewModel(
         }
         state = state.copy(
             title = item?.title.orEmpty(),
-            description = item?.title.orEmpty(),
+            description = item?.description.orEmpty(),
             startDate = item?.startAt?.toLocalDate() ?: state.selectedDate,
             startTime = item?.startAt?.toLocalTime() ?: LocalTime.now(),
             endDate = if (item is AgendaItem.Event) {

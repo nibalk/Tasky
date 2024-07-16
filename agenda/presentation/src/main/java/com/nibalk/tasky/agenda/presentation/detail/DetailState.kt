@@ -1,6 +1,7 @@
 package com.nibalk.tasky.agenda.presentation.detail
 
 import com.nibalk.tasky.agenda.presentation.model.AgendaType
+import com.nibalk.tasky.agenda.presentation.model.NotificationDurationType
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -17,4 +18,5 @@ data class DetailState(
     val startTime: LocalTime = LocalTime.now(),
     val endDate: LocalDate = LocalDate.now(),
     val endTime: LocalTime = LocalTime.now(),
+    val notificationDurationType: NotificationDurationType = NotificationDurationType.THIRTY_MINUTES,
 )
