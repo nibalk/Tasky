@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -15,15 +17,15 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerDefaults
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,24 +35,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.nibalk.tasky.core.presentation.R
-import com.nibalk.tasky.core.presentation.themes.TaskyDarkGreen
+import com.nibalk.tasky.core.presentation.themes.TaskyBrownLight
 import com.nibalk.tasky.core.presentation.themes.TaskyLightGreen
+import com.nibalk.tasky.core.presentation.themes.TaskyOrange
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import com.nibalk.tasky.core.presentation.themes.TaskyWhite
 import com.nibalk.tasky.core.presentation.themes.spacing
-import com.nibalk.tasky.core.presentation.utils.toLocalDate
-import java.time.LocalDate
-import java.time.ZoneOffset
+import java.time.LocalTime
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskyDatePicker(
-    selectedDate: LocalDate,
+fun TaskyTimePicker(
+    selectedTime: LocalTime,
     onCancelPicker: () -> Unit,
-    onConfirmPicker: (LocalDate) -> Unit
+    onConfirmPicker: (LocalTime) -> Unit
 ) {
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = selectedDate
-            .atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+    val timePickerState = rememberTimePickerState(
+        initialHour = selectedTime.hour,
+        initialMinute = selectedTime.minute,
+        is24Hour = true
     )
 
     BasicAlertDialog(
@@ -66,34 +69,33 @@ fun TaskyDatePicker(
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
                     .background(color = MaterialTheme.colorScheme.primary),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                DatePicker(
-                    modifier = Modifier.fillMaxWidth(),
-                    state = datePickerState,
-                    title = {
-                        Box(
-                            modifier = Modifier
-                                .background(color = MaterialTheme.colorScheme.secondary)
-                                .fillMaxWidth()
-                                .align(Alignment.Start)
-                                .padding(MaterialTheme.spacing.spaceExtraSmall),
-                        ) {
-                            IconButton(onClick = onCancelPicker) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Clear,
-                                    contentDescription = "close",
-                                    tint = TaskyWhite
-                                )
-                            }
-                        }
-                    },
-                    colors = DatePickerDefaults.colors(
-                        todayContentColor = TaskyDarkGreen,
-                        todayDateBorderColor = TaskyDarkGreen,
-                        currentYearContentColor = TaskyDarkGreen,
-                        selectedYearContainerColor = TaskyLightGreen,
-                        selectedDayContainerColor = TaskyLightGreen,
+                Box(
+                    modifier = Modifier
+                        .background(color = MaterialTheme.colorScheme.secondary)
+                        .fillMaxWidth()
+                        .align(Alignment.Start)
+                        .padding(MaterialTheme.spacing.spaceExtraSmall),
+                ) {
+                    IconButton(onClick = onCancelPicker) {
+                        Icon(
+                            imageVector = Icons.Outlined.Clear,
+                            contentDescription = "close",
+                            tint = TaskyWhite
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceMedium))
+                TimePicker(
+                    state = timePickerState,
+                    colors = TimePickerDefaults.colors(
+                        clockDialColor = TaskyBrownLight,
+                        selectorColor = TaskyLightGreen,
+                        timeSelectorSelectedContainerColor = TaskyOrange,
+                        timeSelectorUnselectedContainerColor = TaskyBrownLight
                     ),
+                    layoutType = TimePickerDefaults.layoutType()
                 )
                 Row(
                     modifier = Modifier
@@ -104,9 +106,9 @@ fun TaskyDatePicker(
                 ) {
                     TextButton(
                         onClick = {
-                            if (datePickerState.selectedDateMillis != null) {
-                                onConfirmPicker(datePickerState.selectedDateMillis!!.toLocalDate())
-                            }
+                            onConfirmPicker(
+                                LocalTime.of(timePickerState.hour, timePickerState.minute)
+                            )
                             onCancelPicker()
                         }
                     ) {
@@ -120,10 +122,10 @@ fun TaskyDatePicker(
 
 @Preview
 @Composable
-private fun TaskyDatePickerPreview() {
+private fun TaskyTimePickerPreview() {
     TaskyTheme {
-        TaskyDatePicker(
-            LocalDate.now(), {}, {}
+        TaskyTimePicker(
+            LocalTime.now(), {}, {}
         )
     }
 }

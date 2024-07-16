@@ -10,7 +10,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.nibalk.tasky.core.presentation.components.TaskyDropDownMenu
 import com.nibalk.tasky.core.presentation.components.TaskyDropDownMenuItem
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
-import java.time.LocalDate
 
 @Composable
 fun AgendaHeaderProfileIcon(
@@ -46,12 +45,10 @@ fun AgendaHeaderProfileIcon(
 
 @Preview
 @Composable
-private fun AgendaHeaderPreview() {
+private fun AgendaHeaderProfileIconPreview() {
     TaskyTheme {
-        AgendaHeader(
-            selectedDate = LocalDate.now(),
+        AgendaHeaderProfileIcon(
             userInitials = "AB",
-            onDayClicked = {},
             onLogoutClicked = {}
         )
     }

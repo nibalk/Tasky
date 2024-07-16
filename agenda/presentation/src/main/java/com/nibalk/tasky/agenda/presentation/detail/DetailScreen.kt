@@ -1,4 +1,4 @@
-package com.nibalk.tasky.agenda.presentation.event
+package com.nibalk.tasky.agenda.presentation.detail
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,25 +23,31 @@ import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import com.nibalk.tasky.test.mock.AgendaSampleData
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import java.time.LocalTime
 
 @Composable
-fun EventScreenRoot(
+fun DetailScreenRoot(
+    onCloseClicked: () -> Unit,
     agendaArgs: AgendaArgs,
-    viewModel: EventViewModel = koinViewModel { parametersOf(agendaArgs) },
+    viewModel: DetailViewModel = koinViewModel { parametersOf(agendaArgs) },
 ) {
-    EventScreen(
+    DetailScreen(
         state = viewModel.state,
         onAction = { action ->
+            when(action) {
+                is DetailAction.OnCloseClicked -> {
+                    onCloseClicked()
+                }
+                else -> Unit
+            }
             viewModel.onAction(action)
-        },
+        }
     )
 }
 
 @Composable
-fun EventScreen(
-    state: EventState,
-    onAction: (EventAction) -> Unit,
+fun DetailScreen(
+    state: DetailState,
+    onAction: (DetailAction) -> Unit,
 ) {
     TaskyScrollableBackground(
         header = {
@@ -49,16 +55,23 @@ fun EventScreen(
                 modifier = Modifier.fillMaxWidth(),
                 isEditable = state.isEditingMode,
                 headerDate = state.selectedDate,
-                headerTitle = stringResource(R.string.agenda_item_edit, AgendaType.EVENT).uppercase(),
-                onCloseDetail = { },
-                onSaveDetail = { },
-                onIsEditableChanged = { },
-            )
+                headerTitle = stringResource(
+                    id = R.string.agenda_item_edit, state.agendaType.name
+                ).uppercase(),
+                onCloseDetail = {
+                    onAction(DetailAction.OnCloseClicked)
+                },
+                onSaveDetail = { }
+            ) {
+
+            }
         },
         footer = {
             if (WindowInsets.ime.getBottom(LocalDensity.current) <= 0) {
                 AgendaFooter(
-                    content = stringResource(R.string.agenda_item_delete, AgendaType.EVENT).uppercase(),
+                    content = stringResource(
+                        id = R.string.agenda_item_delete, state.agendaType.name
+                    ).uppercase(),
                     onButtonClicked = {}
                 )
             }
@@ -66,7 +79,7 @@ fun EventScreen(
     ) {
         TaskyEditableTextRow(
             rowType = TaskyEditableTextRowType.TITLE,
-            content = state.agendaItem?.title.orEmpty(),
+            content = state.title,
             hint = stringResource(id = R.string.agenda_item_enter_title),
             isEditable = state.isEditingMode,
             onClick = {}
@@ -74,35 +87,58 @@ fun EventScreen(
         HorizontalDivider(color = TaskyLightBlue)
         TaskyEditableTextRow(
             rowType = TaskyEditableTextRowType.DESCRIPTION,
-            content = state.agendaItem?.description.orEmpty(),
+            content = state.description,
             hint = stringResource(id = R.string.agenda_item_enter_description),
             isEditable = state.isEditingMode,
             onClick = {}
         )
         HorizontalDivider(color = TaskyLightBlue)
         TaskyEditableDateTimeRow(
-            label = stringResource(R.string.agenda_item_from),
+            label = stringResource(
+                if (state.agendaType == AgendaType.EVENT) {
+                    R.string.agenda_item_from
+                } else R.string.agenda_item_at
+            ),
             isEditable = state.isEditingMode,
-            selectedDateTime = state.agendaItem?.startAt ?: state.selectedDate.atTime(LocalTime.now()),
+            selectedDateTime = state.startDate.atTime(state.startTime),
+            onTimeSelected = { selectedTime ->
+                onAction(DetailAction.OnStartTimeSelected(selectedTime))
+            },
+            onDateSelected = { selectedDate ->
+                onAction(DetailAction.OnStartDateSelected(selectedDate))
+            }
         )
         HorizontalDivider(color = TaskyLightBlue)
-        TaskyEditableDateTimeRow(
-            label = stringResource(R.string.agenda_item_to),
-            isEditable = state.isEditingMode,
-            selectedDateTime = state.agendaItem?.endAt ?: state.selectedDate.atTime(LocalTime.now()),
-        )
-        HorizontalDivider(color = TaskyLightBlue)
+        if (state.agendaType == AgendaType.EVENT) {
+            TaskyEditableDateTimeRow(
+                label = stringResource(R.string.agenda_item_to),
+                isEditable = state.isEditingMode,
+                selectedDateTime = state.endDate.atTime(state.endTime),
+                onTimeSelected = { selectedTime ->
+                    onAction(DetailAction.OnEndTimeSelected(selectedTime))
+                },
+                onDateSelected = { selectedDate ->
+                    onAction(DetailAction.OnEndDateSelected(selectedDate))
+                }
+            )
+            HorizontalDivider(color = TaskyLightBlue)
+        }
     }
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
-private fun EventScreenPreview() {
+private fun DetailScreenPreview() {
     TaskyTheme {
-        EventScreen(
-            state = EventState(
-                agendaId = AgendaSampleData.event1.id,
-                agendaItem = AgendaSampleData.event1,
+        DetailScreen(
+            state = DetailState(
+                isEditingMode = false,
+                agendaType = AgendaType.TASK,
+                agendaId = AgendaSampleData.task2.id,
+                title = AgendaSampleData.task2.title,
+                description = AgendaSampleData.task2.title,
+                startDate = AgendaSampleData.task2.startAt.toLocalDate(),
+                startTime = AgendaSampleData.task2.startAt.toLocalTime(),
             ),
             onAction = {},
         )

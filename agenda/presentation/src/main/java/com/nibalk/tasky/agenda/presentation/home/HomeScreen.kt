@@ -53,8 +53,7 @@ import com.nibalk.tasky.core.presentation.R as CoreR
 @Composable
 fun HomeScreenRoot(
     onDetailClicked: (
-        isDetailScreenEditable: Boolean,
-        AgendaType, AgendaItem?
+        isDetailScreenEditable: Boolean, AgendaType, AgendaItem?
     ) -> Unit,
     viewModel: HomeViewModel = koinViewModel(),
 ) {

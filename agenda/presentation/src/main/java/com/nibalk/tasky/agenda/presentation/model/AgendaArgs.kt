@@ -6,4 +6,5 @@ data class AgendaArgs(
     val isEditable: Boolean,
     val selectedDate: LocalDate?,
     val agendaId: String?,
+    val agendaType: String,
 )
