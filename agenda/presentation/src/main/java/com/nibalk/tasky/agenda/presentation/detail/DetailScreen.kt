@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.nibalk.tasky.agenda.presentation.R
 import com.nibalk.tasky.agenda.presentation.components.AgendaDetailHeader
 import com.nibalk.tasky.agenda.presentation.components.AgendaFooter
+import com.nibalk.tasky.agenda.presentation.components.AgendaNotificationsRow
 import com.nibalk.tasky.agenda.presentation.model.AgendaArgs
 import com.nibalk.tasky.agenda.presentation.model.AgendaType
 import com.nibalk.tasky.core.presentation.components.TaskyEditableDateTimeRow
@@ -23,6 +24,7 @@ import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import com.nibalk.tasky.test.mock.AgendaSampleData
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import java.time.LocalDateTime
 
 @Composable
 fun DetailScreenRoot(
@@ -40,7 +42,7 @@ fun DetailScreenRoot(
                 else -> Unit
             }
             viewModel.onAction(action)
-        }
+        },
     )
 }
 
@@ -61,10 +63,13 @@ fun DetailScreen(
                 onCloseDetail = {
                     onAction(DetailAction.OnCloseClicked)
                 },
-                onSaveDetail = { }
-            ) {
-
-            }
+                onSaveDetail = {
+                    onAction(DetailAction.OnSaveClicked)
+                },
+                onIsEditableChanged = { isEditable ->
+                    onAction(DetailAction.OnIsEditableChanged(isEditable))
+                }
+            )
         },
         footer = {
             if (WindowInsets.ime.getBottom(LocalDensity.current) <= 0) {
@@ -113,7 +118,11 @@ fun DetailScreen(
             TaskyEditableDateTimeRow(
                 label = stringResource(R.string.agenda_item_to),
                 isEditable = state.isEditingMode,
-                selectedDateTime = state.endDate.atTime(state.endTime),
+                selectedDateTime = state.getEventDetailField(
+                    state.details
+                ) { event ->
+                    event.endDate.atTime(event.endTime)
+                } ?: LocalDateTime.now(),
                 onTimeSelected = { selectedTime ->
                     onAction(DetailAction.OnEndTimeSelected(selectedTime))
                 },
@@ -123,6 +132,13 @@ fun DetailScreen(
             )
             HorizontalDivider(color = TaskyLightBlue)
         }
+        AgendaNotificationsRow(
+            isEditable = state.isEditingMode,
+            currentType = state.notificationDurationType,
+            onMenuItemClicked = { notificationDurationType ->
+                onAction(DetailAction.OnNotificationDurationClicked(notificationDurationType))
+            }
+        )
     }
 }
 
@@ -133,12 +149,16 @@ private fun DetailScreenPreview() {
         DetailScreen(
             state = DetailState(
                 isEditingMode = false,
-                agendaType = AgendaType.TASK,
-                agendaId = AgendaSampleData.task2.id,
-                title = AgendaSampleData.task2.title,
-                description = AgendaSampleData.task2.title,
-                startDate = AgendaSampleData.task2.startAt.toLocalDate(),
-                startTime = AgendaSampleData.task2.startAt.toLocalTime(),
+                agendaType = AgendaType.EVENT,
+                agendaId = AgendaSampleData.event2.id,
+                title = AgendaSampleData.event2.title,
+                description = AgendaSampleData.event2.description,
+                startDate = AgendaSampleData.event2.startAt.toLocalDate(),
+                startTime = AgendaSampleData.event2.startAt.toLocalTime(),
+                details = AgendaItemDetails.Event(
+                    endDate = AgendaSampleData.event2.endAt.toLocalDate(),
+                    endTime = AgendaSampleData.event2.endAt.toLocalTime(),
+                )
             ),
             onAction = {},
         )

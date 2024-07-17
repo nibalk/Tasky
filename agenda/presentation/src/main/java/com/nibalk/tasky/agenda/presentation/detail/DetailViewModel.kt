@@ -19,7 +19,9 @@ import java.time.LocalTime
 class DetailViewModel(
     private val agendaArgs: AgendaArgs
 ): ViewModel() {
-    var state by mutableStateOf(DetailState())
+    var state by mutableStateOf(DetailState(
+        details = AgendaItemDetails.NoDetails
+    ))
         private set
 
     private val eventChannel = Channel<DetailState>()
@@ -35,9 +37,7 @@ class DetailViewModel(
 
                 )
         }
-        viewModelScope.launch {
-            fetchAgendaItem()
-        }
+        fetchAgendaItem()
     }
 
     fun onAction(action: DetailAction) {
@@ -46,19 +46,33 @@ class DetailViewModel(
                 state = state.copy(startDate = action.date)
             }
             is DetailAction.OnEndDateSelected -> {
-                state = state.copy(endDate = action.date)
+                state = state.copy(
+                    details = updateDetailsIfEvent { event ->
+                        event.copy(endDate = action.date)
+                    }
+                )
             }
             is DetailAction.OnStartTimeSelected -> {
                 state = state.copy(startTime = action.time)
             }
             is DetailAction.OnEndTimeSelected -> {
-                state = state.copy(endTime = action.time)
+                state = state.copy(
+                    details = updateDetailsIfEvent { event ->
+                        event.copy(endTime = action.time)
+                    }
+                )
+            }
+            is DetailAction.OnIsEditableChanged -> {
+                state = state.copy(isEditingMode = action.isEditable)
+            }
+            is DetailAction.OnNotificationDurationClicked -> {
+                state =  state.copy(notificationDurationType = action.type)
             }
             else -> Unit
         }
     }
 
-    private suspend fun fetchAgendaItem() {
+    private fun fetchAgendaItem() {
         val item = when(AgendaType.valueOf(agendaArgs.agendaType)) { //TODO: Mocking for now
             AgendaType.EVENT -> {
                 AgendaSampleData.allAgendas.find {
@@ -78,15 +92,26 @@ class DetailViewModel(
         }
         state = state.copy(
             title = item?.title.orEmpty(),
-            description = item?.title.orEmpty(),
+            description = item?.description.orEmpty(),
             startDate = item?.startAt?.toLocalDate() ?: state.selectedDate,
             startTime = item?.startAt?.toLocalTime() ?: LocalTime.now(),
-            endDate = if (item is AgendaItem.Event) {
-                item.endAt.toLocalDate() ?: state.selectedDate
-            } else state.selectedDate,
-            endTime = if (item is AgendaItem.Event) {
-                item.endAt.toLocalTime() ?: LocalTime.now()
-            } else LocalTime.now(),
+            details = AgendaItemDetails.Event(
+                endDate = if (item is AgendaItem.Event) {
+                    item.endAt.toLocalDate() ?: state.selectedDate
+                } else state.selectedDate,
+                endTime = if (item is AgendaItem.Event) {
+                    item.endAt.toLocalTime() ?: LocalTime.now()
+                } else LocalTime.now(),
+            ),
         )
+    }
+
+    private fun updateDetailsIfEvent(
+        update: (AgendaItemDetails.Event) -> AgendaItemDetails.Event
+    ): AgendaItemDetails {
+        return when (val details = state.details) {
+            is AgendaItemDetails.Event -> update(details)
+            else -> details
+        }
     }
 }

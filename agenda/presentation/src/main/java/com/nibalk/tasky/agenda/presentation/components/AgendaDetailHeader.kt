@@ -31,12 +31,8 @@ fun AgendaDetailHeader(
     headerTitle: String,
     onCloseDetail: () -> Unit,
     onSaveDetail: () -> Unit,
-    onIsEditableChanged: (Boolean) -> Unit,
+    onIsEditableChanged: (isEditable: Boolean) -> Unit,
 ) {
-    val isEditingMode = remember {
-        mutableStateOf(isEditable)
-    }
-
     TaskyHeader(
         modifier = modifier
             .padding(horizontal = 0.dp)
@@ -51,7 +47,7 @@ fun AgendaDetailHeader(
             )
         }
         Text(
-            text = if (isEditingMode.value) {
+            text = if (isEditable) {
                 headerTitle.uppercase()
             } else {
                 headerDate.format(DateTimeFormatter.ofPattern(datePattern)).uppercase()
@@ -59,11 +55,10 @@ fun AgendaDetailHeader(
             style = MaterialTheme.typography.displayMedium,
             color = MaterialTheme.colorScheme.onSecondary,
         )
-        if (isEditingMode.value) {
+        if (isEditable) {
             Text(
                 modifier = Modifier
                     .clickable {
-                        isEditingMode.value = false
                         onIsEditableChanged(false)
                         onSaveDetail()
                     },
@@ -74,7 +69,6 @@ fun AgendaDetailHeader(
         } else {
             IconButton(
                 onClick = {
-                    isEditingMode.value = true
                     onIsEditableChanged(true)
                 }
             ) {
