@@ -63,7 +63,7 @@ fun EditorScreen(
     TaskyScrollableBackground {
         EditorScreenHeader(
             headerTitle = stringResource(
-                id = R.string.agenda_item_edit, state.editorType.editorTitleResId
+                id = R.string.agenda_item_edit, stringResource(state.editorType.editorTitleResId)
             ).uppercase(),
             onGoBack = {
                 onAction(EditorAction.OnBackClicked)

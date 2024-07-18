@@ -26,7 +26,6 @@ import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import com.nibalk.tasky.test.mock.AgendaSampleData
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import timber.log.Timber
 import java.time.LocalDateTime
 
 @Composable
@@ -41,8 +40,10 @@ fun DetailScreenRoot(
 ) {
 
     val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
-    val title = savedStateHandle?.get<String>(EditorType.TITLE.name) ?: viewModel.state.title
-    val description = savedStateHandle?.get<String>(EditorType.DESCRIPTION.name) ?: viewModel.state.description
+    val title = savedStateHandle?.get<String>(
+        EditorType.TITLE.name) ?: viewModel.state.title
+    val description = savedStateHandle?.get<String>(
+        EditorType.DESCRIPTION.name) ?: viewModel.state.description
 
     DetailScreen(
         state = viewModel.state.copy(
@@ -55,7 +56,6 @@ fun DetailScreenRoot(
                     onCloseClicked()
                 }
                 is DetailAction.OnTitleClicked -> {
-                    Timber.d("[PARAMS] viewModel.state.title = ", viewModel.state.title)
                     onEditorClicked(
                         viewModel.state.title.ifEmpty { EditorType.TITLE.name },
                         EditorType.TITLE

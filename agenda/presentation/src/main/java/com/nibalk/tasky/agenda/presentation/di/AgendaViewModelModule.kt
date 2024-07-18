@@ -1,6 +1,5 @@
 package com.nibalk.tasky.agenda.presentation.di
 
-import androidx.lifecycle.SavedStateHandle
 import com.nibalk.tasky.agenda.domain.usecase.FormatProfileNameUseCase
 import com.nibalk.tasky.agenda.domain.usecase.GetAgendasUseCase
 import com.nibalk.tasky.agenda.presentation.detail.DetailViewModel
@@ -21,9 +20,9 @@ val agendaUseCaseModule = module {
 val agendaViewModelModule = module {
     viewModelOf(::HomeViewModel)
     viewModel {
-        (agendaArgs: AgendaArgs) -> DetailViewModel(agendaArgs)
+        (args: AgendaArgs) -> DetailViewModel(args)
     }
     viewModel {
-        (editorArgs: EditorArgs, savedState: SavedStateHandle) -> EditorViewModel(editorArgs, savedState)
+        (args: EditorArgs) -> EditorViewModel(args)
     }
 }

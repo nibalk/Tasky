@@ -2,7 +2,6 @@ package com.nibalk.tasky.agenda.presentation.detail
 
 import com.nibalk.tasky.agenda.presentation.model.AgendaType
 import com.nibalk.tasky.agenda.presentation.model.NotificationDurationType
-import timber.log.Timber
 import java.time.LocalDate
 import java.time.LocalTime
 
