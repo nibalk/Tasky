@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.nibalk.tasky.agenda.presentation.model.AgendaType
 import com.nibalk.tasky.agenda.presentation.model.EditorArgs
 import com.nibalk.tasky.agenda.presentation.model.EditorType
 
@@ -24,7 +23,6 @@ class EditorViewModel(
                 TextFieldState(initialText = editorArgs.editorText)
             } else TextFieldState(initialText = ""),
             editorType = EditorType.valueOf(editorArgs.editorType),
-            agendaType = AgendaType.valueOf(editorArgs.agendaType),
         )
     }
 
@@ -35,7 +33,7 @@ class EditorViewModel(
                     editorText = TextFieldState(initialText = editorArgs.editorText),
                     editorType = state.editorType
                 )
-                savedStateHandle[editorArgs.editorType] = action.editorText
+                savedStateHandle[editorArgs.editorType] = state.editorText.text.toString()
             }
             else -> Unit
         }

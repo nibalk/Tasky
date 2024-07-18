@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.nibalk.tasky.agenda.presentation.R
@@ -33,17 +34,20 @@ fun EditorScreenRoot(
     editorArgs: EditorArgs,
     viewModel: EditorViewModel = koinViewModel { parametersOf(editorArgs) },
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     EditorScreen(
         state = viewModel.state,
         onAction = { action ->
             when(action) {
                 is EditorAction.OnBackClicked -> {
+                    keyboardController?.hide()
                     onBackClicked()
                 }
                 is EditorAction.OnSaveClicked -> {
-                    onSaveClicked() //action.editorText, action.editorType
+                    keyboardController?.hide()
+                    onSaveClicked()
                 }
-                else -> Unit
             }
             viewModel.onAction(action)
         },
@@ -57,13 +61,18 @@ fun EditorScreen(
 ) {
     TaskyScrollableBackground {
         EditorScreenHeader(
-            headerTitle = buildString {
-                append(stringResource(id = state.editorType.editorTitleResId))
-                append(" ")
-                append(stringResource(id = state.agendaType.menuNameResId))
-            }.uppercase(),
-            onGoBack = {},
-            onSaveDetail = {},
+            headerTitle = stringResource(
+                id = R.string.agenda_item_edit, state.editorType.editorTitleResId
+            ).uppercase(),
+            onGoBack = {
+                onAction(EditorAction.OnBackClicked)
+            },
+            onSaveDetail = {
+                onAction(EditorAction.OnSaveClicked(
+                    editorText = state.editorText.text.toString(),
+                    editorType = state.editorType,
+                ))
+            },
         )
         HorizontalDivider(
             modifier = Modifier
