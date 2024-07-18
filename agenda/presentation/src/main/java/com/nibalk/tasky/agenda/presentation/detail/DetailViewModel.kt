@@ -34,8 +34,7 @@ class DetailViewModel(
                 selectedDate = agendaArgs.selectedDate ?: LocalDate.now(),
                 agendaType = AgendaType.valueOf(agendaArgs.agendaType),
                 agendaId = agendaArgs.agendaId.orEmpty(),
-
-                )
+            )
         }
         fetchAgendaItem()
     }

@@ -3,8 +3,9 @@
     <string name="content_description_change_month">Change Month</string>
     <string name="content_description_close">Close</string>
     <string name="content_description_edit">Edit</string>
+    <string name="content_description_back">Edit</string>
 
-    <!-- Agenda Screen -->
+    <!-- Agenda Screens -->
     <string name="agenda_items_list_loaded">Agenda items loaded</string>
     <string name="agenda_logout_successful">User logout done</string>
     <string name="agenda_title_today">Today</string>
@@ -17,6 +18,8 @@
     <string name="agenda_item_from">From</string>
     <string name="agenda_item_to">To</string>
     <string name="agenda_item_at">At</string>
+    <string name="agenda_editor">Title</string>
+    <string name="agenda_description">Description</string>
 
     <!-- Agenda Screen - Menu Options -->
     <string name="agenda_option_event">Event</string>

@@ -1,6 +1,9 @@
 package com.nibalk.tasky.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -8,8 +11,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.nibalk.tasky.agenda.presentation.detail.DetailScreenRoot
+import com.nibalk.tasky.agenda.presentation.editor.EditorScreenRoot
 import com.nibalk.tasky.agenda.presentation.home.HomeScreenRoot
 import com.nibalk.tasky.agenda.presentation.model.AgendaArgs
+import com.nibalk.tasky.agenda.presentation.model.AgendaType
+import com.nibalk.tasky.agenda.presentation.model.EditorArgs
 import com.nibalk.tasky.auth.presentation.login.LoginScreenRoot
 import com.nibalk.tasky.auth.presentation.register.RegisterScreenRoot
 import com.nibalk.tasky.core.presentation.utils.toLocalDate
@@ -94,6 +100,15 @@ private fun NavGraphBuilder.agendaGraph(navController: NavHostController) {
         }
         composable<AgendaDetailScreen> { backStackEntry ->
             val args = backStackEntry.toRoute<AgendaDetailScreen>()
+            val editedText = remember { mutableStateOf("") }
+
+            LaunchedEffect(Unit) {
+                backStackEntry.savedStateHandle.getLiveData<String>(
+                    args.agendaId ?: args.agendaType
+                ).observe(backStackEntry) { result ->
+                    editedText.value = result ?: ""
+                }
+            }
             DetailScreenRoot(
                 onCloseClicked = {
                     navController.popBackStack(
@@ -101,10 +116,36 @@ private fun NavGraphBuilder.agendaGraph(navController: NavHostController) {
                         inclusive = false,
                     )
                 },
+                onEditorClicked = { text, type ->
+                    navController.navigate(
+                        AgendaEditorScreen(
+                            editorText = text,
+                            editorType = type.name,
+                            agendaType = args.agendaType
+                        )
+                    )
+                },
                 agendaArgs = AgendaArgs(
                     isEditable = args.isEditable,
                     selectedDate = args.selectedDate.toLocalDate(),
                     agendaId = args.agendaId,
+                    agendaType = args.agendaType
+                )
+            )
+        }
+        composable<AgendaEditorScreen> { backStackEntry ->
+            val args = backStackEntry.toRoute<AgendaEditorScreen>()
+            EditorScreenRoot(
+                onBackClicked = {
+                    navController.popBackStack(
+                        route = AgendaDetailScreen,
+                        inclusive = false,
+                    )
+                },
+                onSaveClicked = {},
+                editorArgs = EditorArgs(
+                    editorText = args.editorText,
+                    editorType = args.editorType,
                     agendaType = args.agendaType
                 )
             )

@@ -33,6 +33,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,12 +44,14 @@ import com.nibalk.tasky.core.presentation.themes.spacing
 
 @Composable
 fun TaskyTextField(
+    modifier: Modifier = Modifier,
     state: TextFieldState,
     hint: String,
-    endIcon: ImageVector?,
-    modifier: Modifier = Modifier,
     error: String? = null,
+    endIcon: ImageVector? = null,
+    textStyle: TextStyle? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
+    lines: TextFieldLineLimits = TextFieldLineLimits.SingleLine,
 ) {
     var isFocused by remember {
         mutableStateOf(false)
@@ -58,13 +61,13 @@ fun TaskyTextField(
     ) {
         BasicTextField(
             state = state,
-            textStyle = LocalTextStyle.current.copy(
+            textStyle = textStyle ?: LocalTextStyle.current.copy(
                 color = MaterialTheme.colorScheme.onTertiary
             ),
             keyboardOptions = KeyboardOptions(
                 keyboardType = keyboardType
             ),
-            lineLimits = TextFieldLineLimits.SingleLine,
+            lineLimits = lines,
             cursorBrush = SolidColor(MaterialTheme.colorScheme.onTertiary),
             modifier = Modifier
                 .clip(RoundedCornerShape(MaterialTheme.spacing.spaceMedium))

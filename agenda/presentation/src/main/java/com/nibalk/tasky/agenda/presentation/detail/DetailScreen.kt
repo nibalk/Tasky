@@ -15,6 +15,7 @@ import com.nibalk.tasky.agenda.presentation.components.AgendaFooter
 import com.nibalk.tasky.agenda.presentation.components.AgendaNotificationsRow
 import com.nibalk.tasky.agenda.presentation.model.AgendaArgs
 import com.nibalk.tasky.agenda.presentation.model.AgendaType
+import com.nibalk.tasky.agenda.presentation.model.EditorType
 import com.nibalk.tasky.core.presentation.components.TaskyEditableDateTimeRow
 import com.nibalk.tasky.core.presentation.components.TaskyEditableTextRow
 import com.nibalk.tasky.core.presentation.components.TaskyEditableTextRowType
@@ -24,11 +25,15 @@ import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import com.nibalk.tasky.test.mock.AgendaSampleData
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import timber.log.Timber
 import java.time.LocalDateTime
 
 @Composable
 fun DetailScreenRoot(
     onCloseClicked: () -> Unit,
+    onEditorClicked: (
+        editorText: String, EditorType
+    ) -> Unit,
     agendaArgs: AgendaArgs,
     viewModel: DetailViewModel = koinViewModel { parametersOf(agendaArgs) },
 ) {
@@ -38,6 +43,19 @@ fun DetailScreenRoot(
             when(action) {
                 is DetailAction.OnCloseClicked -> {
                     onCloseClicked()
+                }
+                is DetailAction.OnTitleClicked -> {
+                    Timber.d("[PARAMS] viewModel.state.title = ", viewModel.state.title)
+                    onEditorClicked(
+                        viewModel.state.title.ifEmpty { EditorType.TITLE.name },
+                        EditorType.TITLE
+                    )
+                }
+                is DetailAction.OnDescriptionClicked -> {
+                    onEditorClicked(
+                        viewModel.state.description.ifEmpty { EditorType.DESCRIPTION.name },
+                        EditorType.DESCRIPTION
+                    )
                 }
                 else -> Unit
             }
@@ -87,7 +105,7 @@ fun DetailScreen(
             content = state.title,
             hint = stringResource(id = R.string.agenda_item_enter_title),
             isEditable = state.isEditingMode,
-            onClick = {}
+            onClick = { onAction(DetailAction.OnTitleClicked) }
         )
         HorizontalDivider(color = TaskyLightBlue)
         TaskyEditableTextRow(
@@ -95,7 +113,7 @@ fun DetailScreen(
             content = state.description,
             hint = stringResource(id = R.string.agenda_item_enter_description),
             isEditable = state.isEditingMode,
-            onClick = {}
+            onClick = { onAction(DetailAction.OnDescriptionClicked) }
         )
         HorizontalDivider(color = TaskyLightBlue)
         TaskyEditableDateTimeRow(
