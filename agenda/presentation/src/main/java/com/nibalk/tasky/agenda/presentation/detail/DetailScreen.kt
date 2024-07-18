@@ -146,11 +146,9 @@ fun DetailScreen(
             TaskyEditableDateTimeRow(
                 label = stringResource(R.string.agenda_item_to),
                 isEditable = state.isEditingMode,
-                selectedDateTime = state.getEventDetailField(
-                    state.details
-                ) { event ->
-                    event.endDate.atTime(event.endTime)
-                } ?: LocalDateTime.now(),
+                selectedDateTime = state.details.asEventDetails?.endDate?.atTime(
+                    state.details.asEventDetails?.endTime
+                ) ?: LocalDateTime.now(),
                 onTimeSelected = { selectedTime ->
                     onAction(DetailAction.OnEndTimeSelected(selectedTime))
                 },

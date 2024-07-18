@@ -1,9 +1,6 @@
 package com.nibalk.tasky.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -19,7 +16,6 @@ import com.nibalk.tasky.auth.presentation.login.LoginScreenRoot
 import com.nibalk.tasky.auth.presentation.register.RegisterScreenRoot
 import com.nibalk.tasky.core.presentation.utils.toLocalDate
 import com.nibalk.tasky.core.presentation.utils.toLongDate
-import timber.log.Timber
 import java.time.LocalDate
 
 @Composable

@@ -19,7 +19,13 @@ import java.time.LocalTime
 class DetailViewModel(
     private val agendaArgs: AgendaArgs
 ): ViewModel() {
-    var state by mutableStateOf(DetailState(details = AgendaItemDetails.NoDetails))
+    var state by mutableStateOf(DetailState(
+        details = when(AgendaType.valueOf(agendaArgs.agendaType)) {
+            AgendaType.TASK -> AgendaItemDetails.Task()
+            AgendaType.EVENT -> AgendaItemDetails.Event()
+            AgendaType.REMINDER -> AgendaItemDetails.Reminder
+        }
+    ))
         private set
 
     private val eventChannel = Channel<DetailState>()
