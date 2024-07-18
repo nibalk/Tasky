@@ -29,3 +29,10 @@ data class AgendaDetailScreen(
     val agendaType: String,
     val agendaId: String?,
 )
+
+@Serializable
+data class AgendaEditorScreen(
+    val editorText: String,
+    val editorType: String,
+    val agendaType: String,
+)

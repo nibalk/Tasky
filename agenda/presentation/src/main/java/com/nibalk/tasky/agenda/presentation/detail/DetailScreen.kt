@@ -9,12 +9,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import com.nibalk.tasky.agenda.presentation.R
 import com.nibalk.tasky.agenda.presentation.components.AgendaDetailHeader
 import com.nibalk.tasky.agenda.presentation.components.AgendaFooter
 import com.nibalk.tasky.agenda.presentation.components.AgendaNotificationsRow
 import com.nibalk.tasky.agenda.presentation.model.AgendaArgs
 import com.nibalk.tasky.agenda.presentation.model.AgendaType
+import com.nibalk.tasky.agenda.presentation.model.EditorType
 import com.nibalk.tasky.core.presentation.components.TaskyEditableDateTimeRow
 import com.nibalk.tasky.core.presentation.components.TaskyEditableTextRow
 import com.nibalk.tasky.core.presentation.components.TaskyEditableTextRowType
@@ -29,15 +31,41 @@ import java.time.LocalDateTime
 @Composable
 fun DetailScreenRoot(
     onCloseClicked: () -> Unit,
+    onEditorClicked: (
+        editorText: String, EditorType
+    ) -> Unit,
     agendaArgs: AgendaArgs,
+    navController: NavHostController,
     viewModel: DetailViewModel = koinViewModel { parametersOf(agendaArgs) },
 ) {
+
+    val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
+    val title = savedStateHandle?.get<String>(
+        EditorType.TITLE.name) ?: viewModel.state.title
+    val description = savedStateHandle?.get<String>(
+        EditorType.DESCRIPTION.name) ?: viewModel.state.description
+
     DetailScreen(
-        state = viewModel.state,
+        state = viewModel.state.copy(
+            title = title,
+            description = description
+        ),
         onAction = { action ->
             when(action) {
                 is DetailAction.OnCloseClicked -> {
                     onCloseClicked()
+                }
+                is DetailAction.OnTitleClicked -> {
+                    onEditorClicked(
+                        viewModel.state.title.ifEmpty { EditorType.TITLE.name },
+                        EditorType.TITLE
+                    )
+                }
+                is DetailAction.OnDescriptionClicked -> {
+                    onEditorClicked(
+                        viewModel.state.description.ifEmpty { EditorType.DESCRIPTION.name },
+                        EditorType.DESCRIPTION
+                    )
                 }
                 else -> Unit
             }
@@ -87,7 +115,7 @@ fun DetailScreen(
             content = state.title,
             hint = stringResource(id = R.string.agenda_item_enter_title),
             isEditable = state.isEditingMode,
-            onClick = {}
+            onClick = { onAction(DetailAction.OnTitleClicked) }
         )
         HorizontalDivider(color = TaskyLightBlue)
         TaskyEditableTextRow(
@@ -95,7 +123,7 @@ fun DetailScreen(
             content = state.description,
             hint = stringResource(id = R.string.agenda_item_enter_description),
             isEditable = state.isEditingMode,
-            onClick = {}
+            onClick = { onAction(DetailAction.OnDescriptionClicked) }
         )
         HorizontalDivider(color = TaskyLightBlue)
         TaskyEditableDateTimeRow(
@@ -118,11 +146,9 @@ fun DetailScreen(
             TaskyEditableDateTimeRow(
                 label = stringResource(R.string.agenda_item_to),
                 isEditable = state.isEditingMode,
-                selectedDateTime = state.getEventDetailField(
-                    state.details
-                ) { event ->
-                    event.endDate.atTime(event.endTime)
-                } ?: LocalDateTime.now(),
+                selectedDateTime = state.details.asEventDetails?.endDate?.atTime(
+                    state.details.asEventDetails?.endTime
+                ) ?: LocalDateTime.now(),
                 onTimeSelected = { selectedTime ->
                     onAction(DetailAction.OnEndTimeSelected(selectedTime))
                 },

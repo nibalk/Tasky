@@ -20,7 +20,11 @@ class DetailViewModel(
     private val agendaArgs: AgendaArgs
 ): ViewModel() {
     var state by mutableStateOf(DetailState(
-        details = AgendaItemDetails.NoDetails
+        details = when(AgendaType.valueOf(agendaArgs.agendaType)) {
+            AgendaType.TASK -> AgendaItemDetails.Task()
+            AgendaType.EVENT -> AgendaItemDetails.Event()
+            AgendaType.REMINDER -> AgendaItemDetails.Reminder
+        }
     ))
         private set
 
@@ -34,8 +38,7 @@ class DetailViewModel(
                 selectedDate = agendaArgs.selectedDate ?: LocalDate.now(),
                 agendaType = AgendaType.valueOf(agendaArgs.agendaType),
                 agendaId = agendaArgs.agendaId.orEmpty(),
-
-                )
+            )
         }
         fetchAgendaItem()
     }

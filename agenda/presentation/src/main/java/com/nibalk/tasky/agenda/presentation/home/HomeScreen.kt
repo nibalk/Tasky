@@ -264,7 +264,7 @@ private fun AgendaListItemCard(
                     .align(Alignment.Center),
             )
             onNeedleShown()
-            Timber.d("[NeedleLogs] - Needle shown")
+            Timber.d("[HomeScreenLogs] - Needle shown")
         }
     }
 }

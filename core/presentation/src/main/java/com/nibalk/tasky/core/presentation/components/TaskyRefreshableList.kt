@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.nibalk.tasky.core.presentation.themes.spacing
-import timber.log.Timber
 
 @Composable
 fun <T> TaskyRefreshableList(
@@ -32,7 +31,6 @@ fun <T> TaskyRefreshableList(
     listContent: @Composable (T, Int) -> Unit,
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
-    Timber.d("[PullToRefreshLogs] - RefreshList flag = $isRefreshing")
 
     Box(
         modifier = modifier
@@ -55,14 +53,10 @@ fun <T> TaskyRefreshableList(
         }
         if(pullToRefreshState.isRefreshing) {
             LaunchedEffect(true) {
-                Timber.d("[PullToRefreshLogs] - onRefresh() state = %s", pullToRefreshState.isRefreshing)
                 onRefresh()
             }
         }
         LaunchedEffect(isRefreshing, pullToRefreshState.isRefreshing) {
-            Timber.d("[PullToRefreshLogs] - LaunchedEffect flag = %s | state = %s",
-                isRefreshing.toString().uppercase(), pullToRefreshState.isRefreshing
-            )
             if(isRefreshing) {
                 pullToRefreshState.startRefresh()
             } else {
