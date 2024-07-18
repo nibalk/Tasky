@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import com.nibalk.tasky.agenda.presentation.R
 import com.nibalk.tasky.agenda.presentation.components.AgendaDetailHeader
 import com.nibalk.tasky.agenda.presentation.components.AgendaFooter
@@ -35,10 +36,19 @@ fun DetailScreenRoot(
         editorText: String, EditorType
     ) -> Unit,
     agendaArgs: AgendaArgs,
+    navController: NavHostController,
     viewModel: DetailViewModel = koinViewModel { parametersOf(agendaArgs) },
 ) {
+
+    val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
+    val title = savedStateHandle?.get<String>(EditorType.TITLE.name) ?: viewModel.state.title
+    val description = savedStateHandle?.get<String>(EditorType.DESCRIPTION.name) ?: viewModel.state.description
+
     DetailScreen(
-        state = viewModel.state,
+        state = viewModel.state.copy(
+            title = title,
+            description = description
+        ),
         onAction = { action ->
             when(action) {
                 is DetailAction.OnCloseClicked -> {

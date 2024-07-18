@@ -3,7 +3,6 @@ package com.nibalk.tasky.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -15,12 +14,12 @@ import com.nibalk.tasky.agenda.presentation.detail.DetailScreenRoot
 import com.nibalk.tasky.agenda.presentation.editor.EditorScreenRoot
 import com.nibalk.tasky.agenda.presentation.home.HomeScreenRoot
 import com.nibalk.tasky.agenda.presentation.model.AgendaArgs
-import com.nibalk.tasky.agenda.presentation.model.AgendaType
 import com.nibalk.tasky.agenda.presentation.model.EditorArgs
 import com.nibalk.tasky.auth.presentation.login.LoginScreenRoot
 import com.nibalk.tasky.auth.presentation.register.RegisterScreenRoot
 import com.nibalk.tasky.core.presentation.utils.toLocalDate
 import com.nibalk.tasky.core.presentation.utils.toLongDate
+import timber.log.Timber
 import java.time.LocalDate
 
 @Composable
@@ -102,6 +101,7 @@ private fun NavGraphBuilder.agendaGraph(navController: NavHostController) {
         composable<AgendaDetailScreen> { backStackEntry ->
             val args = backStackEntry.toRoute<AgendaDetailScreen>()
             DetailScreenRoot(
+                navController = navController,
                 onCloseClicked = {
                     navController.popBackStack(
                         route = AgendaHomeScreen,
@@ -127,24 +127,13 @@ private fun NavGraphBuilder.agendaGraph(navController: NavHostController) {
         }
         composable<AgendaEditorScreen> { backStackEntry ->
             val args = backStackEntry.toRoute<AgendaEditorScreen>()
-            val text = rememberSaveable {
-                mutableStateOf(args.editorText)
-            }
-            LaunchedEffect(Unit) {
-                backStackEntry.savedStateHandle.getLiveData<String>(
-                    args.editorType
-                ).observe(backStackEntry) { result ->
-                    text.value = result ?: ""
-                }
-            }
-
             EditorScreenRoot(
                 onBackClicked = {
                     navController.popBackStack()
                 },
-                onSaveClicked = {
+                onSaveClicked = { text, type ->
                     navController.previousBackStackEntry?.savedStateHandle?.set(
-                        args.editorType, text.value
+                        type.name, text
                     )
                     navController.popBackStack()
                 },

@@ -4,10 +4,16 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.nibalk.tasky.agenda.presentation.model.EditorArgs
 import com.nibalk.tasky.agenda.presentation.model.EditorType
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class EditorViewModel(
     private val editorArgs: EditorArgs,
@@ -24,17 +30,28 @@ class EditorViewModel(
             } else TextFieldState(initialText = ""),
             editorType = EditorType.valueOf(editorArgs.editorType),
         )
+//        viewModelScope.launch {
+//            snapshotFlow { state.editorText.text }
+//                .distinctUntilChanged()
+//                .collectLatest { text ->
+//                    state = state.copy(
+//                        editorText = TextFieldState(initialText = text.toString())
+//                    )
+//                    Timber.d("[EditorLogs] VM snapshotFlow = %s", state.editorText.text.toString())
+//                    savedStateHandle[editorArgs.editorType] = state.editorText.text.toString()
+//                }
+//        }
+
     }
 
     fun onAction(action: EditorAction) {
         when (action) {
             is EditorAction.OnSaveClicked -> {
                 state = state.copy(
-                    editorText = TextFieldState(initialText = editorArgs.editorText),
+                    editorText = TextFieldState(initialText = state.editorText.text.toString()),
                     editorType = state.editorType
                 )
-                savedStateHandle[editorArgs.editorType] = state.editorText.text.toString()
-            }
+             }
             else -> Unit
         }
     }

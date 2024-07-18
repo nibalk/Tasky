@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.nibalk.tasky.agenda.presentation.R
 import com.nibalk.tasky.agenda.presentation.model.EditorArgs
+import com.nibalk.tasky.agenda.presentation.model.EditorType
 import com.nibalk.tasky.core.presentation.components.TaskyScrollableBackground
 import com.nibalk.tasky.core.presentation.components.TaskyTextField
 import com.nibalk.tasky.core.presentation.themes.spacing
@@ -30,7 +31,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun EditorScreenRoot(
     onBackClicked: () -> Unit,
-    onSaveClicked: () -> Unit,
+    onSaveClicked: (String, EditorType)-> Unit,
     editorArgs: EditorArgs,
     viewModel: EditorViewModel = koinViewModel { parametersOf(editorArgs) },
 ) {
@@ -46,7 +47,7 @@ fun EditorScreenRoot(
                 }
                 is EditorAction.OnSaveClicked -> {
                     keyboardController?.hide()
-                    onSaveClicked()
+                    onSaveClicked(action.editorText, action.editorType)
                 }
             }
             viewModel.onAction(action)

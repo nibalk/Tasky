@@ -19,9 +19,7 @@ import java.time.LocalTime
 class DetailViewModel(
     private val agendaArgs: AgendaArgs
 ): ViewModel() {
-    var state by mutableStateOf(DetailState(
-        details = AgendaItemDetails.NoDetails
-    ))
+    var state by mutableStateOf(DetailState(details = AgendaItemDetails.NoDetails))
         private set
 
     private val eventChannel = Channel<DetailState>()
