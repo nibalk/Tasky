@@ -14,6 +14,6 @@ data class PhotoEntity(
 ) {
     companion object {
         const val TABLE_NAME = "photo"
-        const val PRIMARY_KEY = "key"
+        const val PRIMARY_KEY = "photoKey"
     }
 }

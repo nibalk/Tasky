@@ -1,7 +1,7 @@
 package com.nibalk.tasky.agenda.data.local.mapper
 
 import com.nibalk.tasky.agenda.data.local.entity.EventEntity
-import com.nibalk.tasky.agenda.data.local.entity.EventEntityWithRelations
+import com.nibalk.tasky.agenda.data.local.entity.EventEntityFull
 import com.nibalk.tasky.agenda.domain.model.AgendaItem
 import com.nibalk.tasky.agenda.domain.model.EventAttendee
 import com.nibalk.tasky.agenda.domain.model.EventPhoto
@@ -11,7 +11,7 @@ import java.util.UUID
 
 // Mapping EventEntity - with Attendees and Photos
 
-fun EventEntityWithRelations.toAgendaItemEvent(): AgendaItem.Event {
+fun EventEntityFull.toAgendaItemEvent(): AgendaItem.Event {
     val attendees = attendees.map { agendaEntity ->
         agendaEntity.toEventAttendee()
     }
@@ -25,8 +25,8 @@ fun EventEntityWithRelations.toAgendaItemEvent(): AgendaItem.Event {
     return event.toAgendaItemEvent(attendees, photos)
 }
 
-fun AgendaItem.Event.toEventEntityAll(): EventEntityWithRelations {
-    return EventEntityWithRelations(
+fun AgendaItem.Event.toEventEntityAll(): EventEntityFull {
+    return EventEntityFull(
         event = toEventEntity(),
         attendees = attendees.map { attendee ->
             attendee.toAttendeeEntity()

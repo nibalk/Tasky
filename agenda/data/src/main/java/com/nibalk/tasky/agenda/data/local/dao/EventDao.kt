@@ -17,6 +17,7 @@ interface EventDao {
     @Upsert
     suspend fun updateEvents(events: List<EventEntity>)
 
+    @Transaction
     @Query("SELECT * FROM ${EventEntity.TABLE_NAME} WHERE ${EventEntity.PRIMARY_KEY} = :id")
     suspend fun getEventById(id: String): EventEntityFull?
 

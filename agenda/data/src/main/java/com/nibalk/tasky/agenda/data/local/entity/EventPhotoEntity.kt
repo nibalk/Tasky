@@ -2,12 +2,16 @@ package com.nibalk.tasky.agenda.data.local.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 
 @Entity(
     tableName = EventPhotoEntity.TABLE_NAME,
     primaryKeys = [
         EventPhotoEntity.CROSS_REF_EVENT_ID,
         EventPhotoEntity.CROSS_REF_PHOTO_KEY
+    ],
+    indices = [
+        Index(value = [EventPhotoEntity.CROSS_REF_PHOTO_KEY])
     ]
 )
 data class EventPhotoEntity(
