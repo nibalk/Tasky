@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.tasky.android.library)
+    alias(libs.plugins.tasky.android.room)
 }
 
 android {
@@ -9,6 +10,7 @@ android {
 dependencies {
     // Project Modules
     implementation(projects.core.domain)
+    implementation(projects.core.data)
     implementation(projects.agenda.domain)
     implementation(projects.test)
 

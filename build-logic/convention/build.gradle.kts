@@ -35,6 +35,10 @@ gradlePlugin {
             id = "nibalk.tasky.android.feature.ui"
             implementationClass = "AndroidFeatureUiConventionPlugin"
         }
+        register("androidRoom") {
+            id = "nibalk.tasky.android.room"
+            implementationClass = "AndroidRoomConventionPlugin"
+        }
         register("androidDi") {
             id = "nibalk.tasky.android.di"
             implementationClass = "AndroidDependencyInjectionConventionPlugin"

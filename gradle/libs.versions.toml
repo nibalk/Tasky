@@ -67,6 +67,10 @@ androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "u
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+# Android Room DB
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 # Android Libraries
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-security-crypto-ktx = { module = "androidx.security:security-crypto-ktx", version.ref = "securityCryptoKtx" }
@@ -108,6 +112,8 @@ ksp-gradle-plugin = { group = "com.google.devtools.ksp", name = "com.google.devt
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+android-room = { id = "androidx.room", version.ref = "room" }
+google-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinJvm" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
@@ -118,6 +124,7 @@ tasky-android-application-compose = { id = "nibalk.tasky.android.application.com
 tasky-android-library = { id = "nibalk.tasky.android.library", version = "unspecified" }
 tasky-android-library-compose = { id = "nibalk.tasky.android.library.compose", version = "unspecified" }
 tasky-android-feature-ui = { id = "nibalk.tasky.android.feature.ui", version = "unspecified" }
+tasky-android-room = { id = "nibalk.tasky.android.room", version = "unspecified" }
 tasky-anroid-di = { id = "nibalk.tasky.android.di", version = "unspecified" }
 tasky-jvm-library = { id = "nibalk.tasky.jvm.library", version = "unspecified" }
 
