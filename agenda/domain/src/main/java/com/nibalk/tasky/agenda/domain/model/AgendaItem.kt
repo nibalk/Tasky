@@ -3,14 +3,14 @@ package com.nibalk.tasky.agenda.domain.model
 import java.time.LocalDateTime
 
 sealed class AgendaItem(
-    open val id: String,
+    open val id: String?,
     open val title: String,
     open val description: String,
     open val startAt: LocalDateTime,
     open val remindAt: LocalDateTime,
 ) {
     data class Event(
-        override val id: String,
+        override val id: String?,
         override val title: String,
         override val description: String,
         override val startAt: LocalDateTime,
@@ -23,7 +23,7 @@ sealed class AgendaItem(
     ) : AgendaItem(id, title, description, startAt, remindAt)
 
     data class Task(
-        override val id: String,
+        override val id: String?,
         override val title: String,
         override val description: String,
         override val startAt: LocalDateTime,
@@ -32,7 +32,7 @@ sealed class AgendaItem(
     ) : AgendaItem(id, title, description, startAt, remindAt)
 
     data class Reminder(
-        override val id: String,
+        override val id: String?,
         override val title: String,
         override val description: String,
         override val startAt: LocalDateTime,
