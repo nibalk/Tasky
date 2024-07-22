@@ -25,7 +25,7 @@ fun EventEntityFull.toAgendaItemEvent(): AgendaItem.Event {
     return event.toAgendaItemEvent(attendees, photos)
 }
 
-fun AgendaItem.Event.toEventEntityAll(): EventEntityFull {
+fun AgendaItem.Event.toEventEntityFull(): EventEntityFull {
     return EventEntityFull(
         event = toEventEntity(),
         attendees = attendees.map { attendee ->

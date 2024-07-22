@@ -25,6 +25,7 @@ data class EventEntity(
     companion object {
         const val TABLE_NAME = "event"
         const val PRIMARY_KEY = "eventId"
+        const val START_DATE_KEY = "startAt"
     }
 }
 

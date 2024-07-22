@@ -19,5 +19,6 @@ data class ReminderEntity(
     companion object {
         const val TABLE_NAME = "reminder"
         const val PRIMARY_KEY = "id"
+        const val START_DATE_KEY = "startAt"
     }
 }
