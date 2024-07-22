@@ -176,7 +176,7 @@ private fun DetailScreenPreview() {
             state = DetailState(
                 isEditingMode = false,
                 agendaType = AgendaType.EVENT,
-                agendaId = AgendaSampleData.event2.id,
+                agendaId = AgendaSampleData.event2.id.orEmpty(),
                 title = AgendaSampleData.event2.title,
                 description = AgendaSampleData.event2.description,
                 startDate = AgendaSampleData.event2.startAt.toLocalDate(),
