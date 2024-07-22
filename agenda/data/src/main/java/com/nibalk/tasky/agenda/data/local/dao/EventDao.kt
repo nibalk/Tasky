@@ -7,16 +7,15 @@ import androidx.room.Transaction
 import androidx.room.Upsert
 import com.nibalk.tasky.agenda.data.local.entity.EventEntity
 import com.nibalk.tasky.agenda.data.local.entity.EventEntityFull
-import com.nibalk.tasky.agenda.data.local.entity.ReminderEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface EventDao {
     @Upsert
-    suspend fun upsertEvent(event: EventEntityFull)
+    suspend fun upsertEvent(event: EventEntity)
 
     @Upsert
-    suspend fun updateEvents(events: List<EventEntityFull>)
+    suspend fun updateEvents(events: List<EventEntity>)
 
     @Transaction
     @Query("SELECT * FROM ${EventEntity.TABLE_NAME} WHERE ${EventEntity.PRIMARY_KEY} = :id")

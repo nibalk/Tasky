@@ -3,7 +3,7 @@ package com.nibalk.tasky.agenda.data.local.source
 import android.database.sqlite.SQLiteFullException
 import com.nibalk.tasky.agenda.data.local.dao.EventDao
 import com.nibalk.tasky.agenda.data.local.mapper.toAgendaItemEvent
-import com.nibalk.tasky.agenda.data.local.mapper.toEventEntityFull
+import com.nibalk.tasky.agenda.data.local.mapper.toEventEntity
 import com.nibalk.tasky.agenda.domain.model.AgendaItem
 import com.nibalk.tasky.agenda.domain.source.local.EventId
 import com.nibalk.tasky.agenda.domain.source.local.LocalEventDataSource
@@ -38,9 +38,9 @@ class RoomLocalEventDataSource(
 
     override suspend fun upsertEvent(event: AgendaItem.Event): Result<EventId, DataError.Local> {
         return try {
-            val entity = event.toEventEntityFull()
+            val entity = event.toEventEntity()
             eventDao.upsertEvent(entity)
-            Result.Success(entity.event.id)
+            Result.Success(entity.id)
         } catch (e: SQLiteFullException) {
             Result.Error(DataError.Local.DISK_FULL)
         }
@@ -49,12 +49,12 @@ class RoomLocalEventDataSource(
     override suspend fun upsertEvents(events: List<AgendaItem.Event>): Result<List<EventId>, DataError.Local> {
         return try {
             val entities = events.map { item ->
-                item.toEventEntityFull()
+                item.toEventEntity()
             }
             eventDao.updateEvents(entities)
             Result.Success(
                 entities.map { entity ->
-                    entity.event.id
+                    entity.id
                 }
             )
         } catch (e: SQLiteFullException) {
@@ -68,5 +68,5 @@ class RoomLocalEventDataSource(
 
     override suspend fun deleteAllEvents() {
         eventDao.deleteAllEvents()
-    }   
+    }
 }

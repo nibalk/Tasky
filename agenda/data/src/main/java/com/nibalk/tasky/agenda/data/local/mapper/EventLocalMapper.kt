@@ -42,7 +42,7 @@ fun AgendaItem.Event.toEventEntityFull(): EventEntityFull {
 
 // Mapping EventEntity
 
-private fun AgendaItem.Event.toEventEntity(): EventEntity {
+fun AgendaItem.Event.toEventEntity(): EventEntity {
     return EventEntity(
         id = id ?: UUID.randomUUID().toString(),
         title = title,
@@ -55,7 +55,7 @@ private fun AgendaItem.Event.toEventEntity(): EventEntity {
     )
 }
 
-private fun EventEntity.toAgendaItemEvent(
+fun EventEntity.toAgendaItemEvent(
     attendees: List<EventAttendee>,
     photos: List<EventPhoto>
 ): AgendaItem.Event {
