@@ -110,7 +110,7 @@ private fun NavGraphBuilder.agendaGraph(navController: NavHostController) {
                     Timber.d("[NavIssueLogs] type = %s", type)
                     navController.navigate(
                         AgendaEditorScreen(
-                            editorText = text,
+                            editorText = text?.takeIf { it.isNotEmpty() },
                             editorType = type.name,
                             agendaType = args.agendaType
                         )

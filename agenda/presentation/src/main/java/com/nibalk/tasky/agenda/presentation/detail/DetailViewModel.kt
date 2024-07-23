@@ -3,22 +3,27 @@ package com.nibalk.tasky.agenda.presentation.detail
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nibalk.tasky.agenda.domain.model.AgendaItem
 import com.nibalk.tasky.agenda.presentation.model.AgendaArgs
 import com.nibalk.tasky.agenda.presentation.model.AgendaType
+import com.nibalk.tasky.agenda.presentation.model.EditorType
 import com.nibalk.tasky.test.mock.AgendaSampleData
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.time.LocalDate
 import java.time.LocalTime
 
 class DetailViewModel(
-    private val agendaArgs: AgendaArgs
+    private val agendaArgs: AgendaArgs,
+    private val savedStateHandle: SavedStateHandle,
 ): ViewModel() {
+
     var state by mutableStateOf(DetailState(
         details = when(AgendaType.valueOf(agendaArgs.agendaType)) {
             AgendaType.TASK -> AgendaItemDetails.Task()
@@ -32,12 +37,24 @@ class DetailViewModel(
     val uiEvent: Flow<DetailState> = eventChannel.receiveAsFlow()
 
     init {
+        Timber.d(" [NavIssueLogs] agendaArgs = %s", agendaArgs)
+        Timber.d(" [NavIssueLogs] savedStateHandle = %s", savedStateHandle.toString())
+
+        val titleFromSavedState = savedStateHandle.get<String>(EditorType. TITLE. name)
+        val descriptionFromSavedState = savedStateHandle.get<String>(EditorType.DESCRIPTION. name)
+        Timber.d(" [NavIssueLogs] titleFromSavedState = %s", titleFromSavedState)
+        Timber.d(" [NavIssueLogs] descriptionFromSavedState = %s", descriptionFromSavedState)
+        Timber.d(" [NavIssueLogs] VM state.title = %s", state.title)
+        Timber.d(" [NavIssueLogs] VM state description = %s", state.description)
+
         viewModelScope.launch {
             state = state.copy(
                 isEditingMode = agendaArgs.isEditable,
                 selectedDate = agendaArgs.selectedDate ?: LocalDate.now(),
                 agendaType = AgendaType.valueOf(agendaArgs.agendaType),
                 agendaId = agendaArgs.agendaId.orEmpty(),
+                title = titleFromSavedState ?: state.title,
+                description = descriptionFromSavedState ?: state.description,
             )
         }
         fetchAgendaItem()
@@ -70,6 +87,12 @@ class DetailViewModel(
             }
             is DetailAction.OnNotificationDurationClicked -> {
                 state =  state.copy(notificationDurationType = action.type)
+            }
+            is DetailAction.OnTitleEdited -> {
+                state = state.copy(title = action.newTitle)
+            }
+            is DetailAction.OnDescriptionEdited -> {
+                state = state.copy(description = action.newDescription)
             }
             else -> Unit
         }
