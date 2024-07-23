@@ -2,6 +2,8 @@ package com.nibalk.tasky.agenda.data.local.mapper
 
 import com.nibalk.tasky.agenda.data.local.entity.EventEntity
 import com.nibalk.tasky.agenda.data.local.entity.EventEntityFull
+import com.nibalk.tasky.agenda.data.remote.mapper.toEventPhotoDto
+import com.nibalk.tasky.agenda.data.remote.mapper.toEventPhotoRemote
 import com.nibalk.tasky.agenda.domain.model.AgendaItem
 import com.nibalk.tasky.agenda.domain.model.EventAttendee
 import com.nibalk.tasky.agenda.domain.model.EventPhoto
@@ -15,14 +17,7 @@ fun EventEntityFull.toAgendaItemEvent(): AgendaItem.Event {
     val attendees = attendees.map { agendaEntity ->
         agendaEntity.toEventAttendee()
     }
-    val photos = this.photos.map { photo ->
-        if (photo.isLocal) {
-            photo.toEventPhotoLocal()
-        } else {
-            photo.toEventPhotoRemote()
-        }
-    }
-    return event.toAgendaItemEvent(attendees, photos)
+    return event.toAgendaItemEvent(attendees)
 }
 
 fun AgendaItem.Event.toEventEntityFull(): EventEntityFull {
@@ -30,12 +25,6 @@ fun AgendaItem.Event.toEventEntityFull(): EventEntityFull {
         event = toEventEntity(),
         attendees = attendees.map { attendee ->
             attendee.toAttendeeEntity()
-        },
-        photos = photos.map { photo ->
-            when (photo) {
-                is EventPhoto.Local -> photo.toPhotoEntity()
-                is EventPhoto.Remote -> photo.toPhotoEntity()
-            }
         },
     )
 }
@@ -52,12 +41,14 @@ fun AgendaItem.Event.toEventEntity(): EventEntity {
         endAt = endAt.toLongDate(),
         isHost = isHost,
         hostId = hostId,
+        remotePhotos = photos.filterIsInstance<EventPhoto.Remote>().map { remotePhoto ->
+            remotePhoto.toEventPhotoDto()
+        },
     )
 }
 
 fun EventEntity.toAgendaItemEvent(
     attendees: List<EventAttendee>,
-    photos: List<EventPhoto>
 ): AgendaItem.Event {
     return AgendaItem.Event(
         id = id,
@@ -69,6 +60,8 @@ fun EventEntity.toAgendaItemEvent(
         hostId = hostId,
         isHost = isHost,
         attendees = attendees,
-        photos = photos
+        photos = remotePhotos.map { photoDto ->
+            photoDto.toEventPhotoRemote()
+        }
     )
 }

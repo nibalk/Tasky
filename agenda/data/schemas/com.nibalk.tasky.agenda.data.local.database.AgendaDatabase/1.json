@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "af864ce85f9fea7a1e5c5a866b6feab1",
+    "identityHash": "7628413ac225fbd00d1331244abb443a",
     "entities": [
       {
         "tableName": "attendee",
@@ -156,7 +156,7 @@
       },
       {
         "tableName": "event",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`eventId` TEXT NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `startAt` INTEGER NOT NULL, `remindAt` INTEGER NOT NULL, `endAt` INTEGER NOT NULL, `isHost` INTEGER NOT NULL, `hostId` TEXT NOT NULL, PRIMARY KEY(`eventId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`eventId` TEXT NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `startAt` INTEGER NOT NULL, `remindAt` INTEGER NOT NULL, `endAt` INTEGER NOT NULL, `isHost` INTEGER NOT NULL, `hostId` TEXT NOT NULL, `remotePhotos` TEXT NOT NULL, PRIMARY KEY(`eventId`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -203,6 +203,12 @@
           {
             "fieldPath": "hostId",
             "columnName": "hostId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "remotePhotos",
+            "columnName": "remotePhotos",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -314,7 +320,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'af864ce85f9fea7a1e5c5a866b6feab1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7628413ac225fbd00d1331244abb443a')"
     ]
   }
 }

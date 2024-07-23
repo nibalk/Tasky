@@ -6,9 +6,13 @@ import androidx.room.Entity
 import androidx.room.Junction
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import androidx.room.TypeConverters
+import com.nibalk.tasky.agenda.data.local.converter.EventPhotoListConverter
+import com.nibalk.tasky.agenda.data.remote.dto.EventPhotoDto
 import java.util.UUID
 
 @Entity(tableName = EventEntity.TABLE_NAME)
+@TypeConverters(EventPhotoListConverter::class)
 data class EventEntity(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = PRIMARY_KEY)
@@ -21,6 +25,7 @@ data class EventEntity(
     val endAt: Long,
     val isHost: Boolean,
     val hostId: String,
+    val remotePhotos: List<EventPhotoDto>,
 ) {
     companion object {
         const val TABLE_NAME = "event"
@@ -38,11 +43,5 @@ data class EventEntityFull(
         associateBy = Junction(EventAttendeeEntity::class)
     )
     val attendees: List<AttendeeEntity>,
-    @Relation(
-        parentColumn = EventEntity.PRIMARY_KEY,
-        entityColumn = PhotoEntity.PRIMARY_KEY,
-        associateBy = Junction(EventPhotoEntity::class)
-    )
-    val photos: List<PhotoEntity>,
 )
 
