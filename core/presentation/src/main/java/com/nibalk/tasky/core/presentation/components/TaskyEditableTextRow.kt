@@ -30,7 +30,7 @@ import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import com.nibalk.tasky.core.presentation.themes.spacing
 
 
-enum class TaskyEditableTextRowType() {
+enum class TaskyEditableTextRowType {
     TITLE, DESCRIPTION, SUBTITLE,
 }
 

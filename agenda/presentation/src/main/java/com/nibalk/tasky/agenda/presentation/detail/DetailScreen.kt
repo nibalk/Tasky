@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -32,24 +33,27 @@ import java.time.LocalDateTime
 fun DetailScreenRoot(
     onCloseClicked: () -> Unit,
     onEditorClicked: (
-        editorText: String, EditorType
+        editorText: String?, EditorType
     ) -> Unit,
     agendaArgs: AgendaArgs,
     navController: NavHostController,
-    viewModel: DetailViewModel = koinViewModel { parametersOf(agendaArgs) },
+    viewModel: DetailViewModel = koinViewModel {
+        parametersOf(agendaArgs, navController.currentBackStackEntry?.savedStateHandle)
+    },
 ) {
-
-    val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
-    val title = savedStateHandle?.get<String>(
-        EditorType.TITLE.name) ?: viewModel.state.title
-    val description = savedStateHandle?.get<String>(
-        EditorType.DESCRIPTION.name) ?: viewModel.state.description
+    LaunchedEffect(key1 = Unit) {
+        val updatedTitle = navController.currentBackStackEntry?.savedStateHandle?.get<String>(EditorType.TITLE.name)
+        val updatedDescription = navController.currentBackStackEntry?.savedStateHandle?.get<String>(EditorType.DESCRIPTION.name)
+        if (updatedTitle != null) {
+            viewModel.onAction(DetailAction.OnTitleEdited(updatedTitle))
+        }
+        if (updatedDescription != null) {
+            viewModel.onAction(DetailAction.OnDescriptionEdited(updatedDescription))
+        }
+    }
 
     DetailScreen(
-        state = viewModel.state.copy(
-            title = title,
-            description = description
-        ),
+        state = viewModel.state,
         onAction = { action ->
             when(action) {
                 is DetailAction.OnCloseClicked -> {
@@ -57,13 +61,13 @@ fun DetailScreenRoot(
                 }
                 is DetailAction.OnTitleClicked -> {
                     onEditorClicked(
-                        viewModel.state.title.ifEmpty { EditorType.TITLE.name },
+                        viewModel.state.title,
                         EditorType.TITLE
                     )
                 }
                 is DetailAction.OnDescriptionClicked -> {
                     onEditorClicked(
-                        viewModel.state.description.ifEmpty { EditorType.DESCRIPTION.name },
+                        viewModel.state.description,
                         EditorType.DESCRIPTION
                     )
                 }

@@ -17,12 +17,8 @@ class EditorViewModel(
 
     init {
         state = state.copy(
-            editorType = EditorType.valueOf(editorArgs.editorType)
-        )
-        state = state.copy(
-            editorText = if (editorArgs.editorText != state.editorType.name) {
-                TextFieldState(initialText = editorArgs.editorText)
-            } else TextFieldState(initialText = ""),
+            editorType = EditorType.valueOf(editorArgs.editorType),
+            editorText = TextFieldState(initialText = editorArgs.editorText.orEmpty()),
         )
     }
 

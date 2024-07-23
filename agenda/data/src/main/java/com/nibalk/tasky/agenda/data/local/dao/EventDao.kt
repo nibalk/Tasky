@@ -22,11 +22,18 @@ interface EventDao {
     suspend fun getEventById(id: String): EventEntityFull?
 
     @Transaction
+    @Query("SELECT * FROM ${EventEntity.TABLE_NAME} WHERE ${EventEntity.START_DATE_KEY} = :date")
+    fun getAllEventsByDate(date: Long): Flow<List<EventEntityFull>>
+
+    @Transaction
     @Query("SELECT * FROM ${EventEntity.TABLE_NAME}")
     fun getAllEvents(): Flow<List<EventEntityFull>>
 
     @Delete
     suspend fun deleteEvent(event: EventEntity)
+
+    @Query("DELETE FROM ${EventEntity.TABLE_NAME} WHERE ${EventEntity.PRIMARY_KEY} = :id")
+    suspend fun deleteEventById(id: String)
 
     @Query("DELETE FROM ${EventEntity.TABLE_NAME}")
     suspend fun deleteAllEvents()

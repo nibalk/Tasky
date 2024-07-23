@@ -107,7 +107,7 @@ private fun NavGraphBuilder.agendaGraph(navController: NavHostController) {
                 onEditorClicked = { text, type ->
                     navController.navigate(
                         AgendaEditorScreen(
-                            editorText = text,
+                            editorText = text?.takeIf { it.isNotEmpty() },
                             editorType = type.name,
                             agendaType = args.agendaType
                         )
@@ -125,13 +125,13 @@ private fun NavGraphBuilder.agendaGraph(navController: NavHostController) {
             val args = backStackEntry.toRoute<AgendaEditorScreen>()
             EditorScreenRoot(
                 onBackClicked = {
-                    navController.popBackStack()
+                    navController.navigateUp()
                 },
                 onSaveClicked = { text, type ->
                     navController.previousBackStackEntry?.savedStateHandle?.set(
                         type.name, text
                     )
-                    navController.popBackStack()
+                    navController.navigateUp()
                 },
                 editorArgs = EditorArgs(
                     editorText = args.editorText,

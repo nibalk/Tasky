@@ -20,5 +20,6 @@ data class TaskEntity(
     companion object {
         const val TABLE_NAME = "task"
         const val PRIMARY_KEY = "id"
+        const val START_DATE_KEY = "startAt"
     }
 }

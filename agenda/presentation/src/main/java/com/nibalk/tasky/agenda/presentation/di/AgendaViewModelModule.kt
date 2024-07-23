@@ -5,7 +5,6 @@ import com.nibalk.tasky.agenda.domain.usecase.GetAgendasUseCase
 import com.nibalk.tasky.agenda.presentation.detail.DetailViewModel
 import com.nibalk.tasky.agenda.presentation.editor.EditorViewModel
 import com.nibalk.tasky.agenda.presentation.home.HomeViewModel
-import com.nibalk.tasky.agenda.presentation.model.AgendaArgs
 import com.nibalk.tasky.agenda.presentation.model.EditorArgs
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -19,8 +18,11 @@ val agendaUseCaseModule = module {
 
 val agendaViewModelModule = module {
     viewModelOf(::HomeViewModel)
-    viewModel {
-        (args: AgendaArgs) -> DetailViewModel(args)
+    viewModel { parameters ->
+        DetailViewModel(
+            agendaArgs = parameters[0],
+            savedStateHandle = parameters[1],
+        )
     }
     viewModel {
         (args: EditorArgs) -> EditorViewModel(args)

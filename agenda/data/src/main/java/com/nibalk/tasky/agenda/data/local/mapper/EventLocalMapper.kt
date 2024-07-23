@@ -2,6 +2,8 @@ package com.nibalk.tasky.agenda.data.local.mapper
 
 import com.nibalk.tasky.agenda.data.local.entity.EventEntity
 import com.nibalk.tasky.agenda.data.local.entity.EventEntityFull
+import com.nibalk.tasky.agenda.data.remote.mapper.toEventPhotoDto
+import com.nibalk.tasky.agenda.data.remote.mapper.toEventPhotoRemote
 import com.nibalk.tasky.agenda.domain.model.AgendaItem
 import com.nibalk.tasky.agenda.domain.model.EventAttendee
 import com.nibalk.tasky.agenda.domain.model.EventPhoto
@@ -15,34 +17,21 @@ fun EventEntityFull.toAgendaItemEvent(): AgendaItem.Event {
     val attendees = attendees.map { agendaEntity ->
         agendaEntity.toEventAttendee()
     }
-    val photos = this.photos.map { photo ->
-        if (photo.isLocal) {
-            photo.toEventPhotoLocal()
-        } else {
-            photo.toEventPhotoRemote()
-        }
-    }
-    return event.toAgendaItemEvent(attendees, photos)
+    return event.toAgendaItemEvent(attendees)
 }
 
-fun AgendaItem.Event.toEventEntityAll(): EventEntityFull {
+fun AgendaItem.Event.toEventEntityFull(): EventEntityFull {
     return EventEntityFull(
         event = toEventEntity(),
         attendees = attendees.map { attendee ->
             attendee.toAttendeeEntity()
-        },
-        photos = photos.map { photo ->
-            when (photo) {
-                is EventPhoto.Local -> photo.toPhotoEntity()
-                is EventPhoto.Remote -> photo.toPhotoEntity()
-            }
         },
     )
 }
 
 // Mapping EventEntity
 
-private fun AgendaItem.Event.toEventEntity(): EventEntity {
+fun AgendaItem.Event.toEventEntity(): EventEntity {
     return EventEntity(
         id = id ?: UUID.randomUUID().toString(),
         title = title,
@@ -52,12 +41,14 @@ private fun AgendaItem.Event.toEventEntity(): EventEntity {
         endAt = endAt.toLongDate(),
         isHost = isHost,
         hostId = hostId,
+        remotePhotos = photos.filterIsInstance<EventPhoto.Remote>().map { remotePhoto ->
+            remotePhoto.toEventPhotoDto()
+        },
     )
 }
 
-private fun EventEntity.toAgendaItemEvent(
+fun EventEntity.toAgendaItemEvent(
     attendees: List<EventAttendee>,
-    photos: List<EventPhoto>
 ): AgendaItem.Event {
     return AgendaItem.Event(
         id = id,
@@ -69,6 +60,8 @@ private fun EventEntity.toAgendaItemEvent(
         hostId = hostId,
         isHost = isHost,
         attendees = attendees,
-        photos = photos
+        photos = remotePhotos.map { photoDto ->
+            photoDto.toEventPhotoRemote()
+        }
     )
 }

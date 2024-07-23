@@ -10,6 +10,8 @@ sealed interface DetailAction {
     data class OnIsEditableChanged(val isEditable: Boolean) : DetailAction
     data object OnTitleClicked : DetailAction
     data object OnDescriptionClicked : DetailAction
+    data class OnTitleEdited(val newTitle: String) : DetailAction
+    data class OnDescriptionEdited(val newDescription: String) : DetailAction
     data class OnNotificationDurationClicked(val type: NotificationDurationType) : DetailAction
     data class OnStartDateSelected(val date: LocalDate) : DetailAction
     data class OnEndDateSelected(val date: LocalDate) : DetailAction
