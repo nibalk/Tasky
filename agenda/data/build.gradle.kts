@@ -14,6 +14,8 @@ dependencies {
     implementation(projects.agenda.domain)
     implementation(projects.test)
 
+    // Retrofit/ Okhttp for networking
+    implementation(libs.squareup.retrofit)
     // Coroutines
     implementation(libs.kotlinx.coroutines.core)
     // Kotlinx Json for Serialization
