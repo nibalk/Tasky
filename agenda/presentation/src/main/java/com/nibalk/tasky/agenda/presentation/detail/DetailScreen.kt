@@ -26,13 +26,14 @@ import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import com.nibalk.tasky.test.mock.AgendaSampleData
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import timber.log.Timber
 import java.time.LocalDateTime
 
 @Composable
 fun DetailScreenRoot(
     onCloseClicked: () -> Unit,
     onEditorClicked: (
-        editorText: String, EditorType
+        editorText: String?, EditorType
     ) -> Unit,
     agendaArgs: AgendaArgs,
     navController: NavHostController,
@@ -56,14 +57,16 @@ fun DetailScreenRoot(
                     onCloseClicked()
                 }
                 is DetailAction.OnTitleClicked -> {
+                    Timber.d("[NavIssueLogs] viewModel.state.title = %s", viewModel.state.title)
                     onEditorClicked(
-                        viewModel.state.title.ifEmpty { EditorType.TITLE.name },
+                        title.takeIf { it.isNotEmpty() },
                         EditorType.TITLE
                     )
                 }
                 is DetailAction.OnDescriptionClicked -> {
+                    Timber.d("[NavIssueLogs] viewModel.state.description = %s", viewModel.state.description)
                     onEditorClicked(
-                        viewModel.state.description.ifEmpty { EditorType.DESCRIPTION.name },
+                        description.takeIf { it.isNotEmpty() },
                         EditorType.DESCRIPTION
                     )
                 }

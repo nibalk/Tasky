@@ -32,7 +32,7 @@ data class AgendaDetailScreen(
 
 @Serializable
 data class AgendaEditorScreen(
-    val editorText: String,
+    val editorText: String?,
     val editorType: String,
     val agendaType: String,
 )

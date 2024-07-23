@@ -16,6 +16,7 @@ import com.nibalk.tasky.auth.presentation.login.LoginScreenRoot
 import com.nibalk.tasky.auth.presentation.register.RegisterScreenRoot
 import com.nibalk.tasky.core.presentation.utils.toLocalDate
 import com.nibalk.tasky.core.presentation.utils.toLongDate
+import timber.log.Timber
 import java.time.LocalDate
 
 @Composable
@@ -105,6 +106,8 @@ private fun NavGraphBuilder.agendaGraph(navController: NavHostController) {
                     )
                 },
                 onEditorClicked = { text, type ->
+                    Timber.d("[NavIssueLogs] text = %s", text)
+                    Timber.d("[NavIssueLogs] type = %s", type)
                     navController.navigate(
                         AgendaEditorScreen(
                             editorText = text,
@@ -125,13 +128,13 @@ private fun NavGraphBuilder.agendaGraph(navController: NavHostController) {
             val args = backStackEntry.toRoute<AgendaEditorScreen>()
             EditorScreenRoot(
                 onBackClicked = {
-                    navController.popBackStack()
+                    navController.navigateUp()
                 },
                 onSaveClicked = { text, type ->
                     navController.previousBackStackEntry?.savedStateHandle?.set(
                         type.name, text
                     )
-                    navController.popBackStack()
+                    navController.navigateUp()
                 },
                 editorArgs = EditorArgs(
                     editorText = args.editorText,
