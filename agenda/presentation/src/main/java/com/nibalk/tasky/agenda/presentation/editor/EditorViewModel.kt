@@ -7,7 +7,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.nibalk.tasky.agenda.presentation.model.EditorArgs
 import com.nibalk.tasky.agenda.presentation.model.EditorType
-import timber.log.Timber
 
 class EditorViewModel(
     editorArgs: EditorArgs,
@@ -17,7 +16,6 @@ class EditorViewModel(
         private set
 
     init {
-        Timber.d("[NavIssueLogs] editorArgs.editorText = %s", editorArgs.editorText)
         state = state.copy(
             editorType = EditorType.valueOf(editorArgs.editorType),
             editorText = TextFieldState(initialText = editorArgs.editorText.orEmpty()),

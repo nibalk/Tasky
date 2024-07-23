@@ -16,7 +16,6 @@ import com.nibalk.tasky.auth.presentation.login.LoginScreenRoot
 import com.nibalk.tasky.auth.presentation.register.RegisterScreenRoot
 import com.nibalk.tasky.core.presentation.utils.toLocalDate
 import com.nibalk.tasky.core.presentation.utils.toLongDate
-import timber.log.Timber
 import java.time.LocalDate
 
 @Composable
@@ -106,8 +105,6 @@ private fun NavGraphBuilder.agendaGraph(navController: NavHostController) {
                     )
                 },
                 onEditorClicked = { text, type ->
-                    Timber.d("[NavIssueLogs] text = %s", text)
-                    Timber.d("[NavIssueLogs] type = %s", type)
                     navController.navigate(
                         AgendaEditorScreen(
                             editorText = text?.takeIf { it.isNotEmpty() },

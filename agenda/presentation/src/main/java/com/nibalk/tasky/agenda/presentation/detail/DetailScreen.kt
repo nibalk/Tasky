@@ -27,7 +27,6 @@ import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import com.nibalk.tasky.test.mock.AgendaSampleData
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import timber.log.Timber
 import java.time.LocalDateTime
 
 @Composable
@@ -61,14 +60,12 @@ fun DetailScreenRoot(
                     onCloseClicked()
                 }
                 is DetailAction.OnTitleClicked -> {
-                    Timber.d("[NavIssueLogs] viewModel.state.title = %s", viewModel.state.title)
                     onEditorClicked(
                         viewModel.state.title,
                         EditorType.TITLE
                     )
                 }
                 is DetailAction.OnDescriptionClicked -> {
-                    Timber.d("[NavIssueLogs] viewModel.state.description = %s", viewModel.state.description)
                     onEditorClicked(
                         viewModel.state.description,
                         EditorType.DESCRIPTION
@@ -86,9 +83,6 @@ fun DetailScreen(
     state: DetailState,
     onAction: (DetailAction) -> Unit,
 ) {
-    Timber.d(" [NavIssueLogs] DetailScreen state.title = %s", state.title)
-    Timber.d(" [NavIssueLogs] DetailScreen state.description = %s", state.description)
-
     TaskyScrollableBackground(
         header = {
             AgendaDetailHeader(

@@ -10,7 +10,6 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import timber.log.Timber
 
 val agendaUseCaseModule = module {
     singleOf(::FormatProfileNameUseCase)
@@ -20,9 +19,6 @@ val agendaUseCaseModule = module {
 val agendaViewModelModule = module {
     viewModelOf(::HomeViewModel)
     viewModel { parameters ->
-        Timber.d(" [NavIssueLogs] parameters.agendaArgs = %s", parameters[0])
-        Timber.d(" [NavIssueLogs] parameters.savedStateHandle = %s", parameters[1])
-
         DetailViewModel(
             agendaArgs = parameters[0],
             savedStateHandle = parameters[1],

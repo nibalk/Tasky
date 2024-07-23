@@ -15,13 +15,12 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.time.LocalDate
 import java.time.LocalTime
 
 class DetailViewModel(
     private val agendaArgs: AgendaArgs,
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
 ): ViewModel() {
 
     var state by mutableStateOf(DetailState(
@@ -37,15 +36,8 @@ class DetailViewModel(
     val uiEvent: Flow<DetailState> = eventChannel.receiveAsFlow()
 
     init {
-        Timber.d(" [NavIssueLogs] agendaArgs = %s", agendaArgs)
-        Timber.d(" [NavIssueLogs] savedStateHandle = %s", savedStateHandle.toString())
-
         val titleFromSavedState = savedStateHandle.get<String>(EditorType. TITLE. name)
         val descriptionFromSavedState = savedStateHandle.get<String>(EditorType.DESCRIPTION. name)
-        Timber.d(" [NavIssueLogs] titleFromSavedState = %s", titleFromSavedState)
-        Timber.d(" [NavIssueLogs] descriptionFromSavedState = %s", descriptionFromSavedState)
-        Timber.d(" [NavIssueLogs] VM state.title = %s", state.title)
-        Timber.d(" [NavIssueLogs] VM state description = %s", state.description)
 
         viewModelScope.launch {
             state = state.copy(
