@@ -4,12 +4,14 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 
-fun Uri.getCompressedByteArray(
+suspend fun Uri.getCompressedByteArray(
     context: Context,
     uploadTThreshold: Int = 1024 * 1024 // 1MB
-): ByteArray?  {
+): ByteArray? = withContext(Dispatchers.IO) {
     val options = BitmapFactory.Options().apply {
         inJustDecodeBounds = true // Decode bounds without loading the entire image
     }
@@ -17,24 +19,25 @@ fun Uri.getCompressedByteArray(
 
     options.inJustDecodeBounds = false
     val bitmap = BitmapFactory.decodeStream(
-        context.contentResolver.openInputStream(this), null, options
+        context.contentResolver.openInputStream(this@getCompressedByteArray),
+        null, options
     )
 
     if (imageSize > uploadTThreshold) {
-        return bitmap?.toCompressedByteArray()
+        bitmap?.toCompressedByteArray()
     } else {
-        return bitmap?.toByteArray()
+        bitmap?.toByteArray()
     }
 }
 
-private fun Bitmap.toCompressedByteArray(): ByteArray {
+private suspend fun Bitmap.toCompressedByteArray(): ByteArray = withContext(Dispatchers.IO) {
     val stream = ByteArrayOutputStream()
     compress(Bitmap.CompressFormat.JPEG, 50, stream)
-    return stream.toByteArray()
+    stream.toByteArray()
 }
 
-private fun Bitmap.toByteArray(): ByteArray {
+private suspend fun Bitmap.toByteArray(): ByteArray = withContext(Dispatchers.IO) {
     val stream = ByteArrayOutputStream()
     compress(Bitmap.CompressFormat.PNG, 100, stream) // Use PNG for lossless conversion
-    return stream.toByteArray()
+    stream.toByteArray()
 }
