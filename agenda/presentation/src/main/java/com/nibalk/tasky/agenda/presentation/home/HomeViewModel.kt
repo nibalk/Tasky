@@ -3,7 +3,6 @@ package com.nibalk.tasky.agenda.presentation.home
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nibalk.tasky.agenda.domain.usecase.FormatProfileNameUseCase
@@ -11,8 +10,6 @@ import com.nibalk.tasky.agenda.domain.usecase.GetAgendasUseCase
 import com.nibalk.tasky.core.domain.auth.SessionStorage
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch

@@ -34,7 +34,7 @@ class OfflineFirstAgendaRepository(
         val combinedAndSortedFlow: Flow<List<AgendaItem>> = combine(
             localEventDataSource.getEventsByDate(selectedDate.toLongDate()),
             localTaskDataSource.getTasksByDate(selectedDate.toLongDate()),
-            localReminderDataSource.getRemindersByDate(selectedDate.toLongDate())
+            localReminderDataSource.getRemindersByDate(selectedDate)
         ) { events, tasks, reminders ->
             Timber.d("[OfflineFirst-GetAll] LOCAL | events = %s", events)
             Timber.d("[OfflineFirst-GetAll] LOCAL | tasks = %s", tasks)

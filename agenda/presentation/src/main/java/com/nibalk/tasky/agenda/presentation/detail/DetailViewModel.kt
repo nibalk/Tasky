@@ -19,7 +19,6 @@ import com.nibalk.tasky.agenda.presentation.model.EditorType
 import com.nibalk.tasky.core.domain.util.onError
 import com.nibalk.tasky.core.domain.util.onSuccess
 import com.nibalk.tasky.core.presentation.utils.asUiText
-import com.nibalk.tasky.test.mock.AgendaSampleData
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -274,24 +273,6 @@ class DetailViewModel(
         return when (val details = state.details) {
             is AgendaItemDetails.Task -> update(details)
             else -> details
-        }
-    }
-
-    private val mockItem = when(AgendaType.valueOf(agendaArgs.agendaType)) { //TODO: Mocking to be deleted
-        AgendaType.EVENT -> {
-            AgendaSampleData.allAgendas.find {
-                it is AgendaItem.Event && it.id == agendaArgs.agendaId
-            } as? AgendaItem.Event
-        }
-        AgendaType.TASK -> {
-            AgendaSampleData.allAgendas.find {
-                it is AgendaItem.Task && it.id == agendaArgs.agendaId
-            } as? AgendaItem.Task
-        }
-        AgendaType.REMINDER -> {
-            AgendaSampleData.allAgendas.find {
-                it is AgendaItem.Reminder && it.id == agendaArgs.agendaId
-            } as? AgendaItem.Reminder
         }
     }
 }
