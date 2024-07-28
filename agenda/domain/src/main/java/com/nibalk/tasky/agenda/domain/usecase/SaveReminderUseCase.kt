@@ -8,8 +8,11 @@ import com.nibalk.tasky.core.domain.util.EmptyResult
 class SaveReminderUseCase(
     private val reminderRepository: ReminderRepository
 ) {
-    suspend operator fun invoke(reminder: AgendaItem.Reminder): EmptyResult<DataError> {
-        return if (reminder.id.isNullOrEmpty()) {
+    suspend operator fun invoke(
+        reminder: AgendaItem.Reminder,
+        isCreateNew: Boolean
+    ): EmptyResult<DataError> {
+        return if (isCreateNew) {
             reminderRepository.createReminder(reminder)
         } else {
             reminderRepository.updateReminder(reminder)

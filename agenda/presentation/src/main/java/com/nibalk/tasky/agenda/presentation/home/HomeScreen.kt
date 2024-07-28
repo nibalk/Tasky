@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -63,6 +64,10 @@ fun HomeScreenRoot(
 ) {
     val context = LocalContext.current
 
+    LaunchedEffect(viewModel.state.selectedDate) {
+        viewModel.getAgendaItems()
+    }
+
     ObserveAsEvents(viewModel.uiEvent) { event ->
         when(event) {
             is HomeEvent.FetchAgendaError -> {
@@ -79,6 +84,7 @@ fun HomeScreenRoot(
             }
         }
     }
+
     HomeScreen(
         state = viewModel.state,
         onAction = { action ->

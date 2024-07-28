@@ -11,6 +11,7 @@ import com.nibalk.tasky.core.domain.util.EmptyResult
 import com.nibalk.tasky.core.domain.util.Result
 import com.nibalk.tasky.core.domain.util.asEmptyDataResult
 import com.nibalk.tasky.core.domain.util.map
+import timber.log.Timber
 
 class RetrofitRemoteReminderDataSource(
     private val reminderApi: ReminderApi
@@ -32,6 +33,7 @@ class RetrofitRemoteReminderDataSource(
         val response = safeCall {
             reminderApi.createReminder(reminder.toReminderDto())
         }
+        Timber.d("[OfflineFirst-SaveItem] REMOTE | creating reminder(%s)", reminder.id)
         return response.asEmptyDataResult()
     }
 

@@ -64,7 +64,7 @@ class DetailViewModel(
                 title = titleFromSavedState ?: state.title,
                 description = descriptionFromSavedState ?: state.description,
             )
-            fetchAgendaItem()
+            getAgendaItem()
         }
     }
 
@@ -118,18 +118,19 @@ class DetailViewModel(
 
     // Fetch Agenda Item
 
-    private suspend fun fetchAgendaItem() {
+    private suspend fun getAgendaItem() {
         when(state.agendaType) {
-            AgendaType.EVENT -> invokeFetchEvent()
-            AgendaType.TASK -> invokeFetchTask()
-            AgendaType.REMINDER -> invokeFetchReminder()
+            AgendaType.EVENT -> invokeGetEvent()
+            AgendaType.TASK -> invokeGetTask()
+            AgendaType.REMINDER -> invokeGetReminder()
         }
     }
 
-    private suspend fun invokeFetchEvent() {
+    private suspend fun invokeGetEvent() {
         val event = getEventUseCase.invoke(state.agendaId)
         state = event?.let { item ->
             state.copy(
+                agendaId = item.id.orEmpty(),
                 title = item.title,
                 description = item.description,
                 startDate = item.startAt.toLocalDate(),
@@ -148,10 +149,11 @@ class DetailViewModel(
         } ?: state
     }
 
-    private suspend fun invokeFetchTask() {
+    private suspend fun invokeGetTask() {
         val task =  getTaskUseCase.invoke(state.agendaId)
         state = task?.let { item ->
             state.copy(
+                agendaId = item.id.orEmpty(),
                 title = item.title,
                 description = item.description,
                 startDate = item.startAt.toLocalDate(),
@@ -165,10 +167,11 @@ class DetailViewModel(
         } ?: state
     }
 
-    private suspend fun invokeFetchReminder() {
+    private suspend fun invokeGetReminder() {
         val reminder = getReminderUseCase.invoke(state.agendaId)
         state = reminder?.let { item ->
             state.copy(
+                agendaId = item.id.orEmpty(),
                 title = item.title,
                 description = item.description,
                 startDate = item.startAt.toLocalDate(),
@@ -192,11 +195,12 @@ class DetailViewModel(
     private suspend fun invokeSaveEvent() {
         val stateDetails = state.details.asEventDetails
         val randomIdIfNew = UUID.randomUUID().toString()
-        Timber.d("[SaveAgendaItemLog] Event | agendaId = %s , randomIdIfNew = %s",
+        Timber.d("[OfflineFirst-SaveItem] Event | agendaId = %s , randomIdIfNew = %s",
             state.agendaId, randomIdIfNew
         )
 
         saveEventUseCase.invoke(
+            isCreateNew = state.agendaId.isEmpty(),
             event = AgendaItem.Event(
                 id = state.agendaId.ifEmpty { randomIdIfNew },
                 title = state.title,
@@ -218,11 +222,12 @@ class DetailViewModel(
 
     private suspend fun invokeSaveTask() {
         val randomIdIfNew = UUID.randomUUID().toString()
-        Timber.d("[SaveAgendaItemLog] Task | agendaId = %s , randomIdIfNew = %s",
+        Timber.d("[OfflineFirst-SaveItem] Task | agendaId = %s , randomIdIfNew = %s",
             state.agendaId, randomIdIfNew
         )
 
         saveTaskUseCase.invoke(
+            isCreateNew = state.agendaId.isEmpty(),
             task = AgendaItem.Task(
                 id = state.agendaId.ifEmpty { randomIdIfNew },
                 title = state.title,
@@ -236,11 +241,12 @@ class DetailViewModel(
 
     private suspend fun invokeSaveReminder() {
         val randomIdIfNew = UUID.randomUUID().toString()
-        Timber.d("[SaveAgendaItemLog] Reminder | agendaId = %s , randomIdIfNew = %s",
+        Timber.d("[OfflineFirst-SaveItem] Reminder | agendaId = %s , randomIdIfNew = %s",
             state.agendaId, randomIdIfNew
         )
 
         saveReminderUseCase.invoke(
+            isCreateNew = state.agendaId.isEmpty(),
             reminder = AgendaItem.Reminder(
                 id = state.agendaId.ifEmpty { randomIdIfNew },
                 title = state.title,

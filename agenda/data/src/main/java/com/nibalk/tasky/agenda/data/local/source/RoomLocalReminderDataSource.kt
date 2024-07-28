@@ -11,6 +11,7 @@ import com.nibalk.tasky.core.domain.util.DataError
 import com.nibalk.tasky.core.domain.util.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 
 class RoomLocalReminderDataSource(
     private val reminderDao: ReminderDao
@@ -19,12 +20,14 @@ class RoomLocalReminderDataSource(
     override suspend fun getAllReminders(): Flow<List<AgendaItem.Reminder>> {
         return reminderDao.getAllReminders().map { entities ->
             entities.map { entity ->
+                Timber.d("[OfflineFirst-GetAll] LOCAL | reminder entity = %s", entity)
                 entity.toAgendaItemReminder()
             }
         }
     }
 
     override suspend fun getRemindersByDate(selectedDate: Long): Flow<List<AgendaItem.Reminder>> {
+        Timber.d("[OfflineFirst-GetAll] LOCAL | selectedDate = %s", selectedDate)
         return reminderDao.getAllRemindersByDate(selectedDate).map { entities ->
             entities.map { entity ->
                 entity.toAgendaItemReminder()

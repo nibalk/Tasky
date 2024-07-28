@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class HomeViewModel(
     private val sessionStorage: SessionStorage,
@@ -32,7 +33,11 @@ class HomeViewModel(
     init {
         viewModelScope.launch {
             setProfileInitials()
-            getAgendaItems()
+//            snapshotFlow { state.selectedDate }
+//                .distinctUntilChanged()
+//                .collectLatest {
+//                    getAgendaItems()
+//                }
         }
     }
 
@@ -42,7 +47,7 @@ class HomeViewModel(
                 logout()
             }
             is HomeAction.OnAgendaListRefreshed -> {
-                //viewModelScope.launch { fetchAgendaItems() }
+                viewModelScope.launch { getAgendaItems() }
             }
             is HomeAction.OnDayClicked -> {
                 state = state.copy(
@@ -71,11 +76,13 @@ class HomeViewModel(
         )
     }
 
-    private suspend fun getAgendaItems() {
+    suspend fun getAgendaItems() {
         state = state.copy(isLoading = true)
+        Timber.d("[OfflineFirst-GetAll] LOCAL | state.selectedDate = %s", state.selectedDate)
         getAgendasUseCase(
             state.selectedDate
         ).onEach { agendas ->
+            Timber.d("[OfflineFirst-GetAll] LOCAL | agendas = %s", agendas)
             state = state.copy(
                 agendaItems = agendas.sortedBy { it.startAt },
                 isLoading = false

@@ -8,8 +8,10 @@ import com.nibalk.tasky.core.domain.util.DataError
 import com.nibalk.tasky.core.domain.util.EmptyResult
 import com.nibalk.tasky.core.domain.util.asEmptyDataResult
 import com.nibalk.tasky.core.domain.util.onError
+import com.nibalk.tasky.core.domain.util.onSuccess
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
+import timber.log.Timber
 
 class OfflineFirstReminderRepository(
     private val localDataSource: LocalReminderDataSource,
@@ -29,10 +31,14 @@ class OfflineFirstReminderRepository(
     }
 
     override suspend fun createReminder(reminder: AgendaItem.Reminder): EmptyResult<DataError> {
+        Timber.d("[OfflineFirst-SaveItem] LOCAL | creating reminder (%s)", reminder.id)
         val localResult = localDataSource.upsertReminder(reminder)
         localResult.onError {
             return localResult.asEmptyDataResult()
+        }.onSuccess { id ->
+            Timber.d("[OfflineFirst-SaveItem] LOCAL | created reminder(%s)", id)
         }
+
         val remoteResult = remoteDataSource.createReminder(reminder)
         return remoteResult.asEmptyDataResult()
     }

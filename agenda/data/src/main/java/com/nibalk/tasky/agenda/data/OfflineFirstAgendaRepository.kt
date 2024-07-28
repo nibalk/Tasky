@@ -17,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import timber.log.Timber
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -31,10 +32,13 @@ class OfflineFirstAgendaRepository(
 
     override suspend fun getAgendas(selectedDate: LocalDate): Flow<List<AgendaItem>> {
         val combinedAndSortedFlow: Flow<List<AgendaItem>> = combine(
-            localEventDataSource.getAllEvents(),
-            localTaskDataSource.getAllTasks(),
-            localReminderDataSource.getAllReminders()
+            localEventDataSource.getEventsByDate(selectedDate.toLongDate()),
+            localTaskDataSource.getTasksByDate(selectedDate.toLongDate()),
+            localReminderDataSource.getRemindersByDate(selectedDate.toLongDate())
         ) { events, tasks, reminders ->
+            Timber.d("[OfflineFirst-GetAll] LOCAL | events = %s", events)
+            Timber.d("[OfflineFirst-GetAll] LOCAL | tasks = %s", tasks)
+            Timber.d("[OfflineFirst-GetAll] LOCAL | reminders = %s", reminders)
             (events + tasks + reminders).sortedBy { it.startAt }
         }
         return combinedAndSortedFlow

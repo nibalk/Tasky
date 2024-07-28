@@ -8,8 +8,11 @@ import com.nibalk.tasky.core.domain.util.EmptyResult
 class SaveEventUseCase(
     private val eventRepository: EventRepository
 ) {
-    suspend operator fun invoke(event: AgendaItem.Event): EmptyResult<DataError> {
-        return if (event.id.isNullOrEmpty()) {
+    suspend operator fun invoke(
+        event: AgendaItem.Event,
+        isCreateNew: Boolean
+    ): EmptyResult<DataError> {
+        return if (isCreateNew) {
             eventRepository.createEvent(event)
         } else {
             eventRepository.updateEvent(event)
