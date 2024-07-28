@@ -12,7 +12,6 @@ import com.nibalk.tasky.core.data.utils.toStartOfDayMillis
 import com.nibalk.tasky.core.domain.util.DataError
 import com.nibalk.tasky.core.domain.util.Result
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
@@ -33,18 +32,20 @@ class RoomLocalReminderDataSource(
 
     override suspend fun getRemindersByDate(selectedDate: LocalDate): Flow<List<AgendaItem.Reminder>> {
         Timber.d("[OfflineFirst-GetAll] LOCAL | selectedDate = %s", selectedDate)
+        Timber.d("[OfflineFirst-GetAll] LOCAL | toStartOfDayMillis = %s", selectedDate.toStartOfDayMillis())
+        Timber.d("[OfflineFirst-GetAll] LOCAL | toEndOfDayMillis = %s", selectedDate.toEndOfDayMillis())
+
         val result = reminderDao.getAllRemindersByDate(
             selectedDate.toStartOfDayMillis(), selectedDate.toEndOfDayMillis()
-        )
-        Timber.d("[OfflineFirst-GetAll] LOCAL | result = %s", result.first())
-
-        return result.map { entities ->
-            Timber.d("[OfflineFirst-GetAll] LOCAL | entities = %s", entities)
+        ).map { entities ->
+            Timber.d("[OfflineFirst-GetAll] LOCAL | entities = %s", entities[0])
             entities.map { entity ->
                 Timber.d("[OfflineFirst-GetAll] LOCAL | entity = %s", entity)
                 entity.toAgendaItemReminder()
             }
         }
+        Timber.d("[OfflineFirst-GetAll] LOCAL | result = %s", result.toString())
+        return result
     }
 
     override suspend fun getReminderById(reminderId: String): AgendaItem.Reminder? {

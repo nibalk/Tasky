@@ -19,8 +19,8 @@ interface TaskDao {
     @Query("SELECT * FROM ${TaskEntity.TABLE_NAME} WHERE ${TaskEntity.PRIMARY_KEY} = :id")
     suspend fun getTaskById(id: String): TaskEntity?
 
-    @Query("SELECT * FROM ${TaskEntity.TABLE_NAME} WHERE ${TaskEntity.START_DATE_KEY} = :date")
-    fun getAllTasksByDate(date: Long): Flow<List<TaskEntity>>
+    @Query("SELECT * FROM ${TaskEntity.TABLE_NAME} WHERE ${TaskEntity.START_DATE_KEY} BETWEEN :startOfDayMillis AND :endOfDayMillis")
+    fun getAllTasksByDate(startOfDayMillis: Long, endOfDayMillis: Long): Flow<List<TaskEntity>>
 
     @Query("SELECT * FROM ${TaskEntity.TABLE_NAME}")
     fun getAllTasks(): Flow<List<TaskEntity>>

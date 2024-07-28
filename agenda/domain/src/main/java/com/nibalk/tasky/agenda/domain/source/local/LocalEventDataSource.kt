@@ -4,12 +4,13 @@ import com.nibalk.tasky.agenda.domain.model.AgendaItem
 import com.nibalk.tasky.core.domain.util.DataError
 import com.nibalk.tasky.core.domain.util.Result
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 
 typealias EventId = String
 
 interface LocalEventDataSource {
     suspend fun getAllEvents(): Flow<List<AgendaItem.Event>>
-    suspend fun getEventsByDate(selectedDate: Long): Flow<List<AgendaItem.Event>>
+    suspend fun getEventsByDate(selectedDate: LocalDate): Flow<List<AgendaItem.Event>>
     suspend fun getEventById(eventId: String): AgendaItem.Event?
 
     suspend fun upsertEvent(

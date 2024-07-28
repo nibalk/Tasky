@@ -8,6 +8,7 @@ import com.nibalk.tasky.agenda.domain.source.local.LocalReminderDataSource
 import com.nibalk.tasky.agenda.domain.source.local.LocalTaskDataSource
 import com.nibalk.tasky.agenda.domain.source.remote.RemoteAgendaDataSource
 import com.nibalk.tasky.core.data.utils.toLongDate
+import com.nibalk.tasky.core.data.utils.toStartOfDayMillis
 import com.nibalk.tasky.core.domain.util.DataError
 import com.nibalk.tasky.core.domain.util.EmptyResult
 import com.nibalk.tasky.core.domain.util.Result
@@ -32,8 +33,8 @@ class OfflineFirstAgendaRepository(
 
     override suspend fun getAgendas(selectedDate: LocalDate): Flow<List<AgendaItem>> {
         val combinedAndSortedFlow: Flow<List<AgendaItem>> = combine(
-            localEventDataSource.getEventsByDate(selectedDate.toLongDate()),
-            localTaskDataSource.getTasksByDate(selectedDate.toLongDate()),
+            localEventDataSource.getEventsByDate(selectedDate),
+            localTaskDataSource.getTasksByDate(selectedDate),
             localReminderDataSource.getRemindersByDate(selectedDate)
         ) { events, tasks, reminders ->
             Timber.d("[OfflineFirst-GetAll] LOCAL | events = %s", events)

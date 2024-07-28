@@ -7,10 +7,13 @@ import com.nibalk.tasky.agenda.data.local.mapper.toEventEntity
 import com.nibalk.tasky.agenda.domain.model.AgendaItem
 import com.nibalk.tasky.agenda.domain.source.local.EventId
 import com.nibalk.tasky.agenda.domain.source.local.LocalEventDataSource
+import com.nibalk.tasky.core.data.utils.toEndOfDayMillis
+import com.nibalk.tasky.core.data.utils.toStartOfDayMillis
 import com.nibalk.tasky.core.domain.util.DataError
 import com.nibalk.tasky.core.domain.util.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.LocalDate
 
 class RoomLocalEventDataSource(
     private val eventDao: EventDao
@@ -23,8 +26,10 @@ class RoomLocalEventDataSource(
         }
     }
 
-    override suspend fun getEventsByDate(selectedDate: Long): Flow<List<AgendaItem.Event>> {
-        return eventDao.getAllEventsByDate(selectedDate).map { entities ->
+    override suspend fun getEventsByDate(selectedDate: LocalDate): Flow<List<AgendaItem.Event>> {
+        return eventDao.getAllEventsByDate(
+            selectedDate.toStartOfDayMillis(), selectedDate.toEndOfDayMillis()
+        ).map { entities ->
             entities.map { entity ->
                 entity.toAgendaItemEvent()
             }

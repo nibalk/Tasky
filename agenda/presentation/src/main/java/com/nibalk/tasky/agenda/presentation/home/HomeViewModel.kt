@@ -78,7 +78,7 @@ class HomeViewModel(
         Timber.d("[OfflineFirst-GetAll] LOCAL | state.selectedDate = %s", state.selectedDate)
         getAgendasUseCase(
             state.selectedDate
-        ).onEach { agendas ->
+        ).collect { agendas ->
             Timber.d("[OfflineFirst-GetAll] LOCAL | agendas = %s", agendas)
             state = state.copy(
                 agendaItems = agendas.sortedBy { it.startAt },

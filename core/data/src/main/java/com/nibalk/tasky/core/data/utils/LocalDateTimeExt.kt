@@ -19,13 +19,6 @@ fun LocalDateTime.toLongDate(): Long {
         .toEpochMilli()
 }
 
-fun LocalDate.toLongDate(): Long {
-    return this
-        .atStartOfDay(ZoneId.systemDefault())
-        .toInstant()
-        .toEpochMilli()
-}
-
 fun LocalDate.toStartOfDayMillis(): Long {
     return this
         .atStartOfDay(ZoneId.systemDefault())
