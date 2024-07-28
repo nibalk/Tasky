@@ -1,5 +1,6 @@
 package com.nibalk.tasky.agenda.presentation.detail
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
@@ -7,7 +8,9 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -15,6 +18,7 @@ import com.nibalk.tasky.agenda.presentation.R
 import com.nibalk.tasky.agenda.presentation.components.AgendaDetailHeader
 import com.nibalk.tasky.agenda.presentation.components.AgendaFooter
 import com.nibalk.tasky.agenda.presentation.components.AgendaNotificationsRow
+import com.nibalk.tasky.agenda.presentation.editor.EditorAction
 import com.nibalk.tasky.agenda.presentation.model.AgendaArgs
 import com.nibalk.tasky.agenda.presentation.model.AgendaType
 import com.nibalk.tasky.agenda.presentation.model.EditorType
@@ -24,6 +28,7 @@ import com.nibalk.tasky.core.presentation.components.TaskyEditableTextRowType
 import com.nibalk.tasky.core.presentation.components.TaskyScrollableBackground
 import com.nibalk.tasky.core.presentation.themes.TaskyLightBlue
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
+import com.nibalk.tasky.core.presentation.utils.ObserveAsEvents
 import com.nibalk.tasky.test.mock.AgendaSampleData
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -32,6 +37,7 @@ import java.time.LocalDateTime
 @Composable
 fun DetailScreenRoot(
     onCloseClicked: () -> Unit,
+    onSaveClicked: () -> Unit,
     onEditorClicked: (
         editorText: String?, EditorType
     ) -> Unit,
@@ -41,6 +47,9 @@ fun DetailScreenRoot(
         parametersOf(agendaArgs, navController.currentBackStackEntry?.savedStateHandle)
     },
 ) {
+    val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     LaunchedEffect(key1 = Unit) {
         val updatedTitle = navController.currentBackStackEntry?.savedStateHandle?.get<String>(EditorType.TITLE.name)
         val updatedDescription = navController.currentBackStackEntry?.savedStateHandle?.get<String>(EditorType.DESCRIPTION.name)
@@ -49,6 +58,20 @@ fun DetailScreenRoot(
         }
         if (updatedDescription != null) {
             viewModel.onAction(DetailAction.OnDescriptionEdited(updatedDescription))
+        }
+    }
+
+    ObserveAsEvents(viewModel.uiEvent) { event ->
+        when(event) {
+            is DetailEvent.DetailSaveError -> {
+                keyboardController?.hide()
+                Toast.makeText(context, event.error.asString(context), Toast.LENGTH_LONG).show()
+            }
+            is DetailEvent.DetailSaveSuccess -> {
+                keyboardController?.hide()
+                Toast.makeText(context, R.string.agenda_item_saved, Toast.LENGTH_SHORT).show()
+                onSaveClicked()
+            }
         }
     }
 
@@ -109,6 +132,7 @@ fun DetailScreen(
                     content = stringResource(
                         id = R.string.agenda_item_delete, state.agendaType.name
                     ).uppercase(),
+                    isLoading = state.isEditingMode,
                     onButtonClicked = {}
                 )
             }
@@ -150,8 +174,8 @@ fun DetailScreen(
             TaskyEditableDateTimeRow(
                 label = stringResource(R.string.agenda_item_to),
                 isEditable = state.isEditingMode,
-                selectedDateTime = state.details.asEventDetails?.endDate?.atTime(
-                    state.details.asEventDetails?.endTime
+                selectedDateTime = state.details.asEventDetails.endDate.atTime(
+                    state.details.asEventDetails.endTime
                 ) ?: LocalDateTime.now(),
                 onTimeSelected = { selectedTime ->
                     onAction(DetailAction.OnEndTimeSelected(selectedTime))
