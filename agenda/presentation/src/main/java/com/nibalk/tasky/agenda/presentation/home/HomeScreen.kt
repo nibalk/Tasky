@@ -35,7 +35,6 @@ import com.nibalk.tasky.agenda.presentation.components.AgendaDayPicker
 import com.nibalk.tasky.agenda.presentation.components.AgendaHeader
 import com.nibalk.tasky.agenda.presentation.model.AgendaItemActionType
 import com.nibalk.tasky.agenda.presentation.model.AgendaType
-import com.nibalk.tasky.core.presentation.utils.getSurroundingDays
 import com.nibalk.tasky.core.presentation.components.TaskyBackground
 import com.nibalk.tasky.core.presentation.components.TaskyEmptyList
 import com.nibalk.tasky.core.presentation.components.TaskyNeedleSeparator
@@ -43,6 +42,8 @@ import com.nibalk.tasky.core.presentation.components.TaskyRefreshableList
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import com.nibalk.tasky.core.presentation.themes.spacing
 import com.nibalk.tasky.core.presentation.utils.ObserveAsEvents
+import com.nibalk.tasky.core.presentation.utils.getSurroundingDays
+import com.nibalk.tasky.core.presentation.utils.toLongDate
 import org.koin.androidx.compose.koinViewModel
 import timber.log.Timber
 import java.time.LocalDate
@@ -53,7 +54,10 @@ import com.nibalk.tasky.core.presentation.R as CoreR
 @Composable
 fun HomeScreenRoot(
     onDetailClicked: (
-        isDetailScreenEditable: Boolean, AgendaType, AgendaItem?
+        isDetailScreenEditable: Boolean,
+        agendaType: AgendaType,
+        agendaItem: AgendaItem?,
+        selectedDate: Long,
     ) -> Unit,
     viewModel: HomeViewModel = koinViewModel(),
 ) {
@@ -80,13 +84,19 @@ fun HomeScreenRoot(
         onAction = { action ->
             when(action) {
                 is HomeAction.OnAddAgendaOptionsClicked -> {
-                    onDetailClicked(true, action.agendaType, null)
+                    onDetailClicked(true, action.agendaType,null,
+                        viewModel.state.selectedDate.toLongDate(),
+                    )
                 }
                 is HomeAction.OnListItemOptionEditClicked -> {
-                    onDetailClicked(true, action.agendaType, action.agendaItem)
+                    onDetailClicked(true, action.agendaType, action.agendaItem,
+                        viewModel.state.selectedDate.toLongDate(),
+                    )
                 }
                 is HomeAction.OnListItemOptionOpenClicked -> {
-                    onDetailClicked(false, action.agendaType, action.agendaItem)
+                    onDetailClicked(false, action.agendaType, action.agendaItem,
+                        viewModel.state.selectedDate.toLongDate(),
+                    )
                 }
                 is HomeAction.OnListItemOptionDeleteClicked -> {
                     Toast.makeText(

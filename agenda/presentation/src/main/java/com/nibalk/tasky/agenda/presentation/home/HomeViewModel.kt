@@ -9,13 +9,11 @@ import androidx.lifecycle.viewModelScope
 import com.nibalk.tasky.agenda.domain.usecase.FormatProfileNameUseCase
 import com.nibalk.tasky.agenda.domain.usecase.GetAgendasUseCase
 import com.nibalk.tasky.core.domain.auth.SessionStorage
-import com.nibalk.tasky.core.domain.util.onError
-import com.nibalk.tasky.core.domain.util.onSuccess
-import com.nibalk.tasky.core.presentation.utils.asUiText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -34,11 +32,7 @@ class HomeViewModel(
     init {
         viewModelScope.launch {
             setProfileInitials()
-            snapshotFlow { state.selectedDate }
-                .distinctUntilChanged()
-                .collectLatest {
-                    fetchAgendaItems()
-                }
+            getAgendaItems()
         }
     }
 
@@ -48,7 +42,7 @@ class HomeViewModel(
                 logout()
             }
             is HomeAction.OnAgendaListRefreshed -> {
-                viewModelScope.launch { fetchAgendaItems() }
+                //viewModelScope.launch { fetchAgendaItems() }
             }
             is HomeAction.OnDayClicked -> {
                 state = state.copy(
@@ -77,19 +71,17 @@ class HomeViewModel(
         )
     }
 
-    private suspend fun fetchAgendaItems() {
+    private suspend fun getAgendaItems() {
         state = state.copy(isLoading = true)
         getAgendasUseCase(
             state.selectedDate
-        ).onSuccess { agendas ->
+        ).onEach { agendas ->
             state = state.copy(
                 agendaItems = agendas.sortedBy { it.startAt },
                 isLoading = false
             )
             eventChannel.send(HomeEvent.FetchAgendaSuccess)
-        }.onError { error ->
-            state = state.copy(isLoading = false)
-            eventChannel.send(HomeEvent.FetchAgendaError(error.asUiText()))
         }
+        state = state.copy(isLoading = false)
     }
 }

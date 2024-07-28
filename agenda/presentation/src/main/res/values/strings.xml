@@ -18,8 +18,9 @@
     <string name="agenda_item_from">From</string>
     <string name="agenda_item_to">To</string>
     <string name="agenda_item_at">At</string>
-    <string name="agenda_editor">Title</string>
-    <string name="agenda_description">Description</string>
+    <string name="agenda_item_saved">Agenda items saved</string>
+    <string name="agenda_editor_title">Title</string>
+    <string name="agenda_editor_description">Description</string>
 
     <!-- Agenda Screen - Menu Options -->
     <string name="agenda_option_event">Event</string>

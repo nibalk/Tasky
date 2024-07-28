@@ -2,6 +2,12 @@ package com.nibalk.tasky.agenda.presentation.di
 
 import com.nibalk.tasky.agenda.domain.usecase.FormatProfileNameUseCase
 import com.nibalk.tasky.agenda.domain.usecase.GetAgendasUseCase
+import com.nibalk.tasky.agenda.domain.usecase.GetEventUseCase
+import com.nibalk.tasky.agenda.domain.usecase.GetReminderUseCase
+import com.nibalk.tasky.agenda.domain.usecase.GetTaskUseCase
+import com.nibalk.tasky.agenda.domain.usecase.SaveEventUseCase
+import com.nibalk.tasky.agenda.domain.usecase.SaveReminderUseCase
+import com.nibalk.tasky.agenda.domain.usecase.SaveTaskUseCase
 import com.nibalk.tasky.agenda.presentation.detail.DetailViewModel
 import com.nibalk.tasky.agenda.presentation.editor.EditorViewModel
 import com.nibalk.tasky.agenda.presentation.home.HomeViewModel
@@ -14,6 +20,14 @@ import org.koin.dsl.module
 val agendaUseCaseModule = module {
     singleOf(::FormatProfileNameUseCase)
     singleOf(::GetAgendasUseCase)
+    singleOf(::GetEventUseCase)
+    singleOf(::GetTaskUseCase)
+    singleOf(::GetReminderUseCase)
+    singleOf(::SaveTaskUseCase)
+    singleOf(::SaveReminderUseCase)
+    singleOf(::SaveEventUseCase)
+    singleOf(::SaveTaskUseCase)
+    singleOf(::SaveReminderUseCase)
 }
 
 val agendaViewModelModule = module {
@@ -22,6 +36,12 @@ val agendaViewModelModule = module {
         DetailViewModel(
             agendaArgs = parameters[0],
             savedStateHandle = parameters[1],
+            getEventUseCase = get(),
+            getTaskUseCase = get(),
+            getReminderUseCase = get(),
+            saveEventUseCase = get(),
+            saveTaskUseCase = get(),
+            saveReminderUseCase = get()
         )
     }
     viewModel {

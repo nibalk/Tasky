@@ -37,7 +37,7 @@ class RetrofitRemoteEventDataSource(
 
     override suspend fun createEvent(
         event: AgendaItem.Event
-    ): EmptyResult<DataError.Network> {
+    ): Result<AgendaItem.Event?, DataError.Network> {
         val response = safeCall {
             eventApi.createEvent(
                 body = MultipartBody.Part.createFormData(
@@ -56,12 +56,14 @@ class RetrofitRemoteEventDataSource(
                     }
             )
         }
-        return response.asEmptyDataResult()
+        return response.map { eventDto ->
+            eventDto?.toAgendaItemEvent()
+        }
     }
 
     override suspend fun updateEvent(
         event: AgendaItem.Event
-    ): EmptyResult<DataError.Network> {
+    ): Result<AgendaItem.Event?, DataError.Network> {
         val response = safeCall {
             eventApi.updateEvent(
                 body = MultipartBody.Part.createFormData(
@@ -80,7 +82,9 @@ class RetrofitRemoteEventDataSource(
                     }
             )
         }
-        return response.asEmptyDataResult()
+        return response.map { eventDto ->
+            eventDto?.toAgendaItemEvent()
+        }
     }
 
     override suspend fun deleteEvent(

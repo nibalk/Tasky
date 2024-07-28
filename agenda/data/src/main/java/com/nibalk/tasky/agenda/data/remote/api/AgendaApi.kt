@@ -1,7 +1,7 @@
 package com.nibalk.tasky.agenda.data.remote.api
 
-import com.nibalk.tasky.agenda.data.remote.dto.AgendaDto
-import com.nibalk.tasky.agenda.data.remote.dto.AgendaSyncDto
+import com.nibalk.tasky.agenda.data.remote.dto.AgendaDeletedItemsDto
+import com.nibalk.tasky.agenda.data.remote.dto.AgendaItemsDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -19,15 +19,15 @@ interface AgendaApi {
 
     @POST(AGENDA_SYNC_ENDPOINT)
     suspend fun syncAgendaItems(
-        @Body body: AgendaSyncDto
+        @Body body: AgendaDeletedItemsDto
     ): Response<Unit>
 
     @GET(AGENDA_FULL_ENDPOINT)
-    suspend fun getFullAgenda(): Response<AgendaDto>
+    suspend fun getFullAgenda(): Response<AgendaItemsDto>
 
     @GET(AGENDA_QUERY_ENDPOINT)
     suspend fun getAgendaItems(
         @Query(AGENDA_TIME_ZONE_QUERY_PARAM) timezone: String,
         @Query(AGENDA_TIME_QUERY_PARAM) time: Long
-    ): Response<AgendaDto>
+    ): Response<AgendaItemsDto>
 }

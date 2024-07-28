@@ -8,6 +8,6 @@ enum class EditorType(
     @StringRes val editorHintResId: Int,
     val isHeaderText: Boolean,
 ) {
-    TITLE(R.string.agenda_editor, R.string.agenda_item_enter_title, true),
-    DESCRIPTION(R.string.agenda_description, R.string.agenda_item_enter_description, false),
+    TITLE(R.string.agenda_editor_title, R.string.agenda_item_enter_title, true),
+    DESCRIPTION(R.string.agenda_editor_description, R.string.agenda_item_enter_description, false),
 }

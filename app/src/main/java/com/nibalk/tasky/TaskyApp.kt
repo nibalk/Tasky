@@ -10,12 +10,16 @@ import com.nibalk.tasky.auth.presentation.di.authViewModelModule
 import com.nibalk.tasky.core.data.di.coreDataModule
 import com.nibalk.tasky.di.appModule
 import com.nibalk.tasky.utils.TaskyTimberDebugTree
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import timber.log.Timber
 
 class TaskyApp: Application() {
+
+    val applicationScope = CoroutineScope(SupervisorJob())
 
     override fun onCreate() {
         super.onCreate()
