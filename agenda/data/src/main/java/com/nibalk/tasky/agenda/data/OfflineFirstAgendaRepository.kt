@@ -1,0 +1,77 @@
+package com.nibalk.tasky.agenda.data
+
+import android.icu.util.TimeZone
+import com.nibalk.tasky.agenda.domain.AgendaRepository
+import com.nibalk.tasky.agenda.domain.model.AgendaItem
+import com.nibalk.tasky.agenda.domain.source.local.LocalEventDataSource
+import com.nibalk.tasky.agenda.domain.source.local.LocalReminderDataSource
+import com.nibalk.tasky.agenda.domain.source.local.LocalTaskDataSource
+import com.nibalk.tasky.agenda.domain.source.remote.RemoteAgendaDataSource
+import com.nibalk.tasky.core.data.utils.toLongDate
+import com.nibalk.tasky.core.domain.util.DataError
+import com.nibalk.tasky.core.domain.util.EmptyResult
+import com.nibalk.tasky.core.domain.util.Result
+import com.nibalk.tasky.core.domain.util.asEmptyDataResult
+import com.nibalk.tasky.core.domain.util.onError
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+
+class OfflineFirstAgendaRepository(
+    private val remoteAgendaDataSource: RemoteAgendaDataSource,
+    private val localEventDataSource: LocalEventDataSource,
+    private val localTaskDataSource: LocalTaskDataSource,
+    private val localReminderDataSource: LocalReminderDataSource,
+    private val applicationScope: CoroutineScope
+) : AgendaRepository {
+
+    override suspend fun getAgendas(selectedDate: LocalDate): Flow<List<AgendaItem>> {
+        val combinedAndSortedFlow: Flow<List<AgendaItem>> = combine(
+            localEventDataSource.getAllEvents(),
+            localTaskDataSource.getAllTasks(),
+            localReminderDataSource.getAllReminders()
+        ) { events, tasks, reminders ->
+            (events + tasks + reminders).sortedBy { it.startAt }
+        }
+        return combinedAndSortedFlow
+    }
+
+    override suspend fun fetchAgendas(
+        selectedDate: LocalDate
+    ): EmptyResult<DataError> {
+        val remoteResult = remoteAgendaDataSource.getAgendaItems(
+            timezone = TimeZone.getDefault().id,
+            time = LocalDateTime.of(
+                selectedDate, LocalTime.now()
+            )?.toLongDate() ?: LocalDateTime.now().toLongDate()
+        )
+
+        return when (remoteResult) {
+            is Result.Success -> {
+                val agendaItems  = remoteResult.data
+                if (agendaItems != null) {
+                    applicationScope.async {
+                        localEventDataSource.upsertEvents(agendaItems.events)
+                            .onError { localError -> Result.Error(localError) }
+                            .asEmptyDataResult()
+                        localTaskDataSource.upsertTasks(agendaItems.tasks)
+                            .onError { localError -> Result.Error(localError) }
+                            .asEmptyDataResult()
+                        localReminderDataSource.upsertReminders(agendaItems.reminders)
+                            .onError { localError -> Result.Error(localError) }
+                            .asEmptyDataResult()
+                    }.await()
+                } else {
+                    Result.Success(Unit).asEmptyDataResult()
+                }
+            }
+            is Result.Error -> {
+                Result.Error(remoteResult.error)
+            }
+        }
+    }
+}

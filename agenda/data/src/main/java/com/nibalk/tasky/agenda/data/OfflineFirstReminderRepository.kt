@@ -8,13 +8,20 @@ import com.nibalk.tasky.core.domain.util.DataError
 import com.nibalk.tasky.core.domain.util.EmptyResult
 import com.nibalk.tasky.core.domain.util.asEmptyDataResult
 import com.nibalk.tasky.core.domain.util.onError
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
 
 class OfflineFirstReminderRepository(
     private val localDataSource: LocalReminderDataSource,
     private val remoteDataSource: RemoteReminderDataSource,
+    private val applicationScope: CoroutineScope
 ) : ReminderRepository {
     override suspend fun deleteReminder(reminderId: String) {
         localDataSource.deleteReminder(reminderId)
+
+        applicationScope.async {
+            remoteDataSource.deleteReminder(reminderId)
+        }.await()
     }
 
     override suspend fun getReminder(reminderId: String): AgendaItem.Reminder? {

@@ -7,16 +7,24 @@ import com.nibalk.tasky.agenda.domain.source.local.LocalEventDataSource
 import com.nibalk.tasky.agenda.domain.source.remote.RemoteEventDataSource
 import com.nibalk.tasky.core.domain.util.DataError
 import com.nibalk.tasky.core.domain.util.EmptyResult
+import com.nibalk.tasky.core.domain.util.Result
 import com.nibalk.tasky.core.domain.util.asEmptyDataResult
 import com.nibalk.tasky.core.domain.util.onError
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
 
 class OfflineFirstEventRepository(
     private val localDataSource: LocalEventDataSource,
     private val remoteDataSource: RemoteEventDataSource,
+    private val applicationScope: CoroutineScope
 ) : EventRepository {
 
     override suspend fun deleteEvent(eventId: String) {
         localDataSource.deleteEvent(eventId)
+
+        applicationScope.async {
+            remoteDataSource.deleteEvent(eventId)
+        }.await()
     }
 
     override suspend fun getEvent(eventId: String): AgendaItem.Event? {
@@ -28,8 +36,21 @@ class OfflineFirstEventRepository(
         localResult.onError {
             return localResult.asEmptyDataResult()
         }
-        val remoteResult = remoteDataSource.createEvent(event)
-        return remoteResult.asEmptyDataResult()
+        return when(val remoteResult = remoteDataSource.createEvent(event)) {
+            is Result.Error -> {
+                Result.Success(Unit)
+            }
+            is Result.Success -> {
+                val remoteData = remoteResult.data
+                if (remoteData != null) {
+                    applicationScope.async {
+                        localDataSource.upsertEvent(remoteData).asEmptyDataResult()
+                    }.await()
+                } else {
+                    Result.Success(Unit)
+                }
+            }
+        }
     }
 
     override suspend fun updateEvent(event: AgendaItem.Event): EmptyResult<DataError> {
@@ -37,8 +58,21 @@ class OfflineFirstEventRepository(
         localResult.onError {
             return localResult.asEmptyDataResult()
         }
-        val remoteResult = remoteDataSource.updateEvent(event)
-        return remoteResult.asEmptyDataResult()
+        return when(val remoteResult = remoteDataSource.updateEvent(event)) {
+            is Result.Error -> {
+                Result.Success(Unit)
+            }
+            is Result.Success -> {
+                val remoteData = remoteResult.data
+                if (remoteData != null) {
+                    applicationScope.async {
+                        localDataSource.upsertEvent(remoteData).asEmptyDataResult()
+                    }.await()
+                } else {
+                    Result.Success(Unit)
+                }
+            }
+        }
     }
 
     override suspend fun getAttendee(email: String): EventAttendee {

@@ -8,14 +8,21 @@ import com.nibalk.tasky.core.domain.util.DataError
 import com.nibalk.tasky.core.domain.util.EmptyResult
 import com.nibalk.tasky.core.domain.util.asEmptyDataResult
 import com.nibalk.tasky.core.domain.util.onError
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
 
 class OfflineFirstTaskRepository(
     private val localDataSource: LocalTaskDataSource,
-    private val remoteDataSource: RemoteTaskDataSource
+    private val remoteDataSource: RemoteTaskDataSource,
+    private val applicationScope: CoroutineScope
 ) : TaskRepository {
 
     override suspend fun deleteTask(taskId: String) {
         localDataSource.deleteTask(taskId)
+
+        applicationScope.async {
+            remoteDataSource.deleteTask(taskId)
+        }.await()
     }
 
     override suspend fun getTask(taskId: String): AgendaItem.Task? {
