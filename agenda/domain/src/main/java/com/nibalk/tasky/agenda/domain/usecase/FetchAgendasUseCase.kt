@@ -1,16 +1,16 @@
 package com.nibalk.tasky.agenda.domain.usecase
 
 import com.nibalk.tasky.agenda.domain.AgendaRepository
-import com.nibalk.tasky.agenda.domain.model.AgendaItem
-import kotlinx.coroutines.flow.Flow
+import com.nibalk.tasky.core.domain.util.DataError
+import com.nibalk.tasky.core.domain.util.EmptyResult
 import java.time.LocalDate
 
-class GetAgendasUseCase(
+class FetchAgendasUseCase(
     private val agendaRepository: AgendaRepository
 ) {
     suspend operator fun invoke(
         selectedDate: LocalDate
-    ): Flow<List<AgendaItem>> {
-        return agendaRepository.getAgendas(selectedDate)
+    ): EmptyResult<DataError>  {
+        return agendaRepository.fetchAgendas(selectedDate)
     }
 }

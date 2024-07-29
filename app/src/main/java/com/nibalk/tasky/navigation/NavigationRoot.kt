@@ -16,7 +16,6 @@ import com.nibalk.tasky.auth.presentation.login.LoginScreenRoot
 import com.nibalk.tasky.auth.presentation.register.RegisterScreenRoot
 import com.nibalk.tasky.core.presentation.utils.toLocalDate
 import com.nibalk.tasky.core.presentation.utils.toLongDate
-import java.time.LocalDate
 
 @Composable
 fun NavigationRoot(
@@ -81,12 +80,12 @@ private fun NavGraphBuilder.agendaGraph(navController: NavHostController) {
     ) {
         composable<AgendaHomeScreen> {
             HomeScreenRoot(
-                onDetailClicked = { isEditable, agendaType, agendaItem ->
+                onDetailClicked = { isEditable, agendaType, agendaItem, selectedDate ->
                     navController.navigate(
                         AgendaDetailScreen(
                             isEditable = isEditable,
                             selectedDate = agendaItem?.startAt?.toLocalDate()?.toLongDate()
-                                ?: LocalDate.now().toLongDate(),
+                                ?: selectedDate,
                             agendaId = agendaItem?.id,
                             agendaType = agendaType.name
                         )
@@ -103,6 +102,15 @@ private fun NavGraphBuilder.agendaGraph(navController: NavHostController) {
                         route = AgendaHomeScreen,
                         inclusive = false,
                     )
+                },
+                onSaveClicked = {
+                    navController.navigate(AgendaHomeScreen) {
+                        popUpTo(AgendaHomeScreen) {
+                            inclusive = true
+                            saveState = true
+                        }
+                        restoreState = true
+                    }
                 },
                 onEditorClicked = { text, type ->
                     navController.navigate(

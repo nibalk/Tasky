@@ -18,8 +18,8 @@ interface ReminderDao {
     @Query("SELECT * FROM ${ReminderEntity.TABLE_NAME} WHERE ${ReminderEntity.PRIMARY_KEY} = :id")
     suspend fun getReminderById(id: String): ReminderEntity?
 
-    @Query("SELECT * FROM ${ReminderEntity.TABLE_NAME} WHERE ${ReminderEntity.START_DATE_KEY} = :date")
-    fun getAllRemindersByDate(date: Long): Flow<List<ReminderEntity>>
+    @Query("SELECT * FROM ${ReminderEntity.TABLE_NAME} WHERE ${ReminderEntity.START_DATE_KEY} BETWEEN :startOfDayMillis AND :endOfDayMillis")
+    fun getAllRemindersByDate(startOfDayMillis: Long, endOfDayMillis: Long): Flow<List<ReminderEntity>>
 
     @Query("SELECT * FROM ${ReminderEntity.TABLE_NAME}")
     fun getAllReminders(): Flow<List<ReminderEntity>>

@@ -3,21 +3,17 @@ package com.nibalk.tasky.agenda.presentation.home
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nibalk.tasky.agenda.domain.usecase.FormatProfileNameUseCase
 import com.nibalk.tasky.agenda.domain.usecase.GetAgendasUseCase
 import com.nibalk.tasky.core.domain.auth.SessionStorage
-import com.nibalk.tasky.core.domain.util.onError
-import com.nibalk.tasky.core.domain.util.onSuccess
-import com.nibalk.tasky.core.presentation.utils.asUiText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class HomeViewModel(
     private val sessionStorage: SessionStorage,
@@ -34,11 +30,11 @@ class HomeViewModel(
     init {
         viewModelScope.launch {
             setProfileInitials()
-            snapshotFlow { state.selectedDate }
-                .distinctUntilChanged()
-                .collectLatest {
-                    fetchAgendaItems()
-                }
+//            snapshotFlow { state.selectedDate }
+//                .distinctUntilChanged()
+//                .collectLatest {
+//                    getAgendaItems()
+//                }
         }
     }
 
@@ -48,7 +44,7 @@ class HomeViewModel(
                 logout()
             }
             is HomeAction.OnAgendaListRefreshed -> {
-                viewModelScope.launch { fetchAgendaItems() }
+                viewModelScope.launch { getAgendaItems() }
             }
             is HomeAction.OnDayClicked -> {
                 state = state.copy(
@@ -77,19 +73,19 @@ class HomeViewModel(
         )
     }
 
-    private suspend fun fetchAgendaItems() {
+    suspend fun getAgendaItems() {
         state = state.copy(isLoading = true)
+        Timber.d("[OfflineFirst-GetAll] LOCAL | state.selectedDate = %s", state.selectedDate)
         getAgendasUseCase(
             state.selectedDate
-        ).onSuccess { agendas ->
+        ).collect { agendas ->
+            Timber.d("[OfflineFirst-GetAll] LOCAL | agendas = %s", agendas)
             state = state.copy(
                 agendaItems = agendas.sortedBy { it.startAt },
                 isLoading = false
             )
             eventChannel.send(HomeEvent.FetchAgendaSuccess)
-        }.onError { error ->
-            state = state.copy(isLoading = false)
-            eventChannel.send(HomeEvent.FetchAgendaError(error.asUiText()))
         }
+        state = state.copy(isLoading = false)
     }
 }

@@ -9,7 +9,6 @@ import com.nibalk.tasky.agenda.domain.model.EventAttendee
 import com.nibalk.tasky.agenda.domain.model.EventPhoto
 import com.nibalk.tasky.core.data.utils.toLocalDateTime
 import com.nibalk.tasky.core.data.utils.toLongDate
-import java.util.UUID
 
 // Mapping EventEntity - with Attendees and Photos
 
@@ -33,7 +32,7 @@ fun AgendaItem.Event.toEventEntityFull(): EventEntityFull {
 
 fun AgendaItem.Event.toEventEntity(): EventEntity {
     return EventEntity(
-        id = id ?: UUID.randomUUID().toString(),
+        id = id.orEmpty(),
         title = title,
         description = description,
         startAt = startAt.toLongDate(),

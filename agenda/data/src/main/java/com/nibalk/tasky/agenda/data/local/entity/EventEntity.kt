@@ -9,14 +9,13 @@ import androidx.room.Relation
 import androidx.room.TypeConverters
 import com.nibalk.tasky.agenda.data.local.converter.EventPhotoListConverter
 import com.nibalk.tasky.agenda.data.remote.dto.EventPhotoDto
-import java.util.UUID
 
 @Entity(tableName = EventEntity.TABLE_NAME)
 @TypeConverters(EventPhotoListConverter::class)
 data class EventEntity(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = PRIMARY_KEY)
-    val id: String = UUID.randomUUID().toString(),
+    val id: String,
 
     val title: String,
     val description: String,

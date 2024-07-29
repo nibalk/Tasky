@@ -20,4 +20,5 @@ sealed interface DetailAction {
     data class OnDeleteClicked(val agendaId: String) : DetailAction
     data class OnAddPhotoClicked(val agendaId: String) : DetailAction
     data class OnAddInviteesClicked(val agendaId: String) : DetailAction
+    data class OnIsDoneCheckboxClicked(val isDone: Boolean) : DetailAction
 }

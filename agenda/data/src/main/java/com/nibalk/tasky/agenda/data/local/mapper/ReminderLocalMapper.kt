@@ -4,11 +4,10 @@ import com.nibalk.tasky.agenda.data.local.entity.ReminderEntity
 import com.nibalk.tasky.agenda.domain.model.AgendaItem
 import com.nibalk.tasky.core.data.utils.toLocalDateTime
 import com.nibalk.tasky.core.data.utils.toLongDate
-import java.util.UUID
 
 fun AgendaItem.Reminder.toReminderEntity(): ReminderEntity {
     return ReminderEntity(
-        id = id ?: UUID.randomUUID().toString(),
+        id = id.orEmpty(),
         title = title,
         description = description,
         startAt = startAt.toLongDate(),

@@ -12,11 +12,11 @@ interface RemoteEventDataSource {
 
     suspend fun createEvent(
         event: AgendaItem.Event
-    ): EmptyResult<DataError.Network>
+    ): Result<AgendaItem.Event?, DataError.Network>
 
     suspend fun updateEvent(
         event: AgendaItem.Event
-    ): EmptyResult<DataError.Network>
+    ): Result<AgendaItem.Event?, DataError.Network>
 
     suspend fun deleteEvent(
         eventId: String

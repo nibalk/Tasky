@@ -3,13 +3,12 @@ package com.nibalk.tasky.agenda.data.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.UUID
 
 @Entity(tableName = TaskEntity.TABLE_NAME)
 data class TaskEntity(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = PRIMARY_KEY)
-    val id: String = UUID.randomUUID().toString(),
+    val id: String,
 
     val title: String,
     val description: String,

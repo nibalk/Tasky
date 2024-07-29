@@ -4,12 +4,13 @@ import com.nibalk.tasky.agenda.domain.model.AgendaItem
 import com.nibalk.tasky.core.domain.util.DataError
 import com.nibalk.tasky.core.domain.util.Result
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 
 typealias ReminderId = String
 
 interface LocalReminderDataSource {
     suspend fun getAllReminders(): Flow<List<AgendaItem.Reminder>>
-    suspend fun getRemindersByDate(selectedDate: Long): Flow<List<AgendaItem.Reminder>>
+    suspend fun getRemindersByDate(selectedDate: LocalDate): Flow<List<AgendaItem.Reminder>>
     suspend fun getReminderById(reminderId: String): AgendaItem.Reminder?
 
     suspend fun upsertReminder(
