@@ -38,7 +38,7 @@ import com.nibalk.tasky.core.presentation.themes.TaskyLightGreen
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import com.nibalk.tasky.core.presentation.themes.TaskyWhite
 import com.nibalk.tasky.core.presentation.themes.spacing
-import com.nibalk.tasky.core.presentation.utils.toLocalDate
+import com.nibalk.tasky.core.domain.util.toLocalDate
 import java.time.LocalDate
 import java.time.ZoneOffset
 

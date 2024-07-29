@@ -3,17 +3,17 @@ package com.nibalk.tasky.agenda.data.remote.mapper
 import com.nibalk.tasky.agenda.data.remote.dto.EventDto
 import com.nibalk.tasky.agenda.domain.model.AgendaItem
 import com.nibalk.tasky.agenda.domain.model.EventPhoto
-import com.nibalk.tasky.core.data.utils.toLocalDateTime
-import com.nibalk.tasky.core.data.utils.toLongDate
+import com.nibalk.tasky.core.domain.util.toLocalDateTime
+import com.nibalk.tasky.core.domain.util.toLongDateTime
 
 fun AgendaItem.Event.toEventDto(): EventDto {
     return EventDto(
         id = id,
         title = title,
         description = description,
-        startAt = startAt.toLongDate(),
-        remindAt = remindAt.toLongDate(),
-        endAt = endAt.toLongDate(),
+        startAt = startAt.toLongDateTime(),
+        remindAt = remindAt.toLongDateTime(),
+        endAt = endAt.toLongDateTime(),
         isHost = isHost,
         hostId = hostId,
         attendees = attendees.map { attendee ->
