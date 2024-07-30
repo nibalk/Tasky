@@ -15,6 +15,7 @@ data class DetailState(
     val agendaType: AgendaType = AgendaType.TASK,
     // The rest
     val isLoading: Boolean = false,
+    val isSaved: Boolean = false,
     val title: String = "",
     val description: String = "",
     val startDate: LocalDate = LocalDate.now(),

@@ -11,7 +11,9 @@ interface AgendaRepository {
         selectedDate: LocalDate
     ): Flow<List<AgendaItem>>
 
-    suspend fun fetchAgendas(
+    suspend fun fetchAgendasByDate(
         selectedDate: LocalDate
     ): EmptyResult<DataError>
+
+    suspend fun fetchAllAgendas(): EmptyResult<DataError>
 }

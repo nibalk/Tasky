@@ -18,9 +18,8 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.nibalk.tasky.core.presentation.themes.TaskyDarkBlue
+import com.nibalk.tasky.core.presentation.themes.TaskyBrownLight
 import com.nibalk.tasky.core.presentation.themes.TaskyGray
 import com.nibalk.tasky.core.presentation.themes.TaskyLightBlue
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
@@ -42,9 +41,10 @@ fun AgendaFooter(
     ) {
         LinearProgressIndicator(
             modifier = Modifier
-                .size(15.dp)
+                .fillMaxWidth()
+                .size(MaterialTheme.spacing.spaceMedium)
                 .alpha(if (isLoading) 1f else 0f),
-            color = TaskyDarkBlue
+            color = TaskyBrownLight,
         )
         HorizontalDivider(color = TaskyLightBlue)
         Box(
@@ -72,7 +72,7 @@ private fun AgendaFooterPreview() {
     TaskyTheme {
         AgendaFooter(
             content = "Delete Task",
-            isLoading = false,
+            isLoading = true,
             onButtonClicked = {}
         )
     }

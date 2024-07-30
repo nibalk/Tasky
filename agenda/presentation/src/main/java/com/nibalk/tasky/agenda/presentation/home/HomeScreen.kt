@@ -13,7 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -36,6 +35,8 @@ import com.nibalk.tasky.agenda.presentation.components.AgendaDayPicker
 import com.nibalk.tasky.agenda.presentation.components.AgendaHeader
 import com.nibalk.tasky.agenda.presentation.model.AgendaItemActionType
 import com.nibalk.tasky.agenda.presentation.model.AgendaType
+import com.nibalk.tasky.core.domain.util.getSurroundingDays
+import com.nibalk.tasky.core.domain.util.toLongDate
 import com.nibalk.tasky.core.presentation.components.TaskyBackground
 import com.nibalk.tasky.core.presentation.components.TaskyEmptyList
 import com.nibalk.tasky.core.presentation.components.TaskyNeedleSeparator
@@ -43,8 +44,6 @@ import com.nibalk.tasky.core.presentation.components.TaskyRefreshableList
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import com.nibalk.tasky.core.presentation.themes.spacing
 import com.nibalk.tasky.core.presentation.utils.ObserveAsEvents
-import com.nibalk.tasky.core.presentation.utils.getSurroundingDays
-import com.nibalk.tasky.core.presentation.utils.toLongDate
 import org.koin.androidx.compose.koinViewModel
 import timber.log.Timber
 import java.time.LocalDate
@@ -63,10 +62,6 @@ fun HomeScreenRoot(
     viewModel: HomeViewModel = koinViewModel(),
 ) {
     val context = LocalContext.current
-
-    LaunchedEffect(viewModel.state.selectedDate) {
-        viewModel.getAgendaItems()
-    }
 
     ObserveAsEvents(viewModel.uiEvent) { event ->
         when(event) {

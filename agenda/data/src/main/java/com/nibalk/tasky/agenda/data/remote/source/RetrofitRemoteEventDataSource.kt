@@ -19,6 +19,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import timber.log.Timber
 
 class RetrofitRemoteEventDataSource(
     private val eventApi: EventApi,
@@ -56,6 +57,8 @@ class RetrofitRemoteEventDataSource(
                     }
             )
         }
+
+        Timber.d("[OfflineFirst-SaveItem] REMOTE | Creating EVENT (%s)", event.id)
         return response.map { eventDto ->
             eventDto?.toAgendaItemEvent()
         }

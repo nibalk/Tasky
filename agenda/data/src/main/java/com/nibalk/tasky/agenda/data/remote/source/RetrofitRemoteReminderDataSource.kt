@@ -33,7 +33,7 @@ class RetrofitRemoteReminderDataSource(
         val response = safeCall {
             reminderApi.createReminder(reminder.toReminderDto())
         }
-        Timber.d("[OfflineFirst-SaveItem] REMOTE | creating reminder(%s)", reminder.id)
+        Timber.d("[OfflineFirst-SaveItem] REMOTE | Creating REMINDER (%s)", reminder.id)
         return response.asEmptyDataResult()
     }
 

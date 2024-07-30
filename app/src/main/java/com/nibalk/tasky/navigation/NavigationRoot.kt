@@ -14,8 +14,8 @@ import com.nibalk.tasky.agenda.presentation.model.AgendaArgs
 import com.nibalk.tasky.agenda.presentation.model.EditorArgs
 import com.nibalk.tasky.auth.presentation.login.LoginScreenRoot
 import com.nibalk.tasky.auth.presentation.register.RegisterScreenRoot
-import com.nibalk.tasky.core.presentation.utils.toLocalDate
-import com.nibalk.tasky.core.presentation.utils.toLongDate
+import com.nibalk.tasky.core.domain.util.toLocalDate
+import com.nibalk.tasky.core.domain.util.toLongDate
 
 @Composable
 fun NavigationRoot(
@@ -104,13 +104,10 @@ private fun NavGraphBuilder.agendaGraph(navController: NavHostController) {
                     )
                 },
                 onSaveClicked = {
-                    navController.navigate(AgendaHomeScreen) {
-                        popUpTo(AgendaHomeScreen) {
-                            inclusive = true
-                            saveState = true
-                        }
-                        restoreState = true
-                    }
+                    navController.popBackStack(
+                        route = AgendaHomeScreen,
+                        inclusive = false,
+                    )
                 },
                 onEditorClicked = { text, type ->
                     navController.navigate(

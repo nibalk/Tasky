@@ -134,6 +134,7 @@ class DetailViewModel(
                 description = item.description,
                 startDate = item.startAt.toLocalDate(),
                 startTime = item.startAt.toLocalTime(),
+                notificationDurationType = item.startAt,
                 remindDate = item.remindAt.toLocalDate(),
                 remindTime = item.remindAt.toLocalTime(),
                 details = AgendaItemDetails.Event(
@@ -184,11 +185,13 @@ class DetailViewModel(
     // Save Agenda Item
 
     private suspend fun saveAgendaItem() {
+        state = state.copy(isLoading = true)
         when(state.agendaType) {
             AgendaType.EVENT -> invokeSaveEvent()
             AgendaType.TASK -> invokeSaveTask()
             AgendaType.REMINDER -> invokeSaveReminder()
         }
+        state = state.copy(isLoading = false)
     }
 
     private suspend fun invokeSaveEvent() {
@@ -235,7 +238,11 @@ class DetailViewModel(
                 remindAt = state.remindDate.atTime(state.remindTime),
                 isDone = state.details.asTaskDetails.isDone
             )
-        )
+        ).onError { error ->
+            eventChannel.send(DetailEvent.DetailSaveError(error.asUiText()))
+        }.onSuccess {
+            eventChannel.send(DetailEvent.DetailSaveSuccess)
+        }
     }
 
     private suspend fun invokeSaveReminder() {
@@ -253,7 +260,11 @@ class DetailViewModel(
                 startAt = state.startDate.atTime(state.startTime),
                 remindAt = state.remindDate.atTime(state.remindTime),
             )
-        )
+        ).onError { error ->
+            eventChannel.send(DetailEvent.DetailSaveError(error.asUiText()))
+        }.onSuccess {
+            eventChannel.send(DetailEvent.DetailSaveSuccess)
+        }
     }
 
     // Utils
