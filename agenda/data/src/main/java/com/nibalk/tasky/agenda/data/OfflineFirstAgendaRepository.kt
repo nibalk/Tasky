@@ -1,6 +1,5 @@
 package com.nibalk.tasky.agenda.data
 
-import android.icu.util.TimeZone
 import com.nibalk.tasky.agenda.domain.AgendaRepository
 import com.nibalk.tasky.agenda.domain.model.AgendaItem
 import com.nibalk.tasky.agenda.domain.source.local.LocalEventDataSource
@@ -48,7 +47,6 @@ class OfflineFirstAgendaRepository(
         selectedDate: LocalDate
     ): EmptyResult<DataError> {
         val remoteResult = remoteAgendaDataSource.getAgendaItems(
-            timezone = TimeZone.getDefault().id,
             time = LocalDateTime.of(
                 selectedDate, LocalTime.now()
             )?.toLongDateTime() ?: LocalDateTime.now().toLongDateTime()

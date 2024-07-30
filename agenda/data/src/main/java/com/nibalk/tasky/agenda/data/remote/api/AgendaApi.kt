@@ -27,7 +27,6 @@ interface AgendaApi {
 
     @GET(AGENDA_QUERY_ENDPOINT)
     suspend fun getAgendaItems(
-        @Query(AGENDA_TIME_ZONE_QUERY_PARAM) timezone: String,
         @Query(AGENDA_TIME_QUERY_PARAM) time: Long
     ): Response<AgendaItemsDto>
 }

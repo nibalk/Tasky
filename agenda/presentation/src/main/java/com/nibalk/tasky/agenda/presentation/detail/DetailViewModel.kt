@@ -16,6 +16,7 @@ import com.nibalk.tasky.agenda.domain.usecase.SaveTaskUseCase
 import com.nibalk.tasky.agenda.presentation.model.AgendaArgs
 import com.nibalk.tasky.agenda.presentation.model.AgendaType
 import com.nibalk.tasky.agenda.presentation.model.EditorType
+import com.nibalk.tasky.agenda.presentation.model.ReminderDurationType
 import com.nibalk.tasky.core.domain.util.onError
 import com.nibalk.tasky.core.domain.util.onSuccess
 import com.nibalk.tasky.core.presentation.utils.asUiText
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.Duration
 import java.time.LocalDate
 import java.util.UUID
 
@@ -71,6 +73,10 @@ class DetailViewModel(
         when(action) {
             is DetailAction.OnStartDateSelected -> {
                 state = state.copy(startDate = action.date)
+                state = state.copy(
+                    remindDate = state.getReminderDateTime().toLocalDate(),
+                    remindTime = state.getReminderDateTime().toLocalTime(),
+                )
             }
             is DetailAction.OnEndDateSelected -> {
                 state = state.copy(
@@ -81,6 +87,10 @@ class DetailViewModel(
             }
             is DetailAction.OnStartTimeSelected -> {
                 state = state.copy(startTime = action.time)
+                state = state.copy(
+                    remindDate = state.getReminderDateTime().toLocalDate(),
+                    remindTime = state.getReminderDateTime().toLocalTime(),
+                )
             }
             is DetailAction.OnEndTimeSelected -> {
                 state = state.copy(
@@ -93,7 +103,11 @@ class DetailViewModel(
                 state = state.copy(isEditingMode = action.isEditable)
             }
             is DetailAction.OnNotificationDurationClicked -> {
-                state =  state.copy(notificationDurationType = action.type)
+                state =  state.copy(reminderDurationType = action.type)
+                state = state.copy(
+                    remindDate = state.getReminderDateTime().toLocalDate(),
+                    remindTime = state.getReminderDateTime().toLocalTime(),
+                )
             }
             is DetailAction.OnTitleEdited -> {
                 state = state.copy(title = action.newTitle)
@@ -134,9 +148,11 @@ class DetailViewModel(
                 description = item.description,
                 startDate = item.startAt.toLocalDate(),
                 startTime = item.startAt.toLocalTime(),
-                notificationDurationType = item.startAt,
                 remindDate = item.remindAt.toLocalDate(),
                 remindTime = item.remindAt.toLocalTime(),
+                reminderDurationType = getReminderDurationType(
+                    Duration.between(item.startAt, item.remindAt)
+                ),
                 details = AgendaItemDetails.Event(
                     endDate = item.endAt.toLocalDate(),
                     endTime = item.endAt.toLocalTime(),
@@ -146,7 +162,7 @@ class DetailViewModel(
                     attendees = item.attendees
                 ),
             )
-        } ?: state
+        } ?: state.copy(startDate = state.selectedDate)
     }
 
     private suspend fun invokeGetTask() {
@@ -160,11 +176,14 @@ class DetailViewModel(
                 startTime = item.startAt.toLocalTime(),
                 remindDate = item.remindAt.toLocalDate(),
                 remindTime = item.remindAt.toLocalTime(),
+                reminderDurationType = getReminderDurationType(
+                    Duration.between(item.startAt, item.remindAt)
+                ),
                 details = AgendaItemDetails.Task(
                     isDone = item.isDone
                 ),
             )
-        } ?: state
+        } ?: state.copy(startDate = state.selectedDate)
     }
 
     private suspend fun invokeGetReminder() {
@@ -178,8 +197,11 @@ class DetailViewModel(
                 startTime = item.startAt.toLocalTime(),
                 remindDate = item.remindAt.toLocalDate(),
                 remindTime = item.remindAt.toLocalTime(),
+                reminderDurationType = getReminderDurationType(
+                    Duration.between(item.startAt, item.remindAt)
+                ),
             )
-        } ?: state
+        } ?: state.copy(startDate = state.selectedDate)
     }
 
     // Save Agenda Item
@@ -285,5 +307,11 @@ class DetailViewModel(
             is AgendaItemDetails.Task -> update(details)
             else -> details
         }
+    }
+
+    private fun getReminderDurationType(duration: Duration): ReminderDurationType {
+        return ReminderDurationType.entries.find { reminderType ->
+            reminderType.duration == duration
+        } ?: ReminderDurationType.THIRTY_MINUTES
     }
 }

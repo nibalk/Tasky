@@ -183,7 +183,7 @@ fun DetailScreen(
         }
         AgendaNotificationsRow(
             isEditable = state.isEditingMode,
-            currentType = state.notificationDurationType,
+            currentType = state.reminderDurationType,
             onMenuItemClicked = { notificationDurationType ->
                 onAction(DetailAction.OnNotificationDurationClicked(notificationDurationType))
             }

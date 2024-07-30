@@ -1,6 +1,6 @@
 package com.nibalk.tasky.agenda.presentation.detail
 
-import com.nibalk.tasky.agenda.presentation.model.NotificationDurationType
+import com.nibalk.tasky.agenda.presentation.model.ReminderDurationType
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -12,7 +12,7 @@ sealed interface DetailAction {
     data object OnDescriptionClicked : DetailAction
     data class OnTitleEdited(val newTitle: String) : DetailAction
     data class OnDescriptionEdited(val newDescription: String) : DetailAction
-    data class OnNotificationDurationClicked(val type: NotificationDurationType) : DetailAction
+    data class OnNotificationDurationClicked(val type: ReminderDurationType) : DetailAction
     data class OnStartDateSelected(val date: LocalDate) : DetailAction
     data class OnEndDateSelected(val date: LocalDate) : DetailAction
     data class OnStartTimeSelected(val time: LocalTime) : DetailAction

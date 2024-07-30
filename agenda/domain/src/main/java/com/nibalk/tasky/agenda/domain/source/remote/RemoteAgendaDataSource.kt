@@ -13,7 +13,5 @@ interface RemoteAgendaDataSource {
 
     suspend fun getFullAgenda(): Result<AgendaItems?, DataError.Network>
 
-    suspend fun getAgendaItems(
-        timezone: String, time: Long
-    ): Result<AgendaItems?, DataError.Network>
+    suspend fun getAgendaItems(time: Long): Result<AgendaItems?, DataError.Network>
 }

@@ -12,8 +12,8 @@ class HttpClientFactory(
 ) {
     fun build(): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(apiKeyInterceptor)
             .addInterceptor(loggingInterceptor)
+            .addInterceptor(apiKeyInterceptor)
             .addInterceptor(tokenInterceptor)
             .build()
     }

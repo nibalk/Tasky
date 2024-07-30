@@ -38,11 +38,10 @@ class RetrofitRemoteAgendaDataSource(
     }
 
     override suspend fun getAgendaItems(
-        timezone: String,
         time: Long
     ): Result<AgendaItems?, DataError.Network> {
         val response = safeCall {
-            agendaApi.getAgendaItems(timezone, time)
+            agendaApi.getAgendaItems(time)
         }
         return response.map { agendaItemsDto ->
             agendaItemsDto?.toAgendaItems()
