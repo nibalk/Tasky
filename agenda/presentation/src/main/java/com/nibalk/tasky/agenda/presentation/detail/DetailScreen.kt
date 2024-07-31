@@ -42,7 +42,7 @@ fun DetailScreenRoot(
     agendaArgs: AgendaArgs,
     navController: NavHostController,
     viewModel: DetailViewModel = koinViewModel {
-        parametersOf(agendaArgs, navController.currentBackStackEntry?.savedStateHandle)
+        parametersOf(navController.currentBackStackEntry?.savedStateHandle, agendaArgs)
     },
 ) {
     val context = LocalContext.current
