@@ -38,7 +38,7 @@ class HomeViewModel(
             getAgendaItemsFromLocal()
         }
         viewModelScope.launch {
-            getAgendaItemsFromRemote(true)
+            getAgendaItemsFromRemote(isFetchAll = true)
         }
     }
 
@@ -49,7 +49,7 @@ class HomeViewModel(
             }
             is HomeAction.OnAgendaListRefreshed -> {
                 viewModelScope.launch {
-                    getAgendaItemsFromRemote(false)
+                    getAgendaItemsFromRemote(isFetchAll = false)
                 }
             }
             is HomeAction.OnDayClicked -> {
