@@ -12,7 +12,7 @@ import com.nibalk.tasky.core.domain.util.EmptyResult
 import com.nibalk.tasky.core.domain.util.Result
 import com.nibalk.tasky.core.domain.util.asEmptyDataResult
 import com.nibalk.tasky.core.domain.util.onError
-import com.nibalk.tasky.core.domain.util.toLongDateTime
+import com.nibalk.tasky.core.domain.util.toEpochMillis
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import timber.log.Timber
@@ -48,7 +48,7 @@ class OfflineFirstAgendaRepository(
         val remoteResult = remoteAgendaDataSource.getAgendaItems(
             time = LocalDateTime.of(
                 selectedDate, LocalTime.now()
-            )?.toLongDateTime() ?: LocalDateTime.now().toLongDateTime()
+            )?.toEpochMillis() ?: LocalDateTime.now().toEpochMillis()
         )
 
         return when (remoteResult) {

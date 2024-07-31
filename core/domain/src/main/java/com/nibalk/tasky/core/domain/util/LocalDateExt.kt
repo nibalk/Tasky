@@ -18,38 +18,31 @@ fun LocalDate.getSurroundingDays(
         .toList()
 }
 
-// Long -> LocalDate and LocalDateTime
+// Convert from Long timestamp
 
 fun Long.toLocalDate(): LocalDate {
     return Instant
         .ofEpochMilli(this)
-        .atZone(ZoneId.systemDefault())
+        .atZone(ZoneId.of("UTC"))
+        .withZoneSameInstant(ZoneId.systemDefault())
         .toLocalDate()
 }
 
 fun Long.toLocalDateTime(): LocalDateTime {
     return Instant
         .ofEpochMilli(this)
-        .atZone(ZoneId.systemDefault())
+        .atZone(ZoneId.of("UTC"))
+        .withZoneSameInstant(ZoneId.systemDefault())
         .toLocalDateTime()
 }
 
-// LocalDate and LocalDateTime -> Long
+// Convert to Long timestamp
 
-fun LocalDate.toLongDate(): Long {
-    return this
-        .atStartOfDay(ZoneId.systemDefault())
-        .toInstant()
-        .toEpochMilli()
-}
-
-fun LocalDateTime.toLongDateTime(): Long {
+fun LocalDateTime.toEpochMillis(): Long {
     return this.atZone(ZoneId.systemDefault())
         .toInstant()
         .toEpochMilli()
 }
-
-// LocalDate - startOf and endOf in Millis
 
 fun LocalDate.toStartOfDayMillis(): Long {
     return this

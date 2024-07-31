@@ -162,7 +162,12 @@ class DetailViewModel(
                     attendees = item.attendees
                 ),
             )
-        } ?: state.copy(startDate = state.selectedDate)
+        } ?: state.copy(
+            startDate = state.selectedDate,
+            details = AgendaItemDetails.Event(
+                endDate = state.selectedDate,
+            )
+        )
     }
 
     private suspend fun invokeGetTask() {

@@ -5,16 +5,16 @@ import com.nibalk.tasky.agenda.data.remote.dto.EventRequestDto
 import com.nibalk.tasky.agenda.domain.model.AgendaItem
 import com.nibalk.tasky.agenda.domain.model.EventPhoto
 import com.nibalk.tasky.core.domain.util.toLocalDateTime
-import com.nibalk.tasky.core.domain.util.toLongDateTime
+import com.nibalk.tasky.core.domain.util.toEpochMillis
 
 fun AgendaItem.Event.toEventDto(): EventDto {
     return EventDto(
         id = id,
         title = title,
         description = description,
-        startAt = startAt.toLongDateTime(),
-        remindAt = remindAt.toLongDateTime(),
-        endAt = endAt.toLongDateTime(),
+        startAt = startAt.toEpochMillis(),
+        remindAt = remindAt.toEpochMillis(),
+        endAt = endAt.toEpochMillis(),
         isHost = isHost,
         hostId = hostId,
         attendees = attendees.map { attendee ->
@@ -50,9 +50,9 @@ fun AgendaItem.Event.toEventRequestDto(): EventRequestDto {
         id = id,
         title = title,
         description = description,
-        startAt = startAt.toLongDateTime(),
-        remindAt = remindAt.toLongDateTime(),
-        endAt = endAt.toLongDateTime(),
+        startAt = startAt.toEpochMillis(),
+        remindAt = remindAt.toEpochMillis(),
+        endAt = endAt.toEpochMillis(),
         attendeeIds = emptyList() //TODO
 //        attendees.map { attendee ->
 //            attendee.toEventAttendeeDto().userId

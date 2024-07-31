@@ -53,6 +53,7 @@ val agendaDataModule = module {
     }
 
     // Local - Dao
+    single { get<AgendaDatabase>().agendaDao }
     single { get<AgendaDatabase>().eventDao }
     single { get<AgendaDatabase>().taskDao }
     single { get<AgendaDatabase>().reminderDao }
