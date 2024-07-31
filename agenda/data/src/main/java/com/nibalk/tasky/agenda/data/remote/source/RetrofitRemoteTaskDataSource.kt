@@ -11,6 +11,7 @@ import com.nibalk.tasky.core.domain.util.EmptyResult
 import com.nibalk.tasky.core.domain.util.Result
 import com.nibalk.tasky.core.domain.util.asEmptyDataResult
 import com.nibalk.tasky.core.domain.util.map
+import timber.log.Timber
 
 class RetrofitRemoteTaskDataSource(
     private val taskApi: TaskApi
@@ -33,6 +34,7 @@ class RetrofitRemoteTaskDataSource(
         val response = safeCall {
             taskApi.createTask(task.toTaskDto())
         }
+        Timber.d("[OfflineFirst-SaveItem] REMOTE | Creating TASK (%s)", task.id)
         return response.asEmptyDataResult()
     }
 

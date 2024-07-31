@@ -5,12 +5,12 @@ import com.nibalk.tasky.core.domain.util.DataError
 import com.nibalk.tasky.core.domain.util.EmptyResult
 import java.time.LocalDate
 
-class FetchAgendasUseCase(
+class FetchAgendasByDateUseCase(
     private val agendaRepository: AgendaRepository
 ) {
     suspend operator fun invoke(
         selectedDate: LocalDate
     ): EmptyResult<DataError>  {
-        return agendaRepository.fetchAgendas(selectedDate)
+        return agendaRepository.fetchAgendasByDate(selectedDate)
     }
 }

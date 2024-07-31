@@ -4,7 +4,7 @@ import com.nibalk.tasky.agenda.presentation.R
 import com.nibalk.tasky.core.presentation.utils.UiText
 import java.time.Duration
 
-enum class NotificationDurationType(
+enum class ReminderDurationType(
     val label: UiText,
     val duration: Duration,
 ) {

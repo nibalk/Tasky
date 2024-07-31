@@ -10,7 +10,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -18,7 +17,6 @@ import com.nibalk.tasky.agenda.presentation.R
 import com.nibalk.tasky.agenda.presentation.components.AgendaDetailHeader
 import com.nibalk.tasky.agenda.presentation.components.AgendaFooter
 import com.nibalk.tasky.agenda.presentation.components.AgendaNotificationsRow
-import com.nibalk.tasky.agenda.presentation.editor.EditorAction
 import com.nibalk.tasky.agenda.presentation.model.AgendaArgs
 import com.nibalk.tasky.agenda.presentation.model.AgendaType
 import com.nibalk.tasky.agenda.presentation.model.EditorType
@@ -48,7 +46,6 @@ fun DetailScreenRoot(
     },
 ) {
     val context = LocalContext.current
-    val keyboardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(key1 = Unit) {
         val updatedTitle = navController.currentBackStackEntry?.savedStateHandle?.get<String>(EditorType.TITLE.name)
@@ -64,11 +61,9 @@ fun DetailScreenRoot(
     ObserveAsEvents(viewModel.uiEvent) { event ->
         when(event) {
             is DetailEvent.DetailSaveError -> {
-                keyboardController?.hide()
                 Toast.makeText(context, event.error.asString(context), Toast.LENGTH_LONG).show()
             }
-            is DetailEvent.DetailSaveSuccess -> {
-                keyboardController?.hide()
+            DetailEvent.DetailSaveSuccess -> {
                 Toast.makeText(context, R.string.agenda_item_saved, Toast.LENGTH_SHORT).show()
                 onSaveClicked()
             }
@@ -132,7 +127,7 @@ fun DetailScreen(
                     content = stringResource(
                         id = R.string.agenda_item_delete, state.agendaType.name
                     ).uppercase(),
-                    isLoading = state.isEditingMode,
+                    isLoading = state.isLoading,
                     onButtonClicked = {}
                 )
             }
@@ -188,7 +183,7 @@ fun DetailScreen(
         }
         AgendaNotificationsRow(
             isEditable = state.isEditingMode,
-            currentType = state.notificationDurationType,
+            currentType = state.reminderDurationType,
             onMenuItemClicked = { notificationDurationType ->
                 onAction(DetailAction.OnNotificationDurationClicked(notificationDurationType))
             }

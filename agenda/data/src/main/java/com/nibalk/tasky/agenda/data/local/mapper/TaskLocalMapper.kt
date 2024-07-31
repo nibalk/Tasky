@@ -2,16 +2,16 @@ package com.nibalk.tasky.agenda.data.local.mapper
 
 import com.nibalk.tasky.agenda.data.local.entity.TaskEntity
 import com.nibalk.tasky.agenda.domain.model.AgendaItem
-import com.nibalk.tasky.core.data.utils.toLocalDateTime
-import com.nibalk.tasky.core.data.utils.toLongDate
+import com.nibalk.tasky.core.domain.util.toLocalDateTime
+import com.nibalk.tasky.core.domain.util.toLongDateTime
 
 fun AgendaItem.Task.toTaskEntity(): TaskEntity {
     return TaskEntity(
         id = id.orEmpty(),
         title = title,
         description = description,
-        startAt = startAt.toLongDate(),
-        remindAt = remindAt.toLongDate(),
+        startAt = startAt.toLongDateTime(),
+        remindAt = remindAt.toLongDateTime(),
         isDone = isDone,
     )
 }

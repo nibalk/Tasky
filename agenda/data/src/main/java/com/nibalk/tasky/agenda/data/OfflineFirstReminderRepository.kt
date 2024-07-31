@@ -31,12 +31,11 @@ class OfflineFirstReminderRepository(
     }
 
     override suspend fun createReminder(reminder: AgendaItem.Reminder): EmptyResult<DataError> {
-        Timber.d("[OfflineFirst-SaveItem] LOCAL | creating reminder (%s)", reminder.id)
         val localResult = localDataSource.upsertReminder(reminder)
         localResult.onError {
             return localResult.asEmptyDataResult()
         }.onSuccess { id ->
-            Timber.d("[OfflineFirst-SaveItem] LOCAL | created reminder(%s)", id)
+            Timber.d("[OfflineFirst-SaveItem] LOCAL | Created REMINDER (%s)", id)
         }
 
         val remoteResult = remoteDataSource.createReminder(reminder)

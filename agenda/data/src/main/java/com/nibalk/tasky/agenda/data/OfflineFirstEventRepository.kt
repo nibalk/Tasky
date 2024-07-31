@@ -10,8 +10,10 @@ import com.nibalk.tasky.core.domain.util.EmptyResult
 import com.nibalk.tasky.core.domain.util.Result
 import com.nibalk.tasky.core.domain.util.asEmptyDataResult
 import com.nibalk.tasky.core.domain.util.onError
+import com.nibalk.tasky.core.domain.util.onSuccess
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
+import timber.log.Timber
 
 class OfflineFirstEventRepository(
     private val localDataSource: LocalEventDataSource,
@@ -35,7 +37,10 @@ class OfflineFirstEventRepository(
         val localResult = localDataSource.upsertEvent(event)
         localResult.onError {
             return localResult.asEmptyDataResult()
+        }.onSuccess { id ->
+            Timber.d("[OfflineFirst-SaveItem] LOCAL | Created EVENT (%s)", id)
         }
+
         return when(val remoteResult = remoteDataSource.createEvent(event)) {
             is Result.Error -> {
                 Result.Success(Unit)
@@ -82,6 +87,4 @@ class OfflineFirstEventRepository(
     override suspend fun deleteAttendee(eventId: String) {
         TODO("Not yet implemented")
     }
-
-
 }

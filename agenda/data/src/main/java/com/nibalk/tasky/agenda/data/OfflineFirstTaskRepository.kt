@@ -8,8 +8,10 @@ import com.nibalk.tasky.core.domain.util.DataError
 import com.nibalk.tasky.core.domain.util.EmptyResult
 import com.nibalk.tasky.core.domain.util.asEmptyDataResult
 import com.nibalk.tasky.core.domain.util.onError
+import com.nibalk.tasky.core.domain.util.onSuccess
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
+import timber.log.Timber
 
 class OfflineFirstTaskRepository(
     private val localDataSource: LocalTaskDataSource,
@@ -33,7 +35,10 @@ class OfflineFirstTaskRepository(
         val localResult = localDataSource.upsertTask(task)
         localResult.onError {
             return localResult.asEmptyDataResult()
+        }.onSuccess { id ->
+            Timber.d("[OfflineFirst-SaveItem] LOCAL | Created TASK (%s)", id)
         }
+
         val remoteResult = remoteDataSource.createTask(task)
         return remoteResult.asEmptyDataResult()
     }
