@@ -5,13 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nibalk.tasky.agenda.domain.usecase.DeleteEventUseCase
-import com.nibalk.tasky.agenda.domain.usecase.DeleteReminderUseCase
-import com.nibalk.tasky.agenda.domain.usecase.DeleteTaskUseCase
-import com.nibalk.tasky.agenda.domain.usecase.FetchAgendasByDateUseCase
-import com.nibalk.tasky.agenda.domain.usecase.FetchAllAgendasUseCase
+import com.nibalk.tasky.agenda.domain.AgendaRepository
+import com.nibalk.tasky.agenda.domain.EventRepository
+import com.nibalk.tasky.agenda.domain.ReminderRepository
+import com.nibalk.tasky.agenda.domain.TaskRepository
 import com.nibalk.tasky.agenda.domain.usecase.FormatProfileNameUseCase
-import com.nibalk.tasky.agenda.domain.usecase.GetAgendasUseCase
 import com.nibalk.tasky.agenda.presentation.model.AgendaType
 import com.nibalk.tasky.core.domain.auth.SessionStorage
 import kotlinx.coroutines.channels.Channel
@@ -22,12 +20,10 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     private val sessionStorage: SessionStorage,
     private val formatProfileNameUseCase: FormatProfileNameUseCase,
-    private val getAgendasUseCase: GetAgendasUseCase,
-    private val fetchAllAgendasUseCase: FetchAllAgendasUseCase,
-    private val fetchAgendasByDateUseCase: FetchAgendasByDateUseCase,
-    private val deleteEventUseCase: DeleteEventUseCase,
-    private val deleteTaskUseCase: DeleteTaskUseCase,
-    private val deleteReminderUseCase: DeleteReminderUseCase,
+    private val agendaRepository: AgendaRepository,
+    private val eventRepository: EventRepository,
+    private val taskRepository: TaskRepository,
+    private val reminderRepository: ReminderRepository,
 ): ViewModel() {
 
     var state by mutableStateOf(HomeState())
@@ -42,7 +38,7 @@ class HomeViewModel(
             getAgendaItemsFromLocal()
         }
         viewModelScope.launch {
-            getAgendaItemsFromRemote(true)
+            getAgendaItemsFromRemote(isFetchAll = true)
         }
     }
 
@@ -53,7 +49,7 @@ class HomeViewModel(
             }
             is HomeAction.OnAgendaListRefreshed -> {
                 viewModelScope.launch {
-                    getAgendaItemsFromRemote(false)
+                    getAgendaItemsFromRemote(isFetchAll = false)
                 }
             }
             is HomeAction.OnDayClicked -> {
@@ -75,9 +71,9 @@ class HomeViewModel(
                     val agendaItemId = action.agendaItem.id
                     if (agendaItemId != null) {
                         when(action.agendaType) {
-                            AgendaType.EVENT -> deleteEventUseCase.invoke(agendaItemId)
-                            AgendaType.TASK -> deleteTaskUseCase.invoke(agendaItemId)
-                            AgendaType.REMINDER -> deleteReminderUseCase.invoke(agendaItemId)
+                            AgendaType.EVENT -> eventRepository.deleteEvent(agendaItemId)
+                            AgendaType.TASK -> taskRepository.deleteTask(agendaItemId)
+                            AgendaType.REMINDER -> reminderRepository.deleteReminder(agendaItemId)
                         }
                     }
                 }
@@ -101,7 +97,7 @@ class HomeViewModel(
     }
 
     private suspend fun getAgendaItemsFromLocal() {
-        getAgendasUseCase(
+        agendaRepository.getAgendas(
             state.selectedDate
         ).collect { agendas ->
             state = state.copy(
@@ -115,9 +111,9 @@ class HomeViewModel(
 
     private suspend fun getAgendaItemsFromRemote(isFetchAll: Boolean) {
         if (isFetchAll) {
-            fetchAllAgendasUseCase()
+            agendaRepository.fetchAllAgendas()
         } else {
-            fetchAgendasByDateUseCase(state.selectedDate)
+            agendaRepository.fetchAgendasByDate(state.selectedDate)
         }
     }
 }

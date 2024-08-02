@@ -36,7 +36,7 @@ import com.nibalk.tasky.agenda.presentation.components.AgendaHeader
 import com.nibalk.tasky.agenda.presentation.model.AgendaItemActionType
 import com.nibalk.tasky.agenda.presentation.model.AgendaType
 import com.nibalk.tasky.core.domain.util.getSurroundingDays
-import com.nibalk.tasky.core.domain.util.toLongDate
+import com.nibalk.tasky.core.domain.util.toStartOfDayMillis
 import com.nibalk.tasky.core.presentation.components.TaskyBackground
 import com.nibalk.tasky.core.presentation.components.TaskyEmptyList
 import com.nibalk.tasky.core.presentation.components.TaskyNeedleSeparator
@@ -86,17 +86,17 @@ fun HomeScreenRoot(
             when(action) {
                 is HomeAction.OnAddAgendaOptionsClicked -> {
                     onDetailClicked(true, action.agendaType,null,
-                        viewModel.state.selectedDate.toLongDate(),
+                        viewModel.state.selectedDate.toStartOfDayMillis(),
                     )
                 }
                 is HomeAction.OnListItemOptionEditClicked -> {
                     onDetailClicked(true, action.agendaType, action.agendaItem,
-                        viewModel.state.selectedDate.toLongDate(),
+                        viewModel.state.selectedDate.toStartOfDayMillis(),
                     )
                 }
                 is HomeAction.OnListItemOptionOpenClicked -> {
                     onDetailClicked(false, action.agendaType, action.agendaItem,
-                        viewModel.state.selectedDate.toLongDate(),
+                        viewModel.state.selectedDate.toStartOfDayMillis(),
                     )
                 }
                 is HomeAction.OnListItemOptionDeleteClicked -> {

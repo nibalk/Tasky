@@ -15,8 +15,6 @@ import com.nibalk.tasky.agenda.presentation.model.EditorArgs
 import com.nibalk.tasky.auth.presentation.login.LoginScreenRoot
 import com.nibalk.tasky.auth.presentation.register.RegisterScreenRoot
 import com.nibalk.tasky.core.domain.util.toLocalDate
-import com.nibalk.tasky.core.domain.util.toLongDate
-import timber.log.Timber
 
 @Composable
 fun NavigationRoot(
@@ -82,7 +80,7 @@ private fun NavGraphBuilder.agendaGraph(navController: NavHostController) {
         composable<AgendaHomeScreen> {
             HomeScreenRoot(
                 onDetailClicked = { isEditable, agendaType, agendaItem, selectedDate ->
-                   navController.navigate(
+                    navController.navigate(
                         AgendaDetailScreen(
                             isEditable = isEditable,
                             selectedDate = selectedDate,

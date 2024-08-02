@@ -3,7 +3,7 @@ package com.nibalk.tasky.agenda.data.remote.mapper
 import com.nibalk.tasky.agenda.data.remote.dto.EventAttendeeDto
 import com.nibalk.tasky.agenda.domain.model.EventAttendee
 import com.nibalk.tasky.core.domain.util.toLocalDateTime
-import com.nibalk.tasky.core.domain.util.toLongDateTime
+import com.nibalk.tasky.core.domain.util.toEpochMillis
 
 fun EventAttendee.toEventAttendeeDto(): EventAttendeeDto {
     return EventAttendeeDto(
@@ -11,7 +11,7 @@ fun EventAttendee.toEventAttendeeDto(): EventAttendeeDto {
         email = email,
         fullName = fullName,
         isGoing = isGoing,
-        remindAt = remindAt.toLongDateTime()
+        remindAt = remindAt.toEpochMillis()
     )
 }
 

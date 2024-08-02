@@ -8,7 +8,7 @@ import com.nibalk.tasky.agenda.domain.model.AgendaItem
 import com.nibalk.tasky.agenda.domain.model.EventAttendee
 import com.nibalk.tasky.agenda.domain.model.EventPhoto
 import com.nibalk.tasky.core.domain.util.toLocalDateTime
-import com.nibalk.tasky.core.domain.util.toLongDateTime
+import com.nibalk.tasky.core.domain.util.toEpochMillis
 
 // Mapping EventEntity - with Attendees and Photos
 
@@ -35,9 +35,9 @@ fun AgendaItem.Event.toEventEntity(): EventEntity {
         id = id.orEmpty(),
         title = title,
         description = description,
-        startAt = startAt.toLongDateTime(),
-        remindAt = remindAt.toLongDateTime(),
-        endAt = endAt.toLongDateTime(),
+        startAt = startAt.toEpochMillis(),
+        remindAt = remindAt.toEpochMillis(),
+        endAt = endAt.toEpochMillis(),
         isHost = isHost,
         hostId = hostId,
         remotePhotos = photos.filterIsInstance<EventPhoto.Remote>().map { remotePhoto ->

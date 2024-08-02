@@ -1,5 +1,6 @@
 package com.nibalk.tasky.agenda.data
 
+import com.nibalk.tasky.agenda.data.local.source.RoomLocalAgendaDataSource
 import com.nibalk.tasky.agenda.domain.AgendaRepository
 import com.nibalk.tasky.agenda.domain.model.AgendaItem
 import com.nibalk.tasky.agenda.domain.source.local.LocalEventDataSource
@@ -11,9 +12,7 @@ import com.nibalk.tasky.core.domain.util.EmptyResult
 import com.nibalk.tasky.core.domain.util.Result
 import com.nibalk.tasky.core.domain.util.asEmptyDataResult
 import com.nibalk.tasky.core.domain.util.onError
-import com.nibalk.tasky.core.domain.util.toLongDateTime
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
+import com.nibalk.tasky.core.domain.util.toEpochMillis
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import timber.log.Timber
@@ -23,10 +22,10 @@ import java.time.LocalTime
 
 class OfflineFirstAgendaRepository(
     private val remoteAgendaDataSource: RemoteAgendaDataSource,
+    private val localAgendaDataSource: RoomLocalAgendaDataSource,
     private val localEventDataSource: LocalEventDataSource,
     private val localTaskDataSource: LocalTaskDataSource,
     private val localReminderDataSource: LocalReminderDataSource,
-    private val applicationScope: CoroutineScope
 ) : AgendaRepository {
 
     override suspend fun getAgendas(selectedDate: LocalDate): Flow<List<AgendaItem>> {
@@ -49,24 +48,16 @@ class OfflineFirstAgendaRepository(
         val remoteResult = remoteAgendaDataSource.getAgendaItems(
             time = LocalDateTime.of(
                 selectedDate, LocalTime.now()
-            )?.toLongDateTime() ?: LocalDateTime.now().toLongDateTime()
+            )?.toEpochMillis() ?: LocalDateTime.now().toEpochMillis()
         )
 
         return when (remoteResult) {
             is Result.Success -> {
                 val agendaItems  = remoteResult.data
                 if (agendaItems != null) {
-                    applicationScope.async {
-                        localEventDataSource.upsertEvents(agendaItems.events)
-                            .onError { localError -> Result.Error(localError) }
-                            .asEmptyDataResult()
-                        localTaskDataSource.upsertTasks(agendaItems.tasks)
-                            .onError { localError -> Result.Error(localError) }
-                            .asEmptyDataResult()
-                        localReminderDataSource.upsertReminders(agendaItems.reminders)
-                            .onError { localError -> Result.Error(localError) }
-                            .asEmptyDataResult()
-                    }.await()
+                    localAgendaDataSource.fetchAndStoreAgendas(agendaItems)
+                        .onError { localError -> Result.Error(localError) }
+                        .asEmptyDataResult()
                 } else {
                     Result.Success(Unit).asEmptyDataResult()
                 }
@@ -82,17 +73,9 @@ class OfflineFirstAgendaRepository(
             is Result.Success -> {
                 val agendaItems  = remoteResult.data
                 if (agendaItems != null) {
-                    applicationScope.async {
-                        localEventDataSource.upsertEvents(agendaItems.events)
-                            .onError { localError -> Result.Error(localError) }
-                            .asEmptyDataResult()
-                        localTaskDataSource.upsertTasks(agendaItems.tasks)
-                            .onError { localError -> Result.Error(localError) }
-                            .asEmptyDataResult()
-                        localReminderDataSource.upsertReminders(agendaItems.reminders)
-                            .onError { localError -> Result.Error(localError) }
-                            .asEmptyDataResult()
-                    }.await()
+                    localAgendaDataSource.fetchAndStoreAgendas(agendaItems)
+                        .onError { localError -> Result.Error(localError) }
+                        .asEmptyDataResult()
                 } else {
                     Result.Success(Unit).asEmptyDataResult()
                 }
@@ -102,5 +85,4 @@ class OfflineFirstAgendaRepository(
             }
         }
     }
-
 }

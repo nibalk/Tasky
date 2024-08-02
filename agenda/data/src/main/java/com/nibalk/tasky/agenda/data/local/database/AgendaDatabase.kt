@@ -2,6 +2,7 @@ package com.nibalk.tasky.agenda.data.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.nibalk.tasky.agenda.data.local.dao.AgendaDao
 import com.nibalk.tasky.agenda.data.local.dao.EventDao
 import com.nibalk.tasky.agenda.data.local.dao.ReminderDao
 import com.nibalk.tasky.agenda.data.local.dao.TaskDao
@@ -27,6 +28,7 @@ import com.nibalk.tasky.agenda.data.local.entity.TaskEntity
     version = 1,
 )
 abstract class AgendaDatabase: RoomDatabase() {
+    abstract val agendaDao: AgendaDao
     abstract val eventDao: EventDao
     abstract val taskDao: TaskDao
     abstract val reminderDao: ReminderDao

@@ -6,10 +6,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nibalk.tasky.agenda.domain.EventRepository
+import com.nibalk.tasky.agenda.domain.ReminderRepository
+import com.nibalk.tasky.agenda.domain.TaskRepository
 import com.nibalk.tasky.agenda.domain.model.AgendaItem
-import com.nibalk.tasky.agenda.domain.usecase.GetEventUseCase
-import com.nibalk.tasky.agenda.domain.usecase.GetReminderUseCase
-import com.nibalk.tasky.agenda.domain.usecase.GetTaskUseCase
 import com.nibalk.tasky.agenda.domain.usecase.SaveEventUseCase
 import com.nibalk.tasky.agenda.domain.usecase.SaveReminderUseCase
 import com.nibalk.tasky.agenda.domain.usecase.SaveTaskUseCase
@@ -30,14 +30,14 @@ import java.time.LocalDate
 import java.util.UUID
 
 class DetailViewModel(
-    private val agendaArgs: AgendaArgs,
     savedStateHandle: SavedStateHandle,
-    private val getEventUseCase: GetEventUseCase,
-    private val getTaskUseCase: GetTaskUseCase,
-    private val getReminderUseCase: GetReminderUseCase,
+    private val agendaArgs: AgendaArgs,
     private val saveEventUseCase: SaveEventUseCase,
     private val saveTaskUseCase: SaveTaskUseCase,
     private val saveReminderUseCase: SaveReminderUseCase,
+    private val eventRepository: EventRepository,
+    private val taskRepository: TaskRepository,
+    private val reminderRepository: ReminderRepository,
 ): ViewModel() {
 
     var state by mutableStateOf(DetailState(
@@ -140,7 +140,7 @@ class DetailViewModel(
     }
 
     private suspend fun invokeGetEvent() {
-        val event = getEventUseCase.invoke(state.agendaId)
+        val event = eventRepository.getEvent(state.agendaId)
         state = event?.let { item ->
             state.copy(
                 agendaId = item.id.orEmpty(),
@@ -162,11 +162,16 @@ class DetailViewModel(
                     attendees = item.attendees
                 ),
             )
-        } ?: state.copy(startDate = state.selectedDate)
+        } ?: state.copy(
+            startDate = state.selectedDate,
+            details = AgendaItemDetails.Event(
+                endDate = state.selectedDate,
+            )
+        )
     }
 
     private suspend fun invokeGetTask() {
-        val task =  getTaskUseCase.invoke(state.agendaId)
+        val task =  taskRepository.getTask(state.agendaId)
         state = task?.let { item ->
             state.copy(
                 agendaId = item.id.orEmpty(),
@@ -187,7 +192,7 @@ class DetailViewModel(
     }
 
     private suspend fun invokeGetReminder() {
-        val reminder = getReminderUseCase.invoke(state.agendaId)
+        val reminder = reminderRepository.getReminder(state.agendaId)
         state = reminder?.let { item ->
             state.copy(
                 agendaId = item.id.orEmpty(),

@@ -6,6 +6,7 @@ import com.nibalk.tasky.agenda.data.OfflineFirstEventRepository
 import com.nibalk.tasky.agenda.data.OfflineFirstReminderRepository
 import com.nibalk.tasky.agenda.data.OfflineFirstTaskRepository
 import com.nibalk.tasky.agenda.data.local.database.AgendaDatabase
+import com.nibalk.tasky.agenda.data.local.source.RoomLocalAgendaDataSource
 import com.nibalk.tasky.agenda.data.local.source.RoomLocalEventDataSource
 import com.nibalk.tasky.agenda.data.local.source.RoomLocalReminderDataSource
 import com.nibalk.tasky.agenda.data.local.source.RoomLocalTaskDataSource
@@ -21,6 +22,7 @@ import com.nibalk.tasky.agenda.domain.AgendaRepository
 import com.nibalk.tasky.agenda.domain.EventRepository
 import com.nibalk.tasky.agenda.domain.ReminderRepository
 import com.nibalk.tasky.agenda.domain.TaskRepository
+import com.nibalk.tasky.agenda.domain.source.local.LocalAgendaDataSource
 import com.nibalk.tasky.agenda.domain.source.local.LocalEventDataSource
 import com.nibalk.tasky.agenda.domain.source.local.LocalReminderDataSource
 import com.nibalk.tasky.agenda.domain.source.local.LocalTaskDataSource
@@ -51,11 +53,13 @@ val agendaDataModule = module {
     }
 
     // Local - Dao
+    single { get<AgendaDatabase>().agendaDao }
     single { get<AgendaDatabase>().eventDao }
     single { get<AgendaDatabase>().taskDao }
     single { get<AgendaDatabase>().reminderDao }
 
     // Local - Data Sources
+    singleOf(::RoomLocalAgendaDataSource).bind<LocalAgendaDataSource>()
     singleOf(::RoomLocalEventDataSource).bind<LocalEventDataSource>()
     singleOf(::RoomLocalTaskDataSource).bind<LocalTaskDataSource>()
     singleOf(::RoomLocalReminderDataSource).bind<LocalReminderDataSource>()
