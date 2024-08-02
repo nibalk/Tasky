@@ -6,9 +6,14 @@
     <string name="toast_message_clicked">Clicked!</string>
     <string name="toast_message_add">Add</string>
 
+    <!-- Photo Section -->
+    <string name="photos_main_title">Photos</string>
+    <string name="photos_add_section_title">Add Photos</string>
+
     <!-- Content Descriptions -->
     <string name="content_description_back">Back</string>
     <string name="content_description_edit">Edit</string>
+    <string name="content_description_add">Add</string>
     <string name="content_description_show_password_text">Show Password</string>
     <string name="content_description_hide_password_text">Hide password</string>
 

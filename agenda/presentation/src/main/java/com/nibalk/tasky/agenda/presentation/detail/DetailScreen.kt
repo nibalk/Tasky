@@ -1,12 +1,17 @@
 package com.nibalk.tasky.agenda.presentation.detail
 
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -21,13 +26,18 @@ import com.nibalk.tasky.agenda.presentation.model.AgendaArgs
 import com.nibalk.tasky.agenda.presentation.model.AgendaType
 import com.nibalk.tasky.agenda.presentation.model.EditorType
 import com.nibalk.tasky.core.presentation.components.TaskyEditableDateTimeRow
+import com.nibalk.tasky.core.presentation.components.TaskyEditablePhotoRow
 import com.nibalk.tasky.core.presentation.components.TaskyEditableTextRow
 import com.nibalk.tasky.core.presentation.components.TaskyEditableTextRowType
 import com.nibalk.tasky.core.presentation.components.TaskyScrollableBackground
 import com.nibalk.tasky.core.presentation.themes.TaskyLightBlue
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
+import com.nibalk.tasky.core.presentation.themes.spacing
 import com.nibalk.tasky.core.presentation.utils.ObserveAsEvents
+import com.nibalk.tasky.core.presentation.utils.getCompressedByteArray
 import com.nibalk.tasky.test.mock.AgendaSampleData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import java.time.LocalDateTime
@@ -101,7 +111,27 @@ fun DetailScreen(
     state: DetailState,
     onAction: (DetailAction) -> Unit,
 ) {
+    val context = LocalContext.current
+    val itemModifier: Modifier = Modifier.padding(
+        horizontal = MaterialTheme.spacing.spaceMedium
+    )
+
+    val compressedPhotos = remember { mutableStateListOf<ByteArray?>() }
+
+    if (state.agendaType == AgendaType.EVENT) {
+        LaunchedEffect(state.details.asEventDetails.photos) {
+            compressedPhotos.clear()
+            state.details.asEventDetails.photos.forEach { eventPhoto ->
+                val compressedByteArray = withContext(Dispatchers.IO) {
+                    Uri.parse(eventPhoto.location).getCompressedByteArray(context)
+                }
+                compressedPhotos.add(compressedByteArray)
+            }
+        }
+    }
+
     TaskyScrollableBackground(
+        contentHorizontalPadding = MaterialTheme.spacing.default,
         header = {
             AgendaDetailHeader(
                 modifier = Modifier.fillMaxWidth(),
@@ -134,6 +164,7 @@ fun DetailScreen(
         }
     ) {
         TaskyEditableTextRow(
+            modifier = itemModifier,
             rowType = TaskyEditableTextRowType.TITLE,
             content = state.title,
             hint = stringResource(id = R.string.agenda_item_enter_title),
@@ -142,6 +173,7 @@ fun DetailScreen(
         )
         HorizontalDivider(color = TaskyLightBlue)
         TaskyEditableTextRow(
+            modifier = itemModifier,
             rowType = TaskyEditableTextRowType.DESCRIPTION,
             content = state.description,
             hint = stringResource(id = R.string.agenda_item_enter_description),
@@ -149,7 +181,21 @@ fun DetailScreen(
             onClick = { onAction(DetailAction.OnDescriptionClicked) }
         )
         HorizontalDivider(color = TaskyLightBlue)
+        if (state.agendaType == AgendaType.EVENT) {
+            TaskyEditablePhotoRow(
+                photos = compressedPhotos,
+                onPhotoViewed = {
+                    onAction(DetailAction.OnPhotoViewed(it))
+                },
+                onPhotoAdded = {
+                    onAction(DetailAction.OnPhotoAdded(it))
+                },
+                isEditable = state.isEditingMode
+            )
+            HorizontalDivider(color = TaskyLightBlue)
+        }
         TaskyEditableDateTimeRow(
+            modifier = itemModifier,
             label = stringResource(
                 if (state.agendaType == AgendaType.EVENT) {
                     R.string.agenda_item_from
@@ -167,6 +213,7 @@ fun DetailScreen(
         HorizontalDivider(color = TaskyLightBlue)
         if (state.agendaType == AgendaType.EVENT) {
             TaskyEditableDateTimeRow(
+                modifier = itemModifier,
                 label = stringResource(R.string.agenda_item_to),
                 isEditable = state.isEditingMode,
                 selectedDateTime = state.details.asEventDetails.endDate.atTime(
@@ -182,6 +229,7 @@ fun DetailScreen(
             HorizontalDivider(color = TaskyLightBlue)
         }
         AgendaNotificationsRow(
+            modifier = itemModifier,
             isEditable = state.isEditingMode,
             currentType = state.reminderDurationType,
             onMenuItemClicked = { notificationDurationType ->

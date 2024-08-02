@@ -1,4 +1,4 @@
-package com.nibalk.tasky.core.data.utils
+package com.nibalk.tasky.core.presentation.utils
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -7,6 +7,21 @@ import android.net.Uri
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
+
+fun Bitmap.toByteArrayMax1MB(
+    photoMaxSize: Int = 1024 * 1024 // 1MB
+): ByteArray {
+    val stream = ByteArrayOutputStream()
+    var quality = 100
+    do {
+        stream.reset()
+        this.compress(Bitmap.CompressFormat.JPEG, quality, stream)
+        if (stream.size() > photoMaxSize) {
+            quality -= 10 // Decrease quality by 10%
+        }
+    } while (stream.size() > photoMaxSize && quality > 0)
+    return stream.toByteArray()
+}
 
 suspend fun Uri.getCompressedByteArray(
     context: Context,

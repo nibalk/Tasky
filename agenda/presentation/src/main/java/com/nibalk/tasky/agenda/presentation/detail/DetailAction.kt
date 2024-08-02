@@ -1,5 +1,6 @@
 package com.nibalk.tasky.agenda.presentation.detail
 
+import android.net.Uri
 import com.nibalk.tasky.agenda.presentation.model.ReminderDurationType
 import java.time.LocalDate
 import java.time.LocalTime
@@ -21,4 +22,6 @@ sealed interface DetailAction {
     data class OnAddPhotoClicked(val agendaId: String) : DetailAction
     data class OnAddInviteesClicked(val agendaId: String) : DetailAction
     data class OnIsDoneCheckboxClicked(val isDone: Boolean) : DetailAction
+    data class OnPhotoAdded(val localImageUri: Uri) : DetailAction
+    data class OnPhotoViewed(val imageByteArray: ByteArray) : DetailAction
 }
