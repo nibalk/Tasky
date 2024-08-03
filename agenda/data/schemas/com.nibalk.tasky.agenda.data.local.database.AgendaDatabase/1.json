@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7628413ac225fbd00d1331244abb443a",
+    "identityHash": "2db89d1c5b8641e45844f13356d21afd",
     "entities": [
       {
         "tableName": "attendee",
@@ -49,38 +49,6 @@
         "foreignKeys": []
       },
       {
-        "tableName": "photo",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`photoKey` TEXT NOT NULL, `url` TEXT NOT NULL, `isLocal` INTEGER NOT NULL, PRIMARY KEY(`photoKey`))",
-        "fields": [
-          {
-            "fieldPath": "key",
-            "columnName": "photoKey",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "url",
-            "columnName": "url",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isLocal",
-            "columnName": "isLocal",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": false,
-          "columnNames": [
-            "photoKey"
-          ]
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
         "tableName": "event_attendee",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`eventId` TEXT NOT NULL, `attendeeId` TEXT NOT NULL, PRIMARY KEY(`eventId`, `attendeeId`))",
         "fields": [
@@ -113,43 +81,6 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_event_attendee_attendeeId` ON `${TABLE_NAME}` (`attendeeId`)"
-          }
-        ],
-        "foreignKeys": []
-      },
-      {
-        "tableName": "event_photo",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`eventId` TEXT NOT NULL, `photoKey` TEXT NOT NULL, PRIMARY KEY(`eventId`, `photoKey`))",
-        "fields": [
-          {
-            "fieldPath": "eventId",
-            "columnName": "eventId",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "photoKey",
-            "columnName": "photoKey",
-            "affinity": "TEXT",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": false,
-          "columnNames": [
-            "eventId",
-            "photoKey"
-          ]
-        },
-        "indices": [
-          {
-            "name": "index_event_photo_photoKey",
-            "unique": false,
-            "columnNames": [
-              "photoKey"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_event_photo_photoKey` ON `${TABLE_NAME}` (`photoKey`)"
           }
         ],
         "foreignKeys": []
@@ -320,7 +251,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7628413ac225fbd00d1331244abb443a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2db89d1c5b8641e45844f13356d21afd')"
     ]
   }
 }

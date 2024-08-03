@@ -6,28 +6,26 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
+import java.net.URL
 
-fun Bitmap.toByteArrayMax1MB(
-    photoMaxSize: Int = 1024 * 1024 // 1MB
-): ByteArray {
-    val stream = ByteArrayOutputStream()
-    var quality = 100
-    do {
-        stream.reset()
-        this.compress(Bitmap.CompressFormat.JPEG, quality, stream)
-        if (stream.size() > photoMaxSize) {
-            quality -= 10 // Decrease quality by 10%
+suspend fun URL.getCompressedByteArray(): ByteArray =
+    coroutineScope {
+        val getBytes = async(Dispatchers.IO) {
+            val url = this@getCompressedByteArray
+            url.readBytes()
         }
-    } while (stream.size() > photoMaxSize && quality > 0)
-    return stream.toByteArray()
-}
+        getBytes.await()
+    }
 
 suspend fun Uri.getCompressedByteArray(
     context: Context,
     uploadTThreshold: Int = 1024 * 1024 // 1MB
 ): ByteArray? = withContext(Dispatchers.IO) {
+    val uri = this@getCompressedByteArray
     val options = BitmapFactory.Options().apply {
         inJustDecodeBounds = true // Decode bounds without loading the entire image
     }
@@ -35,7 +33,7 @@ suspend fun Uri.getCompressedByteArray(
 
     options.inJustDecodeBounds = false
     val bitmap = BitmapFactory.decodeStream(
-        context.contentResolver.openInputStream(this@getCompressedByteArray),
+        context.contentResolver.openInputStream(uri),
         null, options
     )
 

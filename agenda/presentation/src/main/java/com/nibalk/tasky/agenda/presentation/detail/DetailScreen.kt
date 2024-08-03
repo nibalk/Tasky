@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
+import com.nibalk.tasky.agenda.domain.model.EventPhoto
 import com.nibalk.tasky.agenda.presentation.R
 import com.nibalk.tasky.agenda.presentation.components.AgendaDetailHeader
 import com.nibalk.tasky.agenda.presentation.components.AgendaFooter
@@ -40,6 +41,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import timber.log.Timber
+import java.net.URL
 import java.time.LocalDateTime
 
 @Composable
@@ -120,12 +123,29 @@ fun DetailScreen(
 
     if (state.agendaType == AgendaType.EVENT) {
         LaunchedEffect(state.details.asEventDetails.photos) {
+            Timber.d("[OfflineFirst-ImageIssue] REMOTE | photos list (%s)", state.details.asEventDetails.photos)
+
             compressedPhotos.clear()
             state.details.asEventDetails.photos.forEach { eventPhoto ->
-                val compressedByteArray = withContext(Dispatchers.IO) {
-                    Uri.parse(eventPhoto.location).getCompressedByteArray(context)
+                Timber.d("[OfflineFirst-ImageIssue] REMOTE | photo (%s)", eventPhoto)
+
+                when(eventPhoto) {
+                    is EventPhoto.Local -> {
+                        val compressedByteArrayLocal = withContext(Dispatchers.IO) {
+                            Uri.parse(eventPhoto.location).getCompressedByteArray(context)
+                        }
+                        compressedPhotos.add(compressedByteArrayLocal)
+                    }
+                    is EventPhoto.Remote -> {
+                        val compressedByteArrayRemote = withContext(Dispatchers.IO) {
+                            URL(eventPhoto.location).getCompressedByteArray()
+                        }
+                        compressedPhotos.add(compressedByteArrayRemote)
+                    }
                 }
-                compressedPhotos.add(compressedByteArray)
+
+
+
             }
         }
     }
