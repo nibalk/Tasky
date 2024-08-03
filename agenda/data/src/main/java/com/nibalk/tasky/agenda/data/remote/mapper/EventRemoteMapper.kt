@@ -1,11 +1,12 @@
 package com.nibalk.tasky.agenda.data.remote.mapper
 
 import com.nibalk.tasky.agenda.data.remote.dto.EventDto
-import com.nibalk.tasky.agenda.data.remote.dto.EventRequestDto
+import com.nibalk.tasky.agenda.data.remote.dto.EventRequestForCreateDto
+import com.nibalk.tasky.agenda.data.remote.dto.EventRequestForUpdateDto
 import com.nibalk.tasky.agenda.domain.model.AgendaItem
 import com.nibalk.tasky.agenda.domain.model.EventPhoto
-import com.nibalk.tasky.core.domain.util.toLocalDateTime
 import com.nibalk.tasky.core.domain.util.toEpochMillis
+import com.nibalk.tasky.core.domain.util.toLocalDateTime
 
 fun AgendaItem.Event.toEventDto(): EventDto {
     return EventDto(
@@ -45,8 +46,8 @@ fun EventDto.toAgendaItemEvent(): AgendaItem.Event {
     )
 }
 
-fun AgendaItem.Event.toEventRequestDto(): EventRequestDto {
-    return EventRequestDto(
+fun AgendaItem.Event.toEventRequestForCreateDto(): EventRequestForCreateDto {
+    return EventRequestForCreateDto(
         id = id,
         title = title,
         description = description,
@@ -57,5 +58,19 @@ fun AgendaItem.Event.toEventRequestDto(): EventRequestDto {
 //        attendees.map { attendee ->
 //            attendee.toEventAttendeeDto().userId
 //        },
+    )
+}
+
+fun AgendaItem.Event.toEventRequestForUpdateDto(): EventRequestForUpdateDto {
+    return EventRequestForUpdateDto(
+        id = id,
+        title = title,
+        description = description,
+        startAt = startAt.toEpochMillis(),
+        remindAt = remindAt.toEpochMillis(),
+        endAt = endAt.toEpochMillis(),
+        attendeeIds = emptyList(), //TODO
+        deletedPhotoKeys = emptyList(), //TODO
+        isGoing = false, // TODO
     )
 }

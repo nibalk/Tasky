@@ -4,7 +4,8 @@ import android.content.Context
 import android.net.Uri
 import com.nibalk.tasky.agenda.data.remote.api.EventApi
 import com.nibalk.tasky.agenda.data.remote.mapper.toAgendaItemEvent
-import com.nibalk.tasky.agenda.data.remote.mapper.toEventRequestDto
+import com.nibalk.tasky.agenda.data.remote.mapper.toEventRequestForCreateDto
+import com.nibalk.tasky.agenda.data.remote.mapper.toEventRequestForUpdateDto
 import com.nibalk.tasky.agenda.domain.model.AgendaItem
 import com.nibalk.tasky.agenda.domain.model.EventPhoto
 import com.nibalk.tasky.agenda.domain.source.remote.RemoteEventDataSource
@@ -20,6 +21,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import timber.log.Timber
+import java.net.URL
 
 class RetrofitRemoteEventDataSource(
     private val eventApi: EventApi,
@@ -39,7 +41,7 @@ class RetrofitRemoteEventDataSource(
     override suspend fun createEvent(
         event: AgendaItem.Event
     ): Result<AgendaItem.Event?, DataError.Network> {
-        val formData = Json.encodeToString(event.toEventRequestDto())
+        val formData = Json.encodeToString(event.toEventRequestForCreateDto())
         val photoData = event.photos
             .filterIsInstance<EventPhoto.Local>()
             .mapIndexedNotNull { index, eventPhoto ->
@@ -72,15 +74,29 @@ class RetrofitRemoteEventDataSource(
     override suspend fun updateEvent(
         event: AgendaItem.Event
     ): Result<AgendaItem.Event?, DataError.Network> {
-        val formData = Json.encodeToString(event.toEventRequestDto())
+        Timber.d("[OfflineFirst-ImageIssue] REMOTE | Create EVENT (%s)", event.photos)
+        val formData = Json.encodeToString(event.toEventRequestForUpdateDto())
         val photoData = event.photos
-            .filterIsInstance<EventPhoto.Local>()
             .mapIndexedNotNull { index, eventPhoto ->
-                val bytes = Uri.parse(eventPhoto.localUri).getCompressedByteArray(context)
+                val photoBytes: ByteArray?
+                val photoKey: String
+                when(eventPhoto) {
+                    is EventPhoto.Local -> {
+                        photoKey = eventPhoto.key
+                        photoBytes = Uri.parse(eventPhoto.localUri).getCompressedByteArray(context)
+                    }
+                    is EventPhoto.Remote -> {
+                        photoKey = eventPhoto.key
+                        photoBytes = URL(eventPhoto.location).getCompressedByteArray()
+                    }
+                }
+                Timber.d("[OfflineFirst-ImageIssue] REMOTE | index (%s)", index)
+                Timber.d("[OfflineFirst-ImageIssue] REMOTE | eventPhoto (%s)", eventPhoto)
+                Timber.d("[OfflineFirst-ImageIssue] REMOTE | bytes (%s)", photoBytes)
                 MultipartBody.Part.createFormData(
                     name = "photo$index",
-                    filename = eventPhoto.key,
-                    body = bytes?.toRequestBody() ?: return@mapIndexedNotNull null
+                    filename = photoKey,
+                    body = photoBytes?.toRequestBody() ?: return@mapIndexedNotNull null
                 )
             }
         Timber.d("[OfflineFirst-SaveEvent] REMOTE | Update formData = %s", formData)
@@ -97,7 +113,9 @@ class RetrofitRemoteEventDataSource(
         }
 
         Timber.d("[OfflineFirst-SaveItem] REMOTE | Updating EVENT (%s)", event.id)
+        Timber.d("[OfflineFirst-SaveItem] REMOTE | Updating EVENT response (%s)", response)
         return response.map { eventDto ->
+            Timber.d("[OfflineFirst-SaveItem] REMOTE | Updating EVENT eventDto (%s)", eventDto)
             eventDto?.toAgendaItemEvent()
         }
     }

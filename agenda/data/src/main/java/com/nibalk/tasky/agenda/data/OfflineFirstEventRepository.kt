@@ -59,6 +59,8 @@ class OfflineFirstEventRepository(
     }
 
     override suspend fun updateEvent(event: AgendaItem.Event): EmptyResult<DataError> {
+        Timber.d("[OfflineFirst-ImageIssue] REMOTE | Get from UI to Create EVENT (%s)", event.photos)
+
         val localResult = localDataSource.upsertEvent(event)
         localResult.onError {
             return localResult.asEmptyDataResult()
@@ -70,6 +72,7 @@ class OfflineFirstEventRepository(
             is Result.Success -> {
                 val remoteData = remoteResult.data
                 if (remoteData != null) {
+                    Timber.d("[OfflineFirst-ImageIssue] REMOTE | upsert eventPhoto to local (%s)", remoteData.photos)
                     applicationScope.async {
                         localDataSource.upsertEvent(remoteData).asEmptyDataResult()
                     }.await()

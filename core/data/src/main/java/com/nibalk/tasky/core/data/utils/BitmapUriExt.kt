@@ -5,8 +5,20 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
+import java.net.URL
+
+suspend fun URL.getCompressedByteArray(): ByteArray =
+    coroutineScope {
+        val getBytes = async(Dispatchers.IO) {
+            val url = this@getCompressedByteArray
+            url.readBytes()
+        }
+        getBytes.await()
+    }
 
 suspend fun Uri.getCompressedByteArray(
     context: Context,
