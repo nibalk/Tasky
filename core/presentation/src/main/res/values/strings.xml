@@ -8,7 +8,8 @@
 
     <!-- Photo Section -->
     <string name="photos_main_title">Photos</string>
-    <string name="photos_add_section_title">Add Photos</string>
+    <string name="photos_section_title_add">Add Photos</string>
+    <string name="photos_section_title_no">No Photos</string>
 
     <!-- Content Descriptions -->
     <string name="content_description_back">Back</string>

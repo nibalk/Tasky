@@ -1,14 +1,10 @@
 package com.nibalk.tasky.core.presentation.components
 
-import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,38 +12,28 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.sharp.Add
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.painter.BitmapPainter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.nibalk.tasky.core.presentation.R
-import com.nibalk.tasky.core.presentation.themes.TaskyBlack
+import com.nibalk.tasky.core.presentation.themes.TaskyDarkGray
 import com.nibalk.tasky.core.presentation.themes.TaskyGray
 import com.nibalk.tasky.core.presentation.themes.TaskyLightBlue
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import com.nibalk.tasky.core.presentation.themes.spacing
-import com.nibalk.tasky.core.presentation.utils.toByteArrayMax1MB
+import com.nibalk.tasky.core.presentation.utils.drawableToByteArray
 
 @Composable
 fun TaskyEditablePhotoRow(
@@ -57,30 +43,14 @@ fun TaskyEditablePhotoRow(
     onPhotoAdded: (Uri) -> Unit,
     isEditable: Boolean,
 ) {
-    val context = LocalContext.current
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
-            selectedImageUri = uri
             uri?.let { imageUri ->
                 onPhotoAdded(imageUri)
-//                context.contentResolver.openInputStream(imageUri)
-//                    ?.use { inputStream ->
-//                        BitmapFactory.decodeStream(inputStream)
-//                    }?.let { bitmap ->
-//                        onPhotoAdded(bitmap.toByteArrayMax1MB())
-//                    }
             }
         }
     )
-
-    val imageModifier = Modifier
-        .alpha(0.8f)
-        .size(60.dp)
-        .clip(RoundedCornerShape(MaterialTheme.spacing.spaceExtraSmall))
-        .border(border = BorderStroke(2.dp, TaskyGray))
 
     Column(
         modifier = Modifier
@@ -92,7 +62,7 @@ fun TaskyEditablePhotoRow(
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Text(
-                color = TaskyBlack,
+                color = TaskyDarkGray,
                 text = stringResource(id = R.string.photos_main_title),
                 style = MaterialTheme.typography.displayLarge
             )
@@ -101,80 +71,27 @@ fun TaskyEditablePhotoRow(
                     photoPickerLauncher.launch(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                     )
-                    photoPickerLauncher
                 }
             } else {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                ) {
-                    val chunkedPhotosList = photos.chunked(maxPhotoCount)
-
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spaceSmall)
-                    ) {
-                        for (groupOfPhotos in chunkedPhotosList) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceAround,
-                            ) {
-                                for (photo in groupOfPhotos) {
-                                    TaskyPhotoThumbnail(
-                                        imageModifier, photo, onPhotoViewed
-                                    )
-                                }
-                                if (groupOfPhotos.size < maxPhotoCount && isEditable) {
-                                    Image(
-                                        painter = painterResource(id = android.R.drawable.ic_input_add),
-                                        modifier = imageModifier
-                                            .clickable {
-                                                photoPickerLauncher.launch(
-                                                    PickVisualMediaRequest(
-                                                        ActivityResultContracts.PickVisualMedia.ImageOnly
-                                                    )
-                                                )
-                                            },
-                                        contentScale = ContentScale.Fit,
-                                        contentDescription = null,
-                                    )
-                                    repeat(4 - groupOfPhotos.size) {
-                                        Text(text = "", modifier = Modifier.size(60.dp))
-                                    }
-                                } else {
-                                    repeat(maxPhotoCount - groupOfPhotos.size) {
-                                        Text(text = "", modifier = Modifier.size(60.dp))
-                                    }
-                                }
-                            }
-                            if (photos.size % maxPhotoCount == 0 && isEditable) {
-                                Row(
-                                    horizontalArrangement = Arrangement.SpaceAround,
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Image(
-                                        painter = painterResource(id = android.R.drawable.ic_input_add),
-                                        contentDescription = null,
-                                        modifier = imageModifier
-                                            .clickable {
-                                                photoPickerLauncher.launch(
-                                                    PickVisualMediaRequest(
-                                                        ActivityResultContracts.PickVisualMedia.ImageOnly
-                                                    )
-                                                )
-                                            },
-                                        contentScale = ContentScale.Fit
-                                    )
-                                    repeat(maxPhotoCount - 1) {
-                                        Text(text = "", modifier = Modifier.size(60.dp))
-                                    }
-                                }
-                            }
+                TaskyPhotoCarousel(
+                    photos = photos,
+                    isEditable = isEditable,
+                    maxPhotoCount = maxPhotoCount,
+                    onPhotoAddIconClicked = {
+                        photoPickerLauncher.launch(
+                            PickVisualMediaRequest(
+                                ActivityResultContracts.PickVisualMedia.ImageOnly
+                            )
+                        )
+                    },
+                    onPhotoClicked = { photoBytes ->
+                        if (photoBytes != null) {
+                            onPhotoViewed(photoBytes)
                         }
                     }
-                }
+                )
             }
         }
-        Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceMedium))
     }
 }
 
@@ -199,42 +116,23 @@ private fun TaskyEmptyPhotoSection(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(id = android.R.drawable.ic_input_add),
-                colorFilter = ColorFilter.tint(TaskyGray),
-                contentDescription = null,
+            Icon(
+                imageVector = Icons.Sharp.Add,
+                tint = TaskyGray,
+                contentDescription = null
             )
             Spacer(modifier = Modifier.width(MaterialTheme.spacing.spaceSmall))
             Text(
                 color = TaskyGray,
                 style = MaterialTheme.typography.displayMedium,
-                text = stringResource(id = R.string.photos_add_section_title),
+                text = if(isEditable) {
+                    stringResource(id = R.string.photos_section_title_add)
+                } else {
+                    stringResource(id = R.string.photos_section_title_no)
+                },
             )
         }
     }
-}
-
-@Composable
-private fun TaskyPhotoThumbnail(
-    modifier: Modifier = Modifier,
-    photo: ByteArray?,
-    onPhotoViewed: (ByteArray) -> Unit,
-) {
-    Image(
-        painter = BitmapPainter(
-            BitmapFactory.decodeByteArray(
-                photo, 0, photo?.size ?: 0
-            ).asImageBitmap()
-        ),
-        modifier = modifier
-            .clickable {
-                if (photo != null) {
-                    onPhotoViewed(photo)
-                }
-            },
-        contentScale = ContentScale.FillBounds,
-        contentDescription = null
-    )
 }
 
 // Preview functions
@@ -242,6 +140,25 @@ private fun TaskyPhotoThumbnail(
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
 private fun TaskyEditablePhotoRowEmptyPreview() {
+    val drawable = ContextCompat.getDrawable(
+        LocalContext.current,
+        android.R.drawable.spinner_background
+    )
+    val photo = drawable?.drawableToByteArray()
+
+    TaskyTheme {
+        TaskyEditablePhotoRow(
+            photos = listOf(photo, photo, photo, photo, photo),
+            onPhotoAdded = {},
+            onPhotoViewed = {},
+            isEditable = true,
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
+@Composable
+private fun TaskyEditablePhotoRowPreview() {
     TaskyTheme {
         TaskyEditablePhotoRow(
             onPhotoAdded = {},
@@ -261,18 +178,3 @@ private fun TaskyEmptyPhotoSectionPreview() {
         )
     }
 }
-
-//@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
-//@Composable
-//private fun TaskyPhotoThumbnailPreview() {
-//    val context = LocalContext.current
-//    val inputStream = context.resources.openRawResource(R.raw.sample_image)
-//
-//    TaskyTheme {
-//        TaskyPhotoThumbnail(
-//            onPhotoViewed = {},
-//            photo = inputStream.readBytes(),
-//        )
-//    }
-//}
-
