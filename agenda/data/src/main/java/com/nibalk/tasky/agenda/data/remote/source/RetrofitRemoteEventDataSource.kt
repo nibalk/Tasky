@@ -39,17 +39,11 @@ class RetrofitRemoteEventDataSource(
     override suspend fun createEvent(
         event: AgendaItem.Event
     ): Result<AgendaItem.Event?, DataError.Network> {
-        Timber.d("[OfflineFirst-ImageIssue] REMOTE | Create EVENT (%s)", event.photos)
-
         val formData = Json.encodeToString(event.toEventRequestDto())
         val photoData = event.photos
             .filterIsInstance<EventPhoto.Local>()
             .mapIndexedNotNull { index, eventPhoto ->
                 val bytes = Uri.parse(eventPhoto.localUri).getCompressedByteArray(context)
-                Timber.d("[OfflineFirst-ImageIssue] REMOTE | index (%s)", index)
-                Timber.d("[OfflineFirst-ImageIssue] REMOTE | eventPhoto (%s)", eventPhoto)
-                Timber.d("[OfflineFirst-ImageIssue] REMOTE | bytes (%s)", bytes)
-
                 MultipartBody.Part.createFormData(
                     name = "photo$index",
                     filename = eventPhoto.key,

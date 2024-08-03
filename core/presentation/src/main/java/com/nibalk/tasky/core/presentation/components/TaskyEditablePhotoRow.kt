@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -104,33 +105,36 @@ private fun TaskyEmptyPhotoSection(
         modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
-        Row(
-            modifier = Modifier
-                .then(
-                    if (isEditable) {
-                        Modifier.clickable {
-                            onPhotoAddIconClicked()
-                        }
-                    } else Modifier,
-                ),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Sharp.Add,
-                tint = TaskyGray,
-                contentDescription = null
-            )
-            Spacer(modifier = Modifier.width(MaterialTheme.spacing.spaceSmall))
-            Text(
-                color = TaskyGray,
-                style = MaterialTheme.typography.displayMedium,
-                text = if(isEditable) {
-                    stringResource(id = R.string.photos_section_title_add)
-                } else {
-                    stringResource(id = R.string.photos_section_title_no)
-                },
-            )
+        Column {
+            Row(
+                modifier = Modifier
+                    .then(
+                        if (isEditable) {
+                            Modifier.clickable {
+                                onPhotoAddIconClicked()
+                            }
+                        } else Modifier,
+                    ),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Sharp.Add,
+                    tint = TaskyGray,
+                    contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(MaterialTheme.spacing.spaceSmall))
+                Text(
+                    color = TaskyGray,
+                    style = MaterialTheme.typography.displayMedium,
+                    text = if (isEditable) {
+                        stringResource(id = R.string.photos_section_title_add)
+                    } else {
+                        stringResource(id = R.string.photos_section_title_no)
+                    },
+                )
+            }
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.spaceLarge))
         }
     }
 }

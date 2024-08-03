@@ -41,7 +41,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import timber.log.Timber
 import java.net.URL
 import java.time.LocalDateTime
 
@@ -120,33 +119,28 @@ fun DetailScreen(
     )
 
     val compressedPhotos = remember { mutableStateListOf<ByteArray?>() }
+    val compressedPhotosTemp = remember { mutableStateListOf<ByteArray?>() }
 
     if (state.agendaType == AgendaType.EVENT) {
         LaunchedEffect(state.details.asEventDetails.photos) {
-            Timber.d("[OfflineFirst-ImageIssue] REMOTE | photos list (%s)", state.details.asEventDetails.photos)
-
-            compressedPhotos.clear()
+            compressedPhotosTemp.clear()
             state.details.asEventDetails.photos.forEach { eventPhoto ->
-                Timber.d("[OfflineFirst-ImageIssue] REMOTE | photo (%s)", eventPhoto)
-
-                when(eventPhoto) {
+                val compressedByteArray = when(eventPhoto) {
                     is EventPhoto.Local -> {
-                        val compressedByteArrayLocal = withContext(Dispatchers.IO) {
+                        withContext(Dispatchers.IO) {
                             Uri.parse(eventPhoto.location).getCompressedByteArray(context)
                         }
-                        compressedPhotos.add(compressedByteArrayLocal)
                     }
                     is EventPhoto.Remote -> {
-                        val compressedByteArrayRemote = withContext(Dispatchers.IO) {
+                        withContext(Dispatchers.IO) {
                             URL(eventPhoto.location).getCompressedByteArray()
                         }
-                        compressedPhotos.add(compressedByteArrayRemote)
                     }
                 }
-
-
-
+                compressedPhotosTemp.add(compressedByteArray)
             }
+            compressedPhotos.clear()
+            compressedPhotos.addAll(compressedPhotosTemp)
         }
     }
 

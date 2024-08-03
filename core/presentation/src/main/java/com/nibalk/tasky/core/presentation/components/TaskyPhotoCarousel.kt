@@ -169,7 +169,7 @@ private fun TaskyPhotoPlaceholder(
         Text(
             color = TaskyDarkGray,
             text = footerText,
-            style = MaterialTheme.typography.displayLarge,
+            style = MaterialTheme.typography.displaySmall,
         )
     }
 }
