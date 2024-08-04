@@ -9,8 +9,6 @@ import com.nibalk.tasky.agenda.data.local.dao.TaskDao
 import com.nibalk.tasky.agenda.data.local.entity.AttendeeEntity
 import com.nibalk.tasky.agenda.data.local.entity.EventAttendeeEntity
 import com.nibalk.tasky.agenda.data.local.entity.EventEntity
-import com.nibalk.tasky.agenda.data.local.entity.EventPhotoEntity
-import com.nibalk.tasky.agenda.data.local.entity.PhotoEntity
 import com.nibalk.tasky.agenda.data.local.entity.ReminderEntity
 import com.nibalk.tasky.agenda.data.local.entity.TaskEntity
 
@@ -18,9 +16,7 @@ import com.nibalk.tasky.agenda.data.local.entity.TaskEntity
 @Database(
     entities = [
         AttendeeEntity::class,
-        PhotoEntity::class,
         EventAttendeeEntity::class,
-        EventPhotoEntity::class,
         EventEntity::class,
         TaskEntity::class,
         ReminderEntity::class,

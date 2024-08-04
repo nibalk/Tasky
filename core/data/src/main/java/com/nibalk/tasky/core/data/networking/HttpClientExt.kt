@@ -5,6 +5,7 @@ import com.nibalk.tasky.core.domain.util.Result
 import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.SerializationException
 import retrofit2.Response
+import timber.log.Timber
 import java.nio.channels.UnresolvedAddressException
 
 
@@ -18,8 +19,10 @@ inline fun <reified T> safeCall(execute: () -> Response<T>): Result<T?, DataErro
         e.printStackTrace()
         return Result.Error(DataError.Network.SERIALIZATION)
     } catch(e: Exception) {
+        Timber.d("[SafeCall-Exception] SAFE-CALL | Exception (%s)", e)
         if(e is CancellationException) throw e
         e.printStackTrace()
+        Timber.d("[SafeCall-Exception] SAFE-CALL | Exception Stacktrace (%s)", e.printStackTrace())
         return Result.Error(DataError.Network.UNKNOWN)
     }
 
@@ -27,6 +30,7 @@ inline fun <reified T> safeCall(execute: () -> Response<T>): Result<T?, DataErro
 }
 
 inline fun <reified T> responseToResult(response: Response<T>): Result<T?, DataError.Network> {
+    Timber.d("[SafeCall-Exception] SAFE-CALL | responseToResult (%s)", response)
     return when(response.code()) {
         in 200..299 -> Result.Success(response.body())
         401 -> Result.Error(DataError.Network.UNAUTHORIZED)

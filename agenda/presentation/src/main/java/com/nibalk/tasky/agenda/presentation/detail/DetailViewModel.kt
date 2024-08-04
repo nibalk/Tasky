@@ -10,6 +10,7 @@ import com.nibalk.tasky.agenda.domain.EventRepository
 import com.nibalk.tasky.agenda.domain.ReminderRepository
 import com.nibalk.tasky.agenda.domain.TaskRepository
 import com.nibalk.tasky.agenda.domain.model.AgendaItem
+import com.nibalk.tasky.agenda.domain.model.EventPhoto
 import com.nibalk.tasky.agenda.domain.usecase.SaveEventUseCase
 import com.nibalk.tasky.agenda.domain.usecase.SaveReminderUseCase
 import com.nibalk.tasky.agenda.domain.usecase.SaveTaskUseCase
@@ -124,6 +125,20 @@ class DetailViewModel(
             }
             is DetailAction.OnSaveClicked -> {
                 viewModelScope.launch { saveAgendaItem() }
+            }
+            is DetailAction.OnPhotoAdded -> {
+                state = state.copy(
+                    details = updateDetailsIfEvent { event ->
+                        event.copy(
+                            photos = event.photos.plus(
+                                EventPhoto.Local(
+                                    key = UUID.randomUUID().toString(),
+                                    localUri = action.localImageUri.toString()
+                                )
+                            )
+                        )
+                    }
+                )
             }
             else -> Unit
         }

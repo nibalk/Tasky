@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
 import com.nibalk.tasky.core.presentation.themes.spacing
@@ -29,6 +30,7 @@ import com.nibalk.tasky.core.presentation.themes.spacing
 @Composable
 fun TaskyBackground(
     title: String? = null,
+    contentHorizontalPadding: Dp = MaterialTheme.spacing.spaceMedium,
     header: (@Composable RowScope.() -> Unit)? = null,
     footer: (@Composable BoxScope.() -> Unit)? = null,
     content: @Composable BoxScope.() -> Unit,
@@ -88,7 +90,10 @@ fun TaskyBackground(
                 Box(modifier = Modifier.fillMaxSize()) {
                     Box(
                         modifier = Modifier
-                            .padding(MaterialTheme.spacing.spaceMedium)
+                            .padding(
+                                vertical = MaterialTheme.spacing.spaceMedium,
+                                horizontal = contentHorizontalPadding
+                            )
                     ) {
                         content()
                     }

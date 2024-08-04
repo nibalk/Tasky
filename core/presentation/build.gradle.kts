@@ -14,4 +14,6 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     // Timber for logging
     implementation(libs.timber)
+    // For Async Images
+    implementation(libs.coil)
 }

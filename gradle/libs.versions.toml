@@ -33,6 +33,7 @@ gson = "2.9.0"
 # Other Libraries
 junit = "4.13.2"
 timber = "5.0.1"
+coil = "2.7.0"
 # Gradle and Plugin Related
 agp = "8.5.0-rc02"
 androidTools = "31.4.1"
@@ -99,7 +100,7 @@ squareup-converter-gson = { module = "com.squareup.retrofit2:converter-gson", ve
 # Other Libraries
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
-
+coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 # Gradle Plugin Related
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 android-tools-common-plugin = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
