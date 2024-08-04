@@ -127,14 +127,11 @@ fun DetailScreen(
             state.details.asEventDetails.photos.forEach { eventPhoto ->
                 val compressedByteArray = when(eventPhoto) {
                     is EventPhoto.Local -> {
-                        withContext(Dispatchers.IO) {
-                            Uri.parse(eventPhoto.location).getCompressedByteArray(context)
-                        }
+                        Uri.parse(eventPhoto.location).getCompressedByteArray(context)
+
                     }
                     is EventPhoto.Remote -> {
-                        withContext(Dispatchers.IO) {
-                            URL(eventPhoto.location).getCompressedByteArray()
-                        }
+                        URL(eventPhoto.location).getCompressedByteArray()
                     }
                 }
                 compressedPhotosTemp.add(compressedByteArray)

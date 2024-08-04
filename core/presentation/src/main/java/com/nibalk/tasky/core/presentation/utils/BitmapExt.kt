@@ -6,20 +6,15 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.net.URL
 
-suspend fun URL.getCompressedByteArray(): ByteArray =
-    coroutineScope {
-        val getBytes = async(Dispatchers.IO) {
-            val url = this@getCompressedByteArray
-            url.readBytes()
-        }
-        getBytes.await()
-    }
+suspend fun URL.getCompressedByteArray(): ByteArray = withContext(Dispatchers.IO) {
+    val url = this@getCompressedByteArray
+    url.readBytes()
+}
 
 suspend fun Uri.getCompressedByteArray(
     context: Context,
@@ -37,6 +32,7 @@ suspend fun Uri.getCompressedByteArray(
         null, options
     )
 
+    ensureActive() // Check for cancellation after decoding
     if (imageSize > uploadTThreshold) {
         bitmap?.toCompressedByteArray()
     } else {

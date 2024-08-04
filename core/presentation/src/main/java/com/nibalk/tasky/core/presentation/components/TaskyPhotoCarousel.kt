@@ -14,7 +14,9 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.sharp.Add
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,28 +26,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.nibalk.tasky.core.presentation.R
-import com.nibalk.tasky.core.presentation.themes.LocalSpacing
 import com.nibalk.tasky.core.presentation.themes.TaskyDarkGray
 import com.nibalk.tasky.core.presentation.themes.TaskyGray
+import com.nibalk.tasky.core.presentation.themes.TaskyGreen
 import com.nibalk.tasky.core.presentation.themes.TaskyTheme
+import com.nibalk.tasky.core.presentation.themes.spacing
 
 @Composable
 fun TaskyPhotoCarousel(
-    maxPhotoCount: Int = 10,
     photos: List<ByteArray?> = emptyList(),
+    maxPhotoCount: Int,
     isEditable: Boolean,
     onPhotoClicked: (ByteArray?) -> Unit,
     onPhotoAddIconClicked: () -> Unit,
 ) {
-    val spacing = LocalSpacing.current
-    val arePhotosFull = false
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -69,21 +69,21 @@ fun TaskyPhotoCarousel(
                     modifier = Modifier
                         .then(
                             if (index == 0) {
-                                Modifier.padding(start = spacing.spaceMedium)
+                                Modifier.padding(start = MaterialTheme.spacing.spaceMedium)
                             } else if (index == photos.lastIndex && index == maxPhotoCount - 1) {
-                                Modifier.padding(end = spacing.spaceMedium)
+                                Modifier.padding(end = MaterialTheme.spacing.spaceMedium)
                             } else {
                                 Modifier
                             },
                         ),
                 )
             }
-            if (isEditable && !arePhotosFull) {
+            if (isEditable && photos.size <= maxPhotoCount) {
                 item {
                     TaskyPhotoAddThumbnail(
                         onClick = onPhotoAddIconClicked,
                         modifier = Modifier
-                            .padding(end = spacing.spaceMedium),
+                            .padding(end = MaterialTheme.spacing.spaceMedium),
                     )
                 }
             }
@@ -103,14 +103,25 @@ private fun TaskyPhotoThumbnail(
         onClick = onClick,
         footerText = footerText,
     ) {
-        AsyncImage(
+        SubcomposeAsyncImage(
             modifier = Modifier
                 .fillMaxSize(),
             model = photo,
             contentScale = ContentScale.Crop,
             contentDescription = null,
-            placeholder = painterResource(id = R.drawable.placeholder_photo),
-            error = painterResource(id = android.R.drawable.stat_notify_error),
+            error = {
+                Icon(
+                    imageVector = Icons.Filled.Warning,
+                    contentDescription = null
+                )
+            },
+            loading = {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .align(Alignment.Center),
+                    color = TaskyGreen
+                )
+            }
         )
     }
 }
@@ -182,6 +193,7 @@ private fun TaskyPhotoCarouselPreview() {
     TaskyTheme {
         TaskyPhotoCarousel(
             photos = listOf(null, null, null, null, null),
+            maxPhotoCount = 5,
             isEditable = true,
             onPhotoClicked = {},
             onPhotoAddIconClicked = {},

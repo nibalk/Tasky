@@ -38,7 +38,7 @@ import com.nibalk.tasky.core.presentation.utils.drawableToByteArray
 
 @Composable
 fun TaskyEditablePhotoRow(
-    maxPhotoCount: Int = 5,
+    maxPhotoCount: Int = 10,
     photos: List<ByteArray?> = emptyList(),
     onPhotoViewed: (ByteArray) -> Unit,
     onPhotoAdded: (Uri) -> Unit,
