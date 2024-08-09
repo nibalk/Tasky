@@ -73,7 +73,7 @@ class RetrofitRemoteEventDataSource(
     override suspend fun updateEvent(
         event: AgendaItem.Event
     ): Result<AgendaItem.Event?, DataError.Network> {
-        Timber.d("[OfflineFirst-ImageIssue] REMOTE | Create EVENT (%s)", event.photos)
+        Timber.d("[OfflineFirst-ImageIssue] REMOTE | Update EVENT (%s)", event.photos)
         val formData = Json.encodeToString(event.toEventRequestForUpdateDto())
         val nextIndex = event.photos
             .filterIsInstance<EventPhoto.Remote>()
@@ -102,7 +102,7 @@ class RetrofitRemoteEventDataSource(
                     name = "update_event_request",
                     value = formData
                 ),
-                photos = emptyList()
+                photos = photoData
             )
         }
 

@@ -27,8 +27,6 @@ data class EventRequestForUpdateDto(
     @SerialName("remindAt") val remindAt: Long,
     @SerialName("to") val endAt: Long,
     @SerialName("attendeeIds") @Required val attendeeIds: List<AttendeeId> = emptyList(),
-    @SerialName("deletedPhotoKeys") val deletedPhotoKeys: List<PhotoKey> = emptyList(),
+    @SerialName("deletedPhotoKeys") @Required val deletedPhotoKeys: List<PhotoKey> = emptyList(),
     @SerialName("isGoing") val isGoing: Boolean,
-
-
 )
