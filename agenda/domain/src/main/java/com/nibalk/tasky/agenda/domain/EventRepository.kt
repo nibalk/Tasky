@@ -11,6 +11,8 @@ interface EventRepository {
     suspend fun createEvent(event: AgendaItem.Event): EmptyResult<DataError>
     suspend fun updateEvent(event: AgendaItem.Event): EmptyResult<DataError>
 
+    suspend fun syncPendingEvents()
+
     suspend fun getAttendee(email: String): EventAttendee
     suspend fun deleteAttendee(eventId: String)
 }

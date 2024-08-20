@@ -1,7 +1,6 @@
 package com.nibalk.tasky.agenda.data.remote.source
 
 import android.content.Context
-import android.net.Uri
 import com.nibalk.tasky.agenda.data.remote.api.EventApi
 import com.nibalk.tasky.agenda.data.remote.mapper.toAgendaItemEvent
 import com.nibalk.tasky.agenda.data.remote.mapper.toEventRequestForCreateDto
@@ -10,7 +9,6 @@ import com.nibalk.tasky.agenda.domain.model.AgendaItem
 import com.nibalk.tasky.agenda.domain.model.EventPhoto
 import com.nibalk.tasky.agenda.domain.source.remote.RemoteEventDataSource
 import com.nibalk.tasky.core.data.networking.safeCall
-import com.nibalk.tasky.core.data.utils.getCompressedByteArray
 import com.nibalk.tasky.core.domain.util.DataError
 import com.nibalk.tasky.core.domain.util.EmptyResult
 import com.nibalk.tasky.core.domain.util.Result
@@ -24,7 +22,6 @@ import timber.log.Timber
 
 class RetrofitRemoteEventDataSource(
     private val eventApi: EventApi,
-    private val context: Context
 ) : RemoteEventDataSource {
     override suspend fun getEvent(
         eventId: String
@@ -44,11 +41,10 @@ class RetrofitRemoteEventDataSource(
         val photoData = event.photos
             .filterIsInstance<EventPhoto.Local>()
             .mapIndexedNotNull { index, eventPhoto ->
-                val bytes = Uri.parse(eventPhoto.localUri).getCompressedByteArray(context)
                 MultipartBody.Part.createFormData(
                     name = "photo$index",
                     filename = eventPhoto.key + ".jpg",
-                    body = bytes?.toRequestBody() ?: return@mapIndexedNotNull null
+                    body = eventPhoto.photoBytes?.toRequestBody() ?: return@mapIndexedNotNull null
                 )
             }
         Timber.d("[OfflineFirst-SaveEvent] REMOTE | Create formData = %s", formData)
@@ -83,16 +79,13 @@ class RetrofitRemoteEventDataSource(
         val photoData = event.photos
             .filterIsInstance<EventPhoto.Local>()
             .mapIndexedNotNull { index, eventPhoto ->
-                val bytes = Uri.parse(eventPhoto.localUri).getCompressedByteArray(context)
-                Timber.d("[OfflineFirst-ImageIssue] LOCAL | index (%s)", (nextIndex+index))
-                Timber.d("[OfflineFirst-ImageIssue] LOCAL | eventPhoto (%s)", eventPhoto)
-                Timber.d("[OfflineFirst-ImageIssue] LOCAL | bytes (%s)", bytes)
                 MultipartBody.Part.createFormData(
                     name = "photo${index + nextIndex}",
                     filename = eventPhoto.key + ".jpg",
-                    body = bytes?.toRequestBody() ?: return@mapIndexedNotNull null
+                    body = eventPhoto.photoBytes?.toRequestBody() ?: return@mapIndexedNotNull null
                 )
             }
+
         Timber.d("[OfflineFirst-SaveEvent] REMOTE | Update formData = %s", formData)
         Timber.d("[OfflineFirst-SaveEvent] REMOTE | Update photoData = %s", photoData)
 

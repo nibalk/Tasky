@@ -1,6 +1,8 @@
 package com.nibalk.tasky.agenda.domain.source.local
 
 import com.nibalk.tasky.agenda.domain.model.AgendaItem
+import com.nibalk.tasky.agenda.domain.model.SyncDeletionAgendaItem
+import com.nibalk.tasky.agenda.domain.model.SyncPendingEvent
 import com.nibalk.tasky.core.domain.util.DataError
 import com.nibalk.tasky.core.domain.util.Result
 import kotlinx.coroutines.flow.Flow
@@ -22,4 +24,8 @@ interface LocalEventDataSource {
 
     suspend fun deleteEvent(eventId: String)
     suspend fun deleteAllEvents()
+
+    suspend fun deleteOfflineCreatedEvent(eventId: String)
+    suspend fun getAllOfflineCreatedEvents(userId: String): List<SyncPendingEvent>
+    suspend fun getAllOfflineDeletedEvents(userId: String): List<SyncDeletionAgendaItem>
 }

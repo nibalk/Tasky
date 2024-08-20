@@ -15,7 +15,7 @@ suspend fun URL.getCompressedByteArray(): ByteArray = withContext(Dispatchers.IO
     url.readBytes()
 }
 
-suspend fun Uri.getCompressedByteArray(
+private suspend fun Uri.getCompressedByteArray(
     context: Context,
     uploadTThreshold: Int = 1024 * 1024 // 1MB
 ): ByteArray? = withContext(Dispatchers.IO) {

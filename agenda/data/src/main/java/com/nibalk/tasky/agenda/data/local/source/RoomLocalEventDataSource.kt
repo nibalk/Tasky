@@ -2,9 +2,14 @@ package com.nibalk.tasky.agenda.data.local.source
 
 import android.database.sqlite.SQLiteFullException
 import com.nibalk.tasky.agenda.data.local.dao.EventDao
+import com.nibalk.tasky.agenda.data.local.dao.EventSyncDao
 import com.nibalk.tasky.agenda.data.local.mapper.toAgendaItemEvent
 import com.nibalk.tasky.agenda.data.local.mapper.toEventEntity
+import com.nibalk.tasky.agenda.data.local.mapper.toSyncDeletionAgendaItem
+import com.nibalk.tasky.agenda.data.local.mapper.toSyncPendingEvent
 import com.nibalk.tasky.agenda.domain.model.AgendaItem
+import com.nibalk.tasky.agenda.domain.model.SyncDeletionAgendaItem
+import com.nibalk.tasky.agenda.domain.model.SyncPendingEvent
 import com.nibalk.tasky.agenda.domain.source.local.EventId
 import com.nibalk.tasky.agenda.domain.source.local.LocalEventDataSource
 import com.nibalk.tasky.core.domain.util.DataError
@@ -16,7 +21,8 @@ import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 
 class RoomLocalEventDataSource(
-    private val eventDao: EventDao
+    private val eventDao: EventDao,
+    private val eventSyncDao: EventSyncDao
 ) : LocalEventDataSource {
 
     override suspend fun getAllEvents(): Flow<List<AgendaItem.Event>> {
@@ -74,5 +80,28 @@ class RoomLocalEventDataSource(
 
     override suspend fun deleteAllEvents() {
         eventDao.deleteAllEvents()
+    }
+
+    override suspend fun deleteOfflineCreatedEvent(eventId: String) {
+        // Edge Case :
+        // Where the event is created in offline-mode, and then deleted in offline-mode as well.
+        // In that case, we don't need to sync anything.
+        val isPendingSync = eventSyncDao.getEventPendingSyncEntity(eventId) != null
+        if(isPendingSync) {
+            eventSyncDao.deleteEventPendingSyncEntity(eventId)
+            return
+        }
+    }
+
+    override suspend fun getAllOfflineCreatedEvents(userId: String): List<SyncPendingEvent> {
+        return eventSyncDao.getAllEventPendingSyncEntities(userId).map { entity ->
+            entity.toSyncPendingEvent()
+        }
+    }
+
+    override suspend fun getAllOfflineDeletedEvents(userId: String): List<SyncDeletionAgendaItem> {
+        return eventSyncDao.getAllEventDeletionSyncEntities(userId).map { entity ->
+            entity.toSyncDeletionAgendaItem()
+        }
     }
 }

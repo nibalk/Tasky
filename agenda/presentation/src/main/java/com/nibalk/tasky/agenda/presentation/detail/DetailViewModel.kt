@@ -1,5 +1,7 @@
 package com.nibalk.tasky.agenda.presentation.detail
 
+import android.content.Context
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -21,11 +23,13 @@ import com.nibalk.tasky.agenda.presentation.model.ReminderDurationType
 import com.nibalk.tasky.core.domain.util.onError
 import com.nibalk.tasky.core.domain.util.onSuccess
 import com.nibalk.tasky.core.presentation.utils.asUiText
+import com.nibalk.tasky.core.presentation.utils.getCompressedByteArray
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.net.URL
 import java.time.Duration
 import java.time.LocalDate
 import java.util.UUID
@@ -70,7 +74,7 @@ class DetailViewModel(
         }
     }
 
-    fun onAction(action: DetailAction) {
+    fun onAction(action: DetailAction, context: Context) {
         when(action) {
             is DetailAction.OnStartDateSelected -> {
                 state = state.copy(startDate = action.date)
@@ -124,7 +128,7 @@ class DetailViewModel(
                 )
             }
             is DetailAction.OnSaveClicked -> {
-                viewModelScope.launch { saveAgendaItem() }
+                viewModelScope.launch { saveAgendaItem(context) }
             }
             is DetailAction.OnPhotoAdded -> {
                 state = state.copy(
@@ -133,7 +137,8 @@ class DetailViewModel(
                             photos = event.photos.plus(
                                 EventPhoto.Local(
                                     key = UUID.randomUUID().toString(),
-                                    localUri = action.localImageUri.toString()
+                                    localUri = action.localImageUri.toString(),
+                                    photoBytes = null
                                 )
                             )
                         )
@@ -226,17 +231,17 @@ class DetailViewModel(
 
     // Save Agenda Item
 
-    private suspend fun saveAgendaItem() {
+    private suspend fun saveAgendaItem(context: Context) {
         state = state.copy(isLoading = true)
         when(state.agendaType) {
-            AgendaType.EVENT -> invokeSaveEvent()
+            AgendaType.EVENT -> invokeSaveEvent(context)
             AgendaType.TASK -> invokeSaveTask()
             AgendaType.REMINDER -> invokeSaveReminder()
         }
         state = state.copy(isLoading = false)
     }
 
-    private suspend fun invokeSaveEvent() {
+    private suspend fun invokeSaveEvent(context: Context) {
         val stateDetails = state.details.asEventDetails
         val randomIdIfNew = UUID.randomUUID().toString()
         Timber.d("[OfflineFirst-SaveItem] Event | agendaId = %s , randomIdIfNew = %s",
@@ -254,7 +259,19 @@ class DetailViewModel(
                 endAt = stateDetails.endDate.atTime(stateDetails.endTime),
                 hostId = stateDetails.hostId,
                 isHost = stateDetails.isHost,
-                photos = stateDetails.photos,
+                photos = stateDetails.photos.map { photo->
+                    when(photo) {
+                        is EventPhoto.Local -> {
+                            photo.copy(
+                                photoBytes = Uri.parse(photo.location)
+                                    .getCompressedByteArray(context)
+                            )
+                        }
+                        is EventPhoto.Remote -> {
+                            photo.copy(photoBytes = URL(photo.location).getCompressedByteArray())
+                        }
+                    }
+                },
                 attendees = stateDetails.attendees
             )
         ).onError { error ->
